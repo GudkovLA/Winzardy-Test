@@ -10,6 +10,7 @@ namespace Game.Settings
     public class CharacterSettings : ScriptableObject, IDisposable
     {
         public GameObject Prefab;
+        public float Speed;
 
         public void Dispose()
         {

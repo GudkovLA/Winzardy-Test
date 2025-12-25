@@ -1,5 +1,4 @@
-﻿using Game.Common;
-using Game.Settings;
+﻿using Game.Settings;
 using UnityEngine;
 
 namespace Game
@@ -27,8 +26,16 @@ namespace Game
         private void Awake()
         {
             var gameLevel = new GameLevel(_levelRoot); 
-            var gameCamera = new GameCamera(_camera); 
-            _gameWorld = new GameWorld(_gameSettings, _characterSettings, _enemySettings, gameLevel, gameCamera);
+            var gameCamera = new GameCamera(_camera);
+            var gameInput = new GameInput();
+            gameInput.Player.Enable();
+
+            _gameWorld = new GameWorld(_gameSettings, 
+                _characterSettings, 
+                _enemySettings, 
+                gameLevel, 
+                gameCamera,
+                gameInput);
         }
 
         private void Update()

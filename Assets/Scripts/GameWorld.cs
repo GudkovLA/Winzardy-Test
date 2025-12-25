@@ -22,7 +22,8 @@ namespace Game
             CharacterSettings characterSettings, 
             EnemySettings enemySettings,
             GameLevel gameLevel,
-            GameCamera gameCamera)
+            GameCamera gameCamera,
+            GameInput gameInput)
         {
             var world = World.Create();
             _worldHandle = new WorldHandle(world);
@@ -33,6 +34,7 @@ namespace Game
             _serviceLocator.Register(enemySettings);
             _serviceLocator.Register(gameLevel);
             _serviceLocator.Register(gameCamera);
+            _serviceLocator.Register(gameInput);
             
             _systemManager = new SystemManager(_worldHandle, _serviceLocator);
             _serviceLocator.Register(_systemManager);
