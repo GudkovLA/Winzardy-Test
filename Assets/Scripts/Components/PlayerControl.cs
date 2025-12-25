@@ -1,7 +1,7 @@
 ﻿namespace Game.Components
 {
-    public struct Health
+    public struct PlayerControl
     {
-
+        
     }
 }
