@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using UnityEngine;
 
 namespace Game.Common
 {
@@ -39,6 +41,19 @@ namespace Game.Common
         public T? Get<T>()
         {
             return (T?) _services.GetValueOrDefault(typeof(T));
+        }
+
+        public bool TryGet<T>([NotNullWhen(true)] out T service)
+        {
+            if (!_services.TryGetValue(typeof(T), out var serviceInstance))
+            {
+                Debug.LogError($"Can't find service {typeof(T).Name}");
+                service = default!;
+                return false;
+            }
+
+            service = (T) serviceInstance;
+            return true;
         }
     }
 }

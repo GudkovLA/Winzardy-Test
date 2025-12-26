@@ -23,22 +23,12 @@ namespace Game.Systems
         {
             base.OnCreate();
 
-            var gameSettings = ServiceLocator.Get<GameSettings>();
-            if (gameSettings == null)
+            if (!ServiceLocator.TryGet(out _gameSettings)
+                || !ServiceLocator.TryGet(out _gameCamera))
             {
-                Debug.LogError($"Can't find character settings");
                 return;
             }
 
-            var gameCamera = ServiceLocator.Get<GameCamera>();
-            if (gameCamera == null)
-            {
-                Debug.LogError($"Can't find game camera instance");
-                return;
-            }
-            
-            _gameSettings = gameSettings;
-            _gameCamera = gameCamera;
             _initialized = true;
         }
         

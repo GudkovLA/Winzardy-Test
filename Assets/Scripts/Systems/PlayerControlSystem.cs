@@ -23,22 +23,12 @@ namespace Game.Systems
         {
             base.OnCreate();
             
-            var characterSettings = ServiceLocator.Get<CharacterSettings>();
-            if (characterSettings == null)
+            if (!ServiceLocator.TryGet(out _characterSettings)
+                || !ServiceLocator.TryGet(out _gameInput))
             {
-                Debug.LogError("Can't find character settings");
-                return;
-            }
-            
-            var gameInput = ServiceLocator.Get<GameInput>();
-            if (gameInput == null)
-            {
-                Debug.LogError("Can't find game input");
                 return;
             }
 
-            _characterSettings = characterSettings;
-            _gameInput = gameInput;
             _initialized = true;
         }
 
