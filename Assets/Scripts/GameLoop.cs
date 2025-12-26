@@ -1,4 +1,5 @@
 ﻿using Game.Settings;
+using Game.Utils;
 using UnityEngine;
 
 namespace Game
@@ -19,6 +20,9 @@ namespace Game
         private Transform _levelRoot;
         
         [SerializeField]
+        private Transform _instancePoolRoot;
+        
+        [SerializeField]
         private Camera _camera;
 
         private GameWorld _gameWorld;
@@ -27,6 +31,13 @@ namespace Game
         {
             var gameLevel = new GameLevel(_levelRoot); 
             var gameCamera = new GameCamera(_camera);
+
+            var instancePool = new InstancePool(_instancePoolRoot);
+            instancePool.Register(_characterSettings.Prefab.GetInstanceID(), _characterSettings.Prefab, 1);
+            instancePool.Register(_characterSettings.Projectile.Prefab.GetInstanceID(), _characterSettings.Projectile.Prefab, 20);
+            instancePool.Register(_enemySettings.Prefab.GetInstanceID(), _enemySettings.Prefab, 30);
+            var instanceFactory = new InstanceFactory(instancePool);
+            
             var gameInput = new GameInput();
             gameInput.Player.Enable();
 
@@ -35,7 +46,9 @@ namespace Game
                 _enemySettings, 
                 gameLevel, 
                 gameCamera,
-                gameInput);
+                gameInput,
+                instancePool,
+                instanceFactory);
         }
 
         private void Update()

@@ -7,6 +7,7 @@ using Arch.Core;
 using Game.Common;
 using Game.Common.Systems;
 using Game.Settings;
+using Game.Utils;
 using UnityEngine;
 
 namespace Game
@@ -23,7 +24,9 @@ namespace Game
             EnemySettings enemySettings,
             GameLevel gameLevel,
             GameCamera gameCamera,
-            GameInput gameInput)
+            GameInput gameInput,
+            InstancePool instancePool,
+            InstanceFactory instanceFactory)
         {
             var world = World.Create();
             _worldHandle = new WorldHandle(world);
@@ -35,6 +38,8 @@ namespace Game
             _serviceLocator.Register(gameLevel);
             _serviceLocator.Register(gameCamera);
             _serviceLocator.Register(gameInput);
+            _serviceLocator.Register(instancePool);
+            _serviceLocator.Register(instanceFactory);
             
             _systemManager = new SystemManager(_worldHandle, _serviceLocator);
             _serviceLocator.Register(_systemManager);
