@@ -12,6 +12,7 @@ namespace Game.Settings
         public GameObject Prefab;
         public float FireTimeout;
         public float Speed;
+        public float Damage;
         public float MaxDistance;
         public float HitDistance;
  

@@ -11,6 +11,7 @@ namespace Game.Settings
     {
         public GameObject Prefab;
         public ProjectileSettings Projectile;
+        public float MaxHealth;
         public float Speed;
 
         public void Dispose()

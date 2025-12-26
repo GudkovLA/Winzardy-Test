@@ -61,7 +61,11 @@ namespace Game.Systems
             commandBuffer.Add(entity, new Position { Value = positon });
             commandBuffer.Add(entity, new Rotation { Value = rotation });
             commandBuffer.Add(entity, new PrefabId { Value = _enemySettings.Prefab.GetInstanceID() });
-            commandBuffer.Add(entity, new HealthState());
+            commandBuffer.Add(entity, new HealthState
+            {
+                MaxHealth = _enemySettings.MaxHealth,
+                Health = _enemySettings.MaxHealth
+            });
             commandBuffer.Add(entity, new Enemy());
         }
     }

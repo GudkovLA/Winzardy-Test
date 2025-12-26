@@ -10,6 +10,7 @@ namespace Game.Settings
     public class EnemySettings : ScriptableObject, IDisposable
     {
         public GameObject Prefab;
+        public float MaxHealth;
  
         public void Dispose()
         {

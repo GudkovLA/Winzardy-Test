@@ -58,12 +58,15 @@ namespace Game.Systems
             commandBuffer.Add(entity, new Position { Value = positon });
             commandBuffer.Add(entity, new Rotation { Value = Quaternion.identity });
             commandBuffer.Add(entity, new PrefabId { Value = _characterSettings.Projectile.Prefab.GetInstanceID() });
+            
+            // TODO: Looks like some kind of converter required
             commandBuffer.Add(entity, new Projectile
             {
                 Direction = direction,
                 Speed = _characterSettings.Projectile.Speed,
+                Damage =  _characterSettings.Projectile.Damage,
                 HitDistance = _characterSettings.Projectile.HitDistance,
-                MaxDistance = _characterSettings.Projectile.MaxDistance
+                MaxDistance = _characterSettings.Projectile.MaxDistance,
             });
         }
     }

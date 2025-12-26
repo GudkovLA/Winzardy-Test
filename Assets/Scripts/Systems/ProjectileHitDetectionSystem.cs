@@ -18,7 +18,7 @@ namespace Game.Systems
             .WithNone<Destroy>();
 
         private static readonly QueryDescription _enemyQuery = new QueryDescription()
-            .WithAll<Position, Enemy>()
+            .WithAll<Position, HealthState, Enemy>()
             .WithNone<Destroy>();
 
         protected override void OnUpdate()
@@ -39,7 +39,7 @@ namespace Game.Systems
                 
             // TODO: Heavy operation, possible to optimize with burst
             World.Query(_enemyQuery, 
-                (Entity entity, ref Position position) =>
+                (Entity entity, ref Position position, ref HealthState healthState) =>
                 {
                     for (var i = projectileData.Count - 1; i >= 0; i--)
                     {
@@ -50,12 +50,24 @@ namespace Game.Systems
                         {
                             continue;
                         }
+                 
+                        // TODO: looks like a job for different system (in late simulation for example)
+                        if (projectileData[i].Projectile.Damage <= 0)
+                        {
+                            continue;                            
+                        }
+                        
+                        healthState.Health -= projectileData[i].Projectile.Damage;
+                        healthState.LastHitTime = Context.Time;
 
                         commandBuffer.Add(projectileData[i].Entity, new Destroy());
-                        commandBuffer.Add(entity, new Destroy());
-                        commandBuffer.Add(projectileData[i].Entity, new Destroy());
-                        commandBuffer.Add(entity, new Destroy());
                         projectileData.RemoveAt(i);
+                        
+                        if (healthState.Health <= 0)
+                        {
+                            healthState.Health = 0;
+                            commandBuffer.Add(entity, new Destroy());
+                        }
                     }
                 });
         }

@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: EnemySettings
   m_EditorClassIdentifier: 
   Prefab: {fileID: 4139666738509060230, guid: 9c0e58e6e75de714f8666df2d4bba979, type: 3}
+  MaxHealth: 100

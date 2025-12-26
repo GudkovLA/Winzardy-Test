@@ -16,6 +16,7 @@ namespace Game.Common.Systems
 
         public ServiceLocator ServiceLocator { private set; get; }
         public float DeltaTime { private set; get; }
+        public float Time { private set; get; }
         public World World => _worldHandle.Value;
 
         public SystemContext(SystemManager systemManager, WorldHandle worldHandle, ServiceLocator serviceLocator)
@@ -23,6 +24,11 @@ namespace Game.Common.Systems
             _systemManager = systemManager;
             _worldHandle = worldHandle;
             ServiceLocator = serviceLocator;
+        }
+
+        public void SetTime(float timeSinceStartup)
+        {
+            Time = timeSinceStartup;
         }
 
         public void SetDeltaTime(float deltaTime)

@@ -62,9 +62,10 @@ namespace Game.Common.Systems
             _loopSystemGroup.Dispose();
         }
 
-        public void Update(float deltaTime)
+        public void Update(float deltaTime, float totalTime)
         {
             _systemContext.SetDeltaTime(deltaTime);
+            _systemContext.SetTime(totalTime);
             _loopSystemGroup.Update();
         }
 

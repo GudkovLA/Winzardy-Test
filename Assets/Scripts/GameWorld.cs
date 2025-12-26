@@ -56,7 +56,7 @@ namespace Game
 
         public void Update()
         {
-            _systemManager.Update(Time.deltaTime);
+            _systemManager.Update(Time.deltaTime, Time.realtimeSinceStartup);
         }
         
         private static List<Assembly> GatherAssemblies()
