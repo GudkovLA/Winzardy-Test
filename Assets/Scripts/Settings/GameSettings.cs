@@ -11,6 +11,9 @@ namespace Game.Settings
     {
         public CameraSettingsData CameraSettings = new();
         
+        // TODO: MinMax range
+        public float EnemySpawnTimeout;
+        
         public void Dispose()
         {
         }
