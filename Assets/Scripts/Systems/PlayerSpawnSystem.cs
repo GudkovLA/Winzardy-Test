@@ -16,7 +16,7 @@ namespace Game.Systems
 
         private static readonly QueryDescription _playerQuery = new QueryDescription()
             .WithAll<PlayerControl>();
-
+        
         private CharacterSettings _characterSettings = null!;
         private GameLevel _gameLevel = null!;
         private bool _initialized;
@@ -27,93 +27,30 @@ namespace Game.Systems
         {
             base.OnCreate();
 
-            var characterSettings = ServiceLocator.Get<CharacterSettings>();
-            if (characterSettings == null)
+            if (!ServiceLocator.TryGet(out _characterSettings)
+                || !ServiceLocator.TryGet(out _gameLevel))
             {
-                Debug.LogError($"Can't find character settings");
                 return;
             }
 
-            var gameLevel = ServiceLocator.Get<GameLevel>();
-            if (gameLevel == null)
-            {
-                Debug.LogError($"Can't find game level instance");
-                return;
-            }
-            
-            _characterSettings =  characterSettings;
-            _gameLevel = gameLevel;
             _initialized = true;
         }
         
         protected override void OnUpdate()
         {
-            if (!_initialized)
-            {
-                return;
-            }
-            
             var playersCount = World.CountEntities(_playerQuery);
             if (playersCount >= KMaxCharactersCount)
             {
                 return;
             }
 
-            if (_instantiateOperation != null)
-            {
-                if (!_instantiateOperation.isDone)
-                {
-                    return;
-                }
-
-                if (_instantiateOperation.Result != null && _instantiateOperation.Result.Length == 1)
-                {
-                    CreateCharacterEntity(_instantiateOperation.Result[0]);
-                }
-                else
-                {
-                    Debug.LogError($"Can't spawn player due of instance incompatibility");
-                }
-                
-                _instantiateOperation.completed -= OnInstantiateComplete;
-                _instantiateOperation = null;
-                return;
-            }
-            
-            _instantiateOperation = Object.InstantiateAsync(_characterSettings.Prefab, _gameLevel.Root);
-            _instantiateOperation.completed += OnInstantiateComplete;
-        }
-
-        private void CreateCharacterEntity(GameObject gameObject)
-        {
             var entity = Context.World.Create();
             var commandBuffer = Context.GetOrCreateCommandBuffer(this);
-            commandBuffer.Add(entity, new Position());
-            commandBuffer.Add(entity, new Rotation());
-            commandBuffer.Add(entity, new PlayerControl());
+            commandBuffer.Add(entity, new Position { Value = _gameLevel.StartPosition });
+            commandBuffer.Add(entity, new Rotation { Value = _gameLevel.StartRotation });
+            commandBuffer.Add(entity, new PrefabId { Value = _characterSettings.Prefab.GetInstanceID() });
             commandBuffer.Add(entity, new HealthState());
-            commandBuffer.Add(entity, new TransformLink { Transform = gameObject.transform });
-        }
-
-        private void OnInstantiateComplete(AsyncOperation operation)
-        {
-            if (!Disposed)
-            {
-                return;
-            }
-            
-            if (operation is not AsyncInstantiateOperation instantiateOperation)
-            {
-                Debug.LogError($"Operation is not {nameof(AsyncInstantiateOperation)}");
-                return;
-            }
-
-            Debug.LogError($"System already been disposed {nameof(PlayerSpawnSystem)}");
-
-            foreach (var gameObject in instantiateOperation.Result)
-            {
-                Object.Destroy(gameObject);
-            }
+            commandBuffer.Add(entity, new PlayerControl());
         }
     }
 }

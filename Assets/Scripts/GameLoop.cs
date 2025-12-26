@@ -29,7 +29,7 @@ namespace Game
         
         private void Awake()
         {
-            var gameLevel = new GameLevel(_levelRoot); 
+            var gameLevel = new GameLevel(_levelRoot, Vector3.zero, Quaternion.identity); 
             var gameCamera = new GameCamera(_camera);
 
             var instancePool = new InstancePool(_instancePoolRoot);

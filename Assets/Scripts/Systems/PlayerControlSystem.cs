@@ -39,8 +39,10 @@ namespace Game.Systems
                 return;
             }
 
+            var deltaTime = Context.DeltaTime;
             var moveInput = _gameInput.Player.Move.ReadValue<Vector2>();
-            var moveSpeed = _characterSettings.Speed * Time.deltaTime;
+            var moveSpeed = _characterSettings.Speed * deltaTime;
+            
             World.Query(_playerQuery, (ref Position position) =>
             {
                 position.Value += new Vector3(moveInput.x, 0, moveInput.y) * moveSpeed;
