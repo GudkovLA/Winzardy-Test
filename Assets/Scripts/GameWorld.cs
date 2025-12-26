@@ -51,7 +51,7 @@ namespace Game
 
         public void Update()
         {
-            _systemManager.Update();
+            _systemManager.Update(Time.deltaTime);
         }
         
         private static List<Assembly> GatherAssemblies()

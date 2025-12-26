@@ -12,18 +12,23 @@ namespace Game.Common.Systems
     {
         private readonly Dictionary<AbstractSystemGroup, CommandBuffer> _commandBuffers = new();
         private readonly SystemManager _systemManager;
-        private readonly ServiceLocator _serviceLocator;
         private readonly WorldHandle _worldHandle;
+
+        public ServiceLocator ServiceLocator { private set; get; }
+        public float DeltaTime { private set; get; }
+        public World World => _worldHandle.Value;
 
         public SystemContext(SystemManager systemManager, WorldHandle worldHandle, ServiceLocator serviceLocator)
         {
             _systemManager = systemManager;
             _worldHandle = worldHandle;
-            _serviceLocator = serviceLocator;
+            ServiceLocator = serviceLocator;
         }
 
-        public World World => _worldHandle.Value;
-        public ServiceLocator ServiceLocator => _serviceLocator;
+        public void SetDeltaTime(float deltaTime)
+        {
+            DeltaTime = deltaTime;
+        }
 
         public CommandBuffer GetOrCreateCommandBuffer(AbstractSystem system)
         {
