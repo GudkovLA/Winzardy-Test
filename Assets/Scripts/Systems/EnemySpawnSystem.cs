@@ -62,6 +62,11 @@ namespace Game.Systems
             commandBuffer.Add(entity, new Rotation { Value = rotation });
             commandBuffer.Add(entity, new Size { Value = _enemySettings.Size });
             commandBuffer.Add(entity, new PrefabId { Value = _enemySettings.Prefab.GetInstanceID() });
+            commandBuffer.Add(entity, new CoinSpawner
+            {
+                Chance = _enemySettings.CoinSettings.DropChance,
+                CoinPrefabId = _enemySettings.CoinSettings.Prefab.GetInstanceID()
+            });
             commandBuffer.Add(entity, new HealthState
             {
                 MaxHealth = _enemySettings.MaxHealth,

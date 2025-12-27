@@ -1,6 +1,6 @@
 ﻿namespace Game.Components
 {
-    public struct PlayerControl
+    public struct Coin
     {
     }
 }

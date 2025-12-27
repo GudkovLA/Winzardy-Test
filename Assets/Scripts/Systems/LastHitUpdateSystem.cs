@@ -7,25 +7,25 @@ using Game.Controllers;
 namespace Game.Systems
 {
     [UpdateInGroup(typeof(PresentationSystemGroup))]
-    public class LastHitDamageUpdateSystem : AbstractSystem
+    public class LastHitUpdateSystem : AbstractSystem
     {
-        private static readonly QueryDescription _lastHitDamageQuery = new QueryDescription()
+        private static readonly QueryDescription _lastHitQuery = new QueryDescription()
             .WithAll<InstanceLink, HealthState>();
 
         protected override void OnUpdate()
         {
-            // TODO: Filter by hit damage component
-            World.Query(_lastHitDamageQuery, 
+            // TODO: Filter by last hit component
+            World.Query(_lastHitQuery, 
                 (ref InstanceLink instanceLink, ref HealthState  healthState) =>
                 {
                     var transform = instanceLink.Instance;
-                    var damageController = transform.gameObject.GetComponent<DamageController>();
-                    if (damageController == null)
+                    var hitAnimator = transform.gameObject.GetComponent<HitAnimator>();
+                    if (hitAnimator == null)
                     {
                         return;
                     }
                     
-                    damageController.UpdateLastHitDamage(healthState.LastHitTime);
+                    hitAnimator.UpdateLastHit(healthState.LastHitTime);
                 });
         }
     }

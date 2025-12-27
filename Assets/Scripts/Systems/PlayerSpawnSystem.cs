@@ -30,6 +30,10 @@ namespace Game.Systems
                 MaxHealth = characterSettings.MaxHealth,
                 Health = characterSettings.MaxHealth
             });
+            commandBuffer.Add(entity, new CoinCollector
+            {
+                CollectRadius = characterSettings.CoinsCollectRadius
+            });
             commandBuffer.Add(entity, new PlayerControl());
         }
     }

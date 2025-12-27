@@ -13,6 +13,7 @@ namespace Game.Settings
         public ProjectileSettings Projectile;
         public float MaxHealth;
         public float Speed;
+        public float CoinsCollectRadius;
 
         public void Dispose()
         {

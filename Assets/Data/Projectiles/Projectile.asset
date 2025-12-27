@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Projectile
   m_EditorClassIdentifier: 
   Prefab: {fileID: 4139666738509060230, guid: ab4389717abad6643abc3c1ac9887956, type: 3}
-  FireTimeout: 1
+  FireTimeout: 0.2
   Speed: 20
   Damage: 25
   MaxDistance: 50

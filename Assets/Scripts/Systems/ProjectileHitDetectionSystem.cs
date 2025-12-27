@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using Arch.Core;
+using Arch.Core.Extensions;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.Components;
@@ -63,10 +64,23 @@ namespace Game.Systems
                         commandBuffer.Add(projectileData[i].Entity, new Destroy());
                         projectileData.RemoveAt(i);
                         
-                        if (healthState.Health <= 0)
+                        if (healthState.Health > 0)
                         {
-                            healthState.Health = 0;
-                            commandBuffer.Add(entity, new Destroy());
+                            continue;
+                        }
+                        
+                        healthState.Health = 0;
+                        commandBuffer.Add(entity, new Destroy());
+
+                        // Try to spawn a coin
+                        if (entity.TryGet<CoinSpawner>(out var coinSpawner)
+                            && Random.value < coinSpawner.Chance)
+                        {
+                            var coinEntity = Context.World.Create();
+                            commandBuffer.Add(coinEntity, new Position { Value = position.Value });
+                            commandBuffer.Add(coinEntity, new Rotation { Value = Quaternion.identity });
+                            commandBuffer.Add(coinEntity, new PrefabId { Value = coinSpawner.CoinPrefabId});
+                            commandBuffer.Add(coinEntity, new Coin());
                         }
                     }
                 });

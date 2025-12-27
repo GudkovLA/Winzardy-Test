@@ -2,7 +2,7 @@
 
 namespace Game.Controllers
 {
-    public class DamageController : MonoBehaviour
+    public class HitAnimator : MonoBehaviour
     {
         [SerializeField]
         private float _duration;
@@ -13,7 +13,7 @@ namespace Game.Controllers
         private Color _initialColor;
         private float _lastHitTime;
         
-        public void UpdateLastHitDamage(float lastHitTime)
+        public void UpdateLastHit(float lastHitTime)
         {
             _lastHitTime = lastHitTime;
         }

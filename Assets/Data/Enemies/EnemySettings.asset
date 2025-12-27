@@ -14,4 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prefab: {fileID: 4139666738509060230, guid: 9c0e58e6e75de714f8666df2d4bba979, type: 3}
   Size: {x: 1, y: 1, z: 1}
-  MaxHealth: 100
+  MaxHealth: 1
+  CoinSettings:
+    Prefab: {fileID: 1212067499461965912, guid: 31d09fb37f51e614b9c1ab37309b97e5, type: 3}
+    DropChance: 0.5

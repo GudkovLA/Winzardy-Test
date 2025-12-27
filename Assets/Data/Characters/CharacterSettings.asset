@@ -16,3 +16,4 @@ MonoBehaviour:
   Projectile: {fileID: 11400000, guid: 7bd3d25ee66a20e428de3357954f5d30, type: 2}
   MaxHealth: 200
   Speed: 5
+  CoinsCollectRadius: 3

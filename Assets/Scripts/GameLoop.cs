@@ -36,11 +36,8 @@ namespace Game
             var gameCamera = new GameCamera(_camera);
 
             var instancePool = new InstancePool(_instancePoolRoot);
-            instancePool.Register(_characterSettings.Prefab.GetInstanceID(), _characterSettings.Prefab, 1);
-            instancePool.Register(_characterSettings.Projectile.Prefab.GetInstanceID(), _characterSettings.Projectile.Prefab, 20);
-            instancePool.Register(_enemySettings.Prefab.GetInstanceID(), _enemySettings.Prefab, 30);
-            instancePool.Register(_gameSettings.HealthViewPrefab.GetInstanceID(), _gameSettings.HealthViewPrefab, 30);
             var instanceFactory = new InstanceFactory(instancePool);
+            InitializeInstancePool(instancePool);
             
             var gameInput = new GameInput();
             gameInput.Player.Enable();
@@ -68,6 +65,20 @@ namespace Game
         {
             _gameWorld.Dispose();
             _gameWorld = null;
+        }
+
+        private void InitializeInstancePool(InstancePool instancePool)
+        {
+            RegisterPrefab(instancePool, _characterSettings.Prefab, 1);
+            RegisterPrefab(instancePool, _characterSettings.Projectile.Prefab, 20);
+            RegisterPrefab(instancePool, _enemySettings.Prefab, 30);
+            RegisterPrefab(instancePool, _enemySettings.CoinSettings.Prefab, 30);
+            RegisterPrefab(instancePool, _gameSettings.HealthViewPrefab, 30);
+        }
+        
+        private void RegisterPrefab(InstancePool instancePool, GameObject prefab, int instanceCount)
+        {
+            instancePool.Register(prefab.GetInstanceID(), prefab, instanceCount);
         }
     }
 }
