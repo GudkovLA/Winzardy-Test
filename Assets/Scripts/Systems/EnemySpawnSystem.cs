@@ -60,6 +60,7 @@ namespace Game.Systems
             var commandBuffer = Context.GetOrCreateCommandBuffer(this);
             commandBuffer.Add(entity, new Position { Value = positon });
             commandBuffer.Add(entity, new Rotation { Value = rotation });
+            commandBuffer.Add(entity, new Size { Value = _enemySettings.Size });
             commandBuffer.Add(entity, new PrefabId { Value = _enemySettings.Prefab.GetInstanceID() });
             commandBuffer.Add(entity, new HealthState
             {

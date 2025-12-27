@@ -13,7 +13,7 @@ namespace Game.Systems
     public class InstanceReleaseSystem : AbstractSystem
     {
         private static readonly QueryDescription _transformCleanupQuery = new QueryDescription()
-            .WithAll<TransformLink, PrefabId, Destroy>();
+            .WithAll<InstanceLink, PrefabId, Destroy>();
 
         private InstanceFactory _instanceFactory = null!;
         private bool _initialized;
@@ -33,9 +33,9 @@ namespace Game.Systems
         protected override void OnUpdate()
         {
             World.Query(_transformCleanupQuery,
-                (ref TransformLink transformLink, ref PrefabId prefabId) =>
+                (ref InstanceLink instanceLink, ref PrefabId prefabId) =>
                 {
-                    _instanceFactory.Destroy(prefabId.Value, transformLink.Transform.gameObject);
+                    _instanceFactory.Destroy(prefabId.Value, instanceLink.Instance.gameObject);
                 });
         }        
     }

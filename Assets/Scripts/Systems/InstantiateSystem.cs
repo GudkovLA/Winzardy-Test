@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using Arch.Core;
+using Arch.Core.Extensions;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.Components;
@@ -12,8 +13,8 @@ namespace Game.Systems
     public class InstantiateSystem : AbstractSystem
     {
         private static readonly QueryDescription _instanceQuery = new QueryDescription()
-            .WithAll<PrefabId, Position, Rotation>()
-            .WithNone<TransformLink>();
+            .WithAll<PrefabId>()
+            .WithNone<InstanceLink>();
 
         private InstanceFactory _instanceFactory = null!;
         private GameLevel _gameLevel = null!;
@@ -41,14 +42,26 @@ namespace Game.Systems
             
             var commandBuffer = Context.GetOrCreateCommandBuffer(this);
             World.Query(_instanceQuery, 
-                (Entity entity, ref Position position, ref Rotation rotation, ref PrefabId prefabId) =>
+                (Entity entity, ref PrefabId prefabId) =>
                 {
-                    var instance = _instanceFactory.Create(prefabId.Value, 
-                        _gameLevel.Root, 
-                        position.Value, 
-                        rotation.Value);
-                    
-                    commandBuffer.Add(entity, new TransformLink { Transform = instance.transform });
+                    if (entity.TryGet<Position>(out var position)
+                        && entity.TryGet<Rotation>(out var rotation))
+                    {
+                        commandBuffer.Add(entity, new InstanceLink
+                        {
+                            Instance = _instanceFactory.Create(prefabId.Value,
+                                _gameLevel.Root, 
+                                position.Value, 
+                                rotation.Value)
+                        });
+                        return;
+                    }
+
+                    commandBuffer.Add(entity,
+                        new InstanceLink
+                        {
+                            Instance = _instanceFactory.Create(prefabId.Value, _gameLevel.Root)
+                        });
                 });
         }
     }

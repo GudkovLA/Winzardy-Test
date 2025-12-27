@@ -10,6 +10,7 @@ namespace Game.Settings
     public class GameSettings : ScriptableObject, IDisposable
     {
         public CameraSettingsData CameraSettings = new();
+        public GameObject HealthViewPrefab;
         
         // TODO: MinMax range
         public float EnemySpawnTimeout;

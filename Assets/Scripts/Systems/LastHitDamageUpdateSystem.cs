@@ -10,15 +10,15 @@ namespace Game.Systems
     public class LastHitDamageUpdateSystem : AbstractSystem
     {
         private static readonly QueryDescription _lastHitDamageQuery = new QueryDescription()
-            .WithAll<TransformLink, HealthState>();
+            .WithAll<InstanceLink, HealthState>();
 
         protected override void OnUpdate()
         {
             // TODO: Filter by hit damage component
             World.Query(_lastHitDamageQuery, 
-                (ref TransformLink transformLink, ref HealthState  healthState) =>
+                (ref InstanceLink instanceLink, ref HealthState  healthState) =>
                 {
-                    var transform = transformLink.Transform;
+                    var transform = instanceLink.Instance;
                     var damageController = transform.gameObject.GetComponent<DamageController>();
                     if (damageController == null)
                     {

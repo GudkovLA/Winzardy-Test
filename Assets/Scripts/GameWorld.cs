@@ -25,6 +25,7 @@ namespace Game
             GameLevel gameLevel,
             GameCamera gameCamera,
             GameInput gameInput,
+            GameUi gameUi,
             InstancePool instancePool,
             InstanceFactory instanceFactory)
         {
@@ -38,6 +39,7 @@ namespace Game
             _serviceLocator.Register(gameLevel);
             _serviceLocator.Register(gameCamera);
             _serviceLocator.Register(gameInput);
+            _serviceLocator.Register(gameUi);
             _serviceLocator.Register(instancePool);
             _serviceLocator.Register(instanceFactory);
             

@@ -279,6 +279,7 @@ MonoBehaviour:
   _enemySettings: {fileID: 11400000, guid: b6a0dcdaa8078dc49bbaa67243e5fc76, type: 2}
   _levelRoot: {fileID: 1861657121}
   _instancePoolRoot: {fileID: 1494441982}
+  _uiCanvas: {fileID: 1035471269}
   _camera: {fileID: 963194227}
 --- !u!1 &705507993
 GameObject:

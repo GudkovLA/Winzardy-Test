@@ -11,14 +11,14 @@ namespace Game.Systems
     public class TransformUpdateSystem : AbstractSystem
     {
         private static readonly QueryDescription _transformQuery = new QueryDescription()
-            .WithAll<Position, Rotation, TransformLink>();
+            .WithAll<Position, Rotation, InstanceLink>();
 
         protected override void OnUpdate()
         {
             World.Query(_transformQuery, 
-                (ref Position position, ref Rotation rotation, ref TransformLink transformLink) =>
+                (ref Position position, ref Rotation rotation, ref InstanceLink instanceLink) =>
             {
-                var transform = transformLink.Transform;
+                var transform = instanceLink.Instance.transform;
                 transform.position = position.Value;
                 transform.rotation = rotation.Value;
             });
