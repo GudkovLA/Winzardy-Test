@@ -2,5 +2,7 @@
 {
     public struct Enemy
     {
+        public float LastHitTime;
+        public float HitTimeout;
     }
 }

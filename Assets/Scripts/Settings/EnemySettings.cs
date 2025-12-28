@@ -12,9 +12,12 @@ namespace Game.Settings
         public GameObject Prefab;
         public Vector3 Size;
         public float MaxHealth;
+        public float HitTimeout;
 
         // TODO: Possible to make several coins
         public CoinSettingsData CoinSettings;
+        
+        public DamageSettingsData DamageSettings;
         
         public void Dispose()
         {
@@ -28,6 +31,13 @@ namespace Game.Settings
             [Tooltip("Chance of coin will be dropped, where 1 means 100% of chance")]
             [Range(0, 1)]
             public float DropChance;
+        }
+        
+        [Serializable]
+        public class DamageSettingsData
+        {
+            public float Amount;
+            public float HitDistance;
         }
     }
 }

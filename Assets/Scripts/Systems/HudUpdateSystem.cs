@@ -10,8 +10,8 @@ namespace Game.Systems
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     public class HudUpdateSystem : AbstractSystem
     {
-        private static readonly QueryDescription _coinCollectorQuery = new QueryDescription()
-            .WithAll<CoinCollector>()
+        private static readonly QueryDescription _playerInfoQuery = new QueryDescription()
+            .WithAll<HealthState, CoinCollector>()
             .WithNone<Destroy>();
 
         private GameUi _gameUi = null!;
@@ -36,9 +36,10 @@ namespace Game.Systems
                 return;
             }
             
-            World.Query(_coinCollectorQuery,
-                (ref CoinCollector coinCollector) =>
+            World.Query(_playerInfoQuery,
+                (ref HealthState healthState, ref CoinCollector coinCollector) =>
                 {
+                    _gameUi.HudController.SetHealthAmount(healthState.Health, healthState.MaxHealth);
                     _gameUi.HudController.SetCoinsAmount(coinCollector.CoinsAmount);
                 });
         }

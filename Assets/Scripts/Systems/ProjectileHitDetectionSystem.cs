@@ -15,7 +15,7 @@ namespace Game.Systems
     public class ProjectileHitDetectionSystem : AbstractSystem
     {
         private static readonly QueryDescription _projectileQuery = new QueryDescription()
-            .WithAll<Position, Projectile>()
+            .WithAll<Position, Projectile, Damage>()
             .WithNone<Destroy>();
 
         private static readonly QueryDescription _enemyQuery = new QueryDescription()
@@ -26,13 +26,13 @@ namespace Game.Systems
         {
             using var _ = ListPool<ProjectileData>.Get(out var projectileData);
             World.Query(_projectileQuery,
-                (Entity entity, ref Position position, ref Projectile projectile) =>
+                (Entity entity, ref Position position, ref Damage damage) =>
                 {
                     projectileData.Add(new ProjectileData
                     {
                         Entity = entity,
                         Position = position.Value,
-                        Projectile = projectile
+                        Damage = damage
                     });
                 });
 
@@ -44,21 +44,22 @@ namespace Game.Systems
                 {
                     for (var i = projectileData.Count - 1; i >= 0; i--)
                     {
+                        var projectileDamage = projectileData[i].Damage;
                         var delta = position.Value - projectileData[i].Position;
                         delta.y = 0;
                         
-                        if (delta.magnitude > projectileData[i].Projectile.HitDistance)
+                        if (delta.magnitude > projectileDamage.HitDistance)
                         {
                             continue;
                         }
                  
                         // TODO: looks like a job for different system (in late simulation for example)
-                        if (projectileData[i].Projectile.Damage <= 0)
+                        if (projectileDamage.Amount <= 0)
                         {
                             continue;                            
                         }
                         
-                        healthState.Health -= projectileData[i].Projectile.Damage;
+                        healthState.Health -= projectileDamage.Amount;
                         healthState.LastHitTime = Context.Time;
 
                         commandBuffer.Add(projectileData[i].Entity, new Destroy());
@@ -91,7 +92,7 @@ namespace Game.Systems
         {
             public Entity Entity;
             public Vector3 Position;
-            public Projectile Projectile;
+            public Damage Damage;
         }
     }
 }

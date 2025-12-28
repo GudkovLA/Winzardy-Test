@@ -6,7 +6,7 @@ namespace Game.Ui
     public class ResourceController : MonoBehaviour
     {
         [SerializeField]
-        private TextMeshProUGUI _coinsAmountLabel;
+        private TextMeshProUGUI _amountLabel;
 
         [SerializeField] 
         private float _duration; 
@@ -21,25 +21,25 @@ namespace Game.Ui
         {
             if (value > _currentAmount)
             {
-                _coinsAmountLabel.transform.localScale = Vector3.one * _maxScale;
+                _amountLabel.transform.localScale = Vector3.one * _maxScale;
                 _increaseTime = Time.realtimeSinceStartup;
             }
             
-            _coinsAmountLabel.text = value.ToString();
+            _amountLabel.text = value.ToString();
             _currentAmount = value;
         }
 
         private void Awake()
         {
             _currentAmount = 0;
-            _coinsAmountLabel.text = _currentAmount.ToString();
+            _amountLabel.text = _currentAmount.ToString();
         }
 
         private void Update()
         {
             var timePassed = Time.realtimeSinceStartup - _increaseTime;
             var progress = Mathf.Clamp01(timePassed / _duration);
-            _coinsAmountLabel.transform.localScale = Vector3.one * Mathf.Lerp(1f, _maxScale, 1 - progress);
+            _amountLabel.transform.localScale = Vector3.one * Mathf.Lerp(1f, _maxScale, 1 - progress);
         }
     }
 }

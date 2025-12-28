@@ -64,9 +64,13 @@ namespace Game.Systems
             {
                 Direction = direction,
                 Speed = _characterSettings.Projectile.Speed,
-                Damage =  _characterSettings.Projectile.Damage,
-                HitDistance = _characterSettings.Projectile.HitDistance,
                 MaxDistance = _characterSettings.Projectile.MaxDistance,
+            });
+            
+            commandBuffer.Add(entity, new Damage
+            {
+                Amount =  _characterSettings.Projectile.Damage,
+                HitDistance = _characterSettings.Projectile.HitDistance,
             });
         }
     }

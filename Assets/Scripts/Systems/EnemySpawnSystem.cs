@@ -72,7 +72,15 @@ namespace Game.Systems
                 MaxHealth = _enemySettings.MaxHealth,
                 Health = _enemySettings.MaxHealth
             });
-            commandBuffer.Add(entity, new Enemy());
+            commandBuffer.Add(entity, new Enemy
+            {
+                HitTimeout = _enemySettings.HitTimeout
+            });
+            commandBuffer.Add(entity, new Damage
+            {
+                Amount = _enemySettings.DamageSettings.Amount,
+                HitDistance = _enemySettings.DamageSettings.HitDistance
+            });
         }
     }
 }

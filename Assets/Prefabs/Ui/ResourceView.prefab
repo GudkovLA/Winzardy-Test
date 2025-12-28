@@ -77,7 +77,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f190136f04acaa1488fbdf218fb21775, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coinsAmountLabel: {fileID: 1709523076242857073}
+  _amountLabel: {fileID: 1709523076242857073}
   _duration: 0.15
   _maxScale: 1.8
 --- !u!1 &3287205182577410677
