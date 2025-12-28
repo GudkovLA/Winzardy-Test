@@ -11,7 +11,8 @@ namespace Game.Systems
     public class TransformUpdateSystem : AbstractSystem
     {
         private static readonly QueryDescription _transformQuery = new QueryDescription()
-            .WithAll<Position, Rotation, InstanceLink>();
+            .WithAll<Position, Rotation, InstanceLink>()
+            .WithNone<Destroy>();
 
         protected override void OnUpdate()
         {

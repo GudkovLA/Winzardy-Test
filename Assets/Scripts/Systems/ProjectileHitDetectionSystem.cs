@@ -73,6 +73,7 @@ namespace Game.Systems
                         commandBuffer.Add(entity, new Destroy());
 
                         // Try to spawn a coin
+                        // TODO: Drop result can be managed by ResourceDropManager or set drop on spawn
                         if (entity.TryGet<CoinSpawner>(out var coinSpawner)
                             && Random.value < coinSpawner.Chance)
                         {

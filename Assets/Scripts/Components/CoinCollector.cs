@@ -1,6 +1,6 @@
 ﻿namespace Game.Components
 {
-    public class CoinCollector
+    public struct CoinCollector
     {
         public int CoinsAmount;
         public float CollectRadius;
