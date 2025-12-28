@@ -6,7 +6,7 @@ using Game.Common.Systems.Attributes;
 namespace Game.Systems
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    public class EnemyThinkSystem : AbstractSystem
+    public class EnemyMoveSystem : AbstractSystem
     {
         
     }

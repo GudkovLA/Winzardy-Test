@@ -1,10 +1,12 @@
 ﻿#nullable enable
 
 using Arch.Core;
+using Arch.Core.Extensions;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.Components;
 using Game.Settings;
+using Game.Utils;
 using UnityEngine;
 
 namespace Game.Systems
@@ -12,9 +14,6 @@ namespace Game.Systems
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public class PlayerControlSystem : AbstractSystem
     {
-        private static readonly QueryDescription _playerQuery = new QueryDescription()
-            .WithAll<PlayerControl>();
-
         private CharacterSettings _characterSettings = null!;
         private GameInput _gameInput = null!;
         private bool _initialized;
@@ -42,11 +41,14 @@ namespace Game.Systems
             var deltaTime = Context.DeltaTime;
             var moveInput = _gameInput.Player.Move.ReadValue<Vector2>();
             var moveSpeed = _characterSettings.Speed * deltaTime;
-            
-            World.Query(_playerQuery, (ref Position position) =>
+
+            var playerEntity = World.GetPlayerSingleton();
+            if (playerEntity != Entity.Null
+                && playerEntity.TryGet<Position>(out var playerPosition))
             {
-                position.Value += new Vector3(moveInput.x, 0, moveInput.y) * moveSpeed;
-            });
+                playerPosition.Value += new Vector3(moveInput.x, 0, moveInput.y) * moveSpeed;
+                playerEntity.Set(playerPosition);
+            }
         }
     }
 }

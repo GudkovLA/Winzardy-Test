@@ -48,6 +48,8 @@ namespace Game
 
             _systemManager.InitializeFrom(GatherAssemblies());
             _systemManager.LogStructure();
+            
+            world.CreatePlayerSingleton(_serviceLocator);
         }
 
         public void Dispose()

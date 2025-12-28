@@ -1,10 +1,12 @@
 ﻿#nullable enable
 
 using Arch.Core;
+using Arch.Core.Extensions;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.Components;
 using Game.Settings;
+using Game.Utils;
 using UnityEngine;
 
 namespace Game.Systems
@@ -12,9 +14,6 @@ namespace Game.Systems
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     public class CameraUpdateSystem : AbstractSystem
     {
-        private static readonly QueryDescription _playerQuery = new QueryDescription()
-            .WithAll<PlayerControl>();
-
         private GameSettings _gameSettings = null!;
         private GameCamera _gameCamera = null!;
         private bool _initialized;
@@ -39,11 +38,13 @@ namespace Game.Systems
                 return;
             }
 
-            World.Query(_playerQuery, (ref Position position) =>
+            var playerEntity = World.GetPlayerSingleton();
+            if (playerEntity != Entity.Null
+                && playerEntity.TryGet<Position>(out var playerPosition))
             {
-                _gameCamera.SetTransform(position.Value + _gameSettings.CameraSettings.Offset,
+                _gameCamera.SetTransform(playerPosition.Value + _gameSettings.CameraSettings.Offset,
                     Quaternion.Euler(_gameSettings.CameraSettings.Angle));
-            });
+            }
         }
     }
 }
