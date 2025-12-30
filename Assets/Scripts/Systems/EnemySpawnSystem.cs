@@ -74,6 +74,7 @@ namespace Game.Systems
             });
             commandBuffer.Add(entity, new Enemy
             {
+                Speed = _enemySettings.Speed,
                 HitTimeout = _enemySettings.HitTimeout
             });
             commandBuffer.Add(entity, new Damage

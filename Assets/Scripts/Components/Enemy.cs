@@ -4,5 +4,6 @@
     {
         public float LastHitTime;
         public float HitTimeout;
+        public float Speed;
     }
 }

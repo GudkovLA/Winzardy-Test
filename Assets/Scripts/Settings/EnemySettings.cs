@@ -10,6 +10,7 @@ namespace Game.Settings
     public class EnemySettings : ScriptableObject, IDisposable
     {
         public GameObject Prefab;
+        public float Speed;
         public Vector3 Size;
         public float MaxHealth;
         public float HitTimeout;
