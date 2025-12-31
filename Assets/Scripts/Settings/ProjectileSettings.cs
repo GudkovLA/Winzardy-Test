@@ -10,7 +10,8 @@ namespace Game.Settings
     public class ProjectileSettings : ScriptableObject, IDisposable
     {
         public GameObject Prefab;
-        public float FireTimeout;
+        public int PoolSize;
+
         public float Speed;
         public float Damage;
         public float MaxDistance;

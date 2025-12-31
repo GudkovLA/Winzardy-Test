@@ -11,6 +11,7 @@ namespace Game.Settings
     {
         public CameraSettingsData CameraSettings = new();
         public GameObject HealthViewPrefab;
+        public int HealthViewPoolSize;
         
         // TODO: MinMax range
         public float EnemySpawnTimeout;

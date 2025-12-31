@@ -69,16 +69,11 @@ namespace Game
 
         private void InitializeInstancePool(InstancePool instancePool)
         {
-            RegisterPrefab(instancePool, _characterSettings.Prefab, 1);
-            RegisterPrefab(instancePool, _characterSettings.Projectile.Prefab, 20);
-            RegisterPrefab(instancePool, _enemySettings.Prefab, 30);
-            RegisterPrefab(instancePool, _enemySettings.CoinSettings.Prefab, 30);
-            RegisterPrefab(instancePool, _gameSettings.HealthViewPrefab, 30);
-        }
-        
-        private void RegisterPrefab(InstancePool instancePool, GameObject prefab, int instanceCount)
-        {
-            instancePool.Register(prefab.GetInstanceID(), prefab, instanceCount);
+            instancePool.Register(_characterSettings.Prefab, _characterSettings.PoolSize);
+            // instancePool.Register(characterSettings.Projectile.Prefab, 20);
+            instancePool.Register(_enemySettings.Prefab, _enemySettings.PoolSize);
+            instancePool.Register(_enemySettings.CoinSettings.Prefab, _enemySettings.CoinSettings.PoolSize);
+            instancePool.Register(_gameSettings.HealthViewPrefab, _gameSettings.HealthViewPoolSize);
         }
     }
 }

@@ -44,6 +44,7 @@ namespace Game.Systems
 
             var playerEntity = World.GetPlayerSingleton();
             if (playerEntity != Entity.Null
+                && !playerEntity.Has<IsDeadTag>()
                 && playerEntity.TryGet<Position>(out var playerPosition))
             {
                 playerPosition.Value += new Vector3(moveInput.x, 0, moveInput.y) * moveSpeed;

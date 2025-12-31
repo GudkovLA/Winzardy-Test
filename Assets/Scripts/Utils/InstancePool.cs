@@ -27,8 +27,9 @@ namespace Game.Utils
             _pools.Clear();
         }
         
-        public void Register(int prefabId, GameObject prefab, int instanceCount = 0)
+        public void Register(GameObject prefab, int instanceCount = 0)
         {
+            var prefabId = prefab.GetInstanceID();
             if (_pools.ContainsKey(prefabId))
             {
                 Debug.LogError($"Pool is already registered (PrefabId={prefabId})");

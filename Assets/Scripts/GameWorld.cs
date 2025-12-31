@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Arch.Core;
+using Game.AbilitySystem;
 using Game.Common;
 using Game.Common.Systems;
 using Game.Settings;
@@ -32,6 +33,9 @@ namespace Game
             var world = World.Create();
             _worldHandle = new WorldHandle(world);
 
+            var assemblies =  GatherAssemblies();
+            var abilityManager = new AbilityManager(_worldHandle, instancePool);
+
             _serviceLocator = new ServiceLocator();
             _serviceLocator.Register(gameSettings);
             _serviceLocator.Register(characterSettings);
@@ -42,14 +46,16 @@ namespace Game
             _serviceLocator.Register(gameUi);
             _serviceLocator.Register(instancePool);
             _serviceLocator.Register(instanceFactory);
+            _serviceLocator.Register(abilityManager);
             
             _systemManager = new SystemManager(_worldHandle, _serviceLocator);
             _serviceLocator.Register(_systemManager);
 
-            _systemManager.InitializeFrom(GatherAssemblies());
+            _systemManager.InitializeFrom(assemblies);
             _systemManager.LogStructure();
             
             world.CreatePlayerSingleton(_serviceLocator);
+            ConfigurePlayer(world, characterSettings, abilityManager);
         }
 
         public void Dispose()
@@ -62,7 +68,19 @@ namespace Game
         {
             _systemManager.Update(Time.deltaTime, Time.realtimeSinceStartup);
         }
-        
+
+        private static void ConfigurePlayer(
+            World world, 
+            CharacterSettings characterSettings,
+            AbilityManager abilityManager)
+        {
+            var playerEntity = world.GetPlayerSingleton();
+            foreach (var abilitySettings in characterSettings.Abilities)
+            {
+                abilityManager.CreateAbility(abilitySettings, playerEntity);
+            }
+        }
+
         private static List<Assembly> GatherAssemblies()
         {
             return new List<Assembly>

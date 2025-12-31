@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using Game.AbilitySystem.Settings;
 using UnityEngine;
 
 namespace Game.Settings
@@ -10,6 +11,10 @@ namespace Game.Settings
     public class EnemySettings : ScriptableObject, IDisposable
     {
         public GameObject Prefab;
+        public int PoolSize;
+
+        public AbstractAbilitySettings[] Abilities;
+        
         public float Speed;
         public Vector3 Size;
         public float MaxHealth;
@@ -28,6 +33,7 @@ namespace Game.Settings
         public class CoinSettingsData
         {
             public GameObject Prefab;
+            public int PoolSize;
             
             [Tooltip("Chance of coin will be dropped, where 1 means 100% of chance")]
             [Range(0, 1)]

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2834cd4586f40528daf3f11facbd476, type: 3}
+  m_Name: BasicProjectile
+  m_EditorClassIdentifier: 
+  Prefab: {fileID: 4139666738509060230, guid: ab4389717abad6643abc3c1ac9887956, type: 3}
+  PoolSize: 10
+  FireTimeout: 0.2
+  Speed: 20
+  Damage: 25
+  MaxDistance: 50
+  HitDistance: 1

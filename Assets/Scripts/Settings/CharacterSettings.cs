@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using Game.AbilitySystem.Settings;
 using UnityEngine;
 
 namespace Game.Settings
@@ -10,7 +11,10 @@ namespace Game.Settings
     public class CharacterSettings : ScriptableObject, IDisposable
     {
         public GameObject Prefab;
-        public ProjectileSettings Projectile;
+        public int PoolSize;
+        
+        public AbstractAbilitySettings[] Abilities;
+        
         public float MaxHealth;
         public float Speed;
         public float CoinsCollectRadius;
