@@ -1,88 +1,78 @@
 ﻿#nullable enable
 
 using Arch.Core;
-using Arch.Core.Extensions;
+using Game.Common;
+using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.Components;
+using Game.ProjectileSystem.Components;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Game.Systems
+namespace Game.ProjectileSystem.Systems
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(ProjectileUpdateSystem))]
     public class ProjectileHitDetectionSystem : AbstractSystem
     {
         private static readonly QueryDescription _projectileQuery = new QueryDescription()
-            .WithAll<Position, Projectile, Damage>()
+            .WithAll<Position, ProjectileState, Fraction>()
             .WithNone<Destroy>();
 
-        private static readonly QueryDescription _enemyQuery = new QueryDescription()
-            .WithAll<Position, HealthState, Enemy>()
-            .WithNone<Destroy>();
+        private static readonly QueryDescription _targetQuery = new QueryDescription()
+            .WithAll<Position, ProjectileCollider, Fraction>()
+            .WithNone<Destroy, IsDeadTag>();
 
         protected override void OnUpdate()
         {
             using var _ = ListPool<ProjectileData>.Get(out var projectileData);
             World.Query(_projectileQuery,
-                (Entity entity, ref Position position, ref Damage damage) =>
+                (Entity entity, ref Position position, ref ProjectileState projectileState, ref Fraction fraction) =>
                 {
                     projectileData.Add(new ProjectileData
                     {
                         Entity = entity,
                         Position = position.Value,
-                        Damage = damage
+                        ProjectileState = projectileState,
+                        Fraction = fraction
                     });
                 });
 
             var commandBuffer = Context.GetOrCreateCommandBuffer(this); 
                 
             // TODO: Heavy operation, possible to optimize with burst
-            World.Query(_enemyQuery, 
-                (Entity entity, ref Position position, ref HealthState healthState) =>
+            World.Query(_targetQuery, 
+                (Entity entity, ref Position position, ref ProjectileCollider projectileCollider, ref Fraction fraction) =>
                 {
                     for (var i = projectileData.Count - 1; i >= 0; i--)
                     {
-                        var projectileDamage = projectileData[i].Damage;
+                        var projectileState = projectileData[i].ProjectileState;
+                        var projectileFraction = projectileData[i].Fraction;
+                        if ((projectileFraction.EnemiesMask & fraction.AlliesMask) == 0)
+                        {
+                            continue;
+                        }
+                        
                         var delta = position.Value - projectileData[i].Position;
                         delta.y = 0;
                         
-                        if (delta.magnitude > projectileDamage.HitDistance)
+                        if (delta.magnitude > projectileState.HitRadius + projectileCollider.Radius)
                         {
                             continue;
                         }
-                 
-                        // TODO: looks like a job for different system (in late simulation for example)
-                        if (projectileDamage.Amount <= 0)
-                        {
-                            continue;                            
-                        }
-                        
-                        healthState.Health -= projectileDamage.Amount;
-                        healthState.LastHitTime = Context.Time;
 
-                        commandBuffer.Add(projectileData[i].Entity, new Destroy());
-                        projectileData.RemoveAt(i);
-                        
-                        if (healthState.Health > 0)
+                        var hitEntity = Context.World.Create();
+                        commandBuffer.Add(hitEntity, new ProjectileHit
                         {
-                            continue;
-                        }
-                        
-                        healthState.Health = 0;
-                        commandBuffer.Add(entity, new Destroy());
+                            ProjectileEntity = new EntityHandle(projectileData[i].Entity),
+                            TargetEntity = new EntityHandle(entity)
+                        });
 
-                        // Try to spawn a coin
-                        // TODO: Drop result can be managed by ResourceDropManager or set drop on spawn
-                        if (entity.TryGet<CoinSpawner>(out var coinSpawner)
-                            && Random.value < coinSpawner.Chance)
+                        if (projectileState.DestroyOnHit)
                         {
-                            var coinEntity = Context.World.Create();
-                            commandBuffer.Add(coinEntity, new Position { Value = position.Value });
-                            commandBuffer.Add(coinEntity, new Rotation { Value = Quaternion.identity });
-                            commandBuffer.Add(coinEntity, new PrefabId { Value = coinSpawner.CoinPrefabId});
-                            commandBuffer.Add(coinEntity, new Coin());
+                            commandBuffer.Add(projectileData[i].Entity, new Destroy());
+                            projectileData.RemoveAt(i);
                         }
                     }
                 });
@@ -92,7 +82,8 @@ namespace Game.Systems
         {
             public Entity Entity;
             public Vector3 Position;
-            public Damage Damage;
+            public ProjectileState ProjectileState;
+            public Fraction Fraction;
         }
     }
 }

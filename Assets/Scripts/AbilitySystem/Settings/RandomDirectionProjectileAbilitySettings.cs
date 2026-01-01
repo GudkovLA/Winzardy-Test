@@ -1,6 +1,8 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using Game.AbilitySystem.Abilities;
-using Game.Settings;
+using Game.ProjectileSystem.Settings;
 using UnityEngine;
 
 namespace Game.AbilitySystem.Settings

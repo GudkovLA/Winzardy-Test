@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a2834cd4586f40528daf3f11facbd476, type: 3}
-  m_Name: BasicProjectile
+  m_Name: AreaProjectile
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 4139666738509060230, guid: ab4389717abad6643abc3c1ac9887956, type: 3}
-  PoolSize: 10
-  Speed: 20
-  Damage: 25
-  MaxDistance: 50
-  HitRadius: 0.1
-  DestroyOnHit: 0
+  Prefab: {fileID: 0}
+  PoolSize: 0
+  Speed: 0
+  Damage: 5
+  MaxDistance: 0
+  HitRadius: 1
+  DestroyOnHit: 1

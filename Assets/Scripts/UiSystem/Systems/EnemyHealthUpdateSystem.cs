@@ -12,7 +12,7 @@ using Game.Settings;
 using Game.Ui;
 using UnityEngine;
 
-namespace Game.Systems
+namespace Game.UiSystem.Systems
 {
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     public class EnemyHealthUpdateSystem : AbstractSystem

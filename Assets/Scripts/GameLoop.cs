@@ -1,4 +1,6 @@
-﻿using Game.Settings;
+﻿#nullable enable
+
+using Game.Settings;
 using Game.Utils;
 using UnityEngine;
 
@@ -69,11 +71,19 @@ namespace Game
 
         private void InitializeInstancePool(InstancePool instancePool)
         {
-            instancePool.Register(_characterSettings.Prefab, _characterSettings.PoolSize);
-            // instancePool.Register(characterSettings.Projectile.Prefab, 20);
-            instancePool.Register(_enemySettings.Prefab, _enemySettings.PoolSize);
-            instancePool.Register(_enemySettings.CoinSettings.Prefab, _enemySettings.CoinSettings.PoolSize);
-            instancePool.Register(_gameSettings.HealthViewPrefab, _gameSettings.HealthViewPoolSize);
+            InitializeInstancePool(instancePool, _characterSettings.Prefab, _characterSettings.PoolSize);
+            // InitializeInstancePool(instancePool.Register(characterSettings.Projectile.Prefab, 20);
+            InitializeInstancePool(instancePool, _enemySettings.Prefab, _enemySettings.PoolSize);
+            InitializeInstancePool(instancePool, _enemySettings.CoinSettings.Prefab, _enemySettings.CoinSettings.PoolSize);
+            InitializeInstancePool(instancePool, _gameSettings.HealthViewPrefab, _gameSettings.HealthViewPoolSize);
+        }
+
+        private static void InitializeInstancePool(InstancePool instancePool, GameObject? prefab, int poolSize)
+        {
+            if (prefab != null)
+            {
+                instancePool.Register(prefab, poolSize);
+            }
         }
     }
 }

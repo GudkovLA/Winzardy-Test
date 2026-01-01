@@ -1,4 +1,4 @@
-﻿namespace Game.Components
+﻿namespace Game.DamageSystem.Components
 {
     public struct HealthState
     {

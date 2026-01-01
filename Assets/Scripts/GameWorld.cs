@@ -4,9 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Arch.Core;
+using Arch.Core.Extensions;
 using Game.AbilitySystem;
 using Game.Common;
 using Game.Common.Systems;
+using Game.Components;
+using Game.ProjectileSystem.Components;
 using Game.Settings;
 using Game.Utils;
 using UnityEngine;
@@ -79,6 +82,17 @@ namespace Game
             {
                 abilityManager.CreateAbility(abilitySettings, playerEntity);
             }
+
+            playerEntity.Add(new Fraction
+            {
+                AlliesMask = characterSettings.Fraction,
+                EnemiesMask = characterSettings.Enemies
+            });
+
+            playerEntity.Add(new ProjectileCollider
+            {
+                Radius = characterSettings.ColliderRadius
+            });
         }
 
         private static List<Assembly> GatherAssemblies()

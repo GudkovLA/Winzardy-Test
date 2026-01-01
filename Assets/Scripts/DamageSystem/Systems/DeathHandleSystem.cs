@@ -6,9 +6,10 @@ using Game.Common.Systems.Attributes;
 using Game.Components;
 using Game.DamageSystem.Components;
 
-namespace Game.Systems
+namespace Game.DamageSystem.Systems
 {
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
+    [UpdateAfter(typeof(DamageHandleSystem))]
     public class DeathHandleSystem : AbstractSystem
     {
         private static readonly QueryDescription _unitsQuery = new QueryDescription()

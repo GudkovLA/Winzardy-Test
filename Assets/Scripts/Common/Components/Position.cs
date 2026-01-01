@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Game.Components
+namespace Game.Common.Components
 {
     public struct Position
     {

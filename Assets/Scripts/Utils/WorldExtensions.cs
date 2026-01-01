@@ -2,7 +2,9 @@
 
 using Arch.Core;
 using Game.Common;
+using Game.Common.Components;
 using Game.Components;
+using Game.DamageSystem.Components;
 using Game.Settings;
 using UnityEngine;
 

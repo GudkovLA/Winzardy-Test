@@ -3,7 +3,9 @@
 using System;
 using Arch.Buffer;
 using Arch.Core;
+using Arch.Core.Extensions;
 using Game.AbilitySystem.Settings;
+using Game.Common.Components;
 using Game.Components;
 using Game.Utils;
 using UnityEngine;
@@ -23,34 +25,44 @@ namespace Game.AbilitySystem.Abilities
 
         public void Prepare(InstancePool instancePool)
         {
-            instancePool.Register(_abilitySettings.ProjectileSettings.Prefab, _abilitySettings.ProjectileSettings.PoolSize);
+            if (_abilitySettings.ProjectileSettings.Prefab != null)
+            {
+                instancePool.Register(_abilitySettings.ProjectileSettings.Prefab,
+                    _abilitySettings.ProjectileSettings.PoolSize);
+            }
         }
 
-        public void Activate(World world, CommandBuffer commandBuffer, Vector3 ownerPosition)
+        public bool CanActivate(World world, Entity ownerEntity)
         {
+            return true;
+        }
+
+        public void Activate(World world, CommandBuffer commandBuffer, Entity ownerEntity)
+        {
+            if (!ownerEntity.TryGet<Position>(out var position))
+            {
+                Debug.LogError($"Can't find required component in ability owner (ComponentType={nameof(Position)})");
+                return;
+            }
+             
+            if (!ownerEntity.TryGet<Fraction>(out var fraction))
+            {
+                Debug.LogError($"Can't find required component in ability owner (ComponentType={nameof(Fraction)})");
+                return;
+            }
+
             for (var i = 0; i < _abilitySettings.ProjectilesAmountPerActivation; i++)
             {
                 var angle = Random.value * Mathf.PI * 2;
                 var direction = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle));
 
-                var entity = world.Create();
-                commandBuffer.Add(entity, new Position { Value = ownerPosition });
+                var entity = AbilityUtils.SpawnProjectile(world, 
+                    commandBuffer, 
+                    _abilitySettings.ProjectileSettings,
+                    direction);
+                commandBuffer.Add(entity, new Position { Value = position.Value });
                 commandBuffer.Add(entity, new Rotation { Value = Quaternion.identity });
-                commandBuffer.Add(entity,
-                    new PrefabId { Value = _abilitySettings.ProjectileSettings.Prefab.GetInstanceID() });
-
-                commandBuffer.Add(entity, new Projectile
-                {
-                    Direction = direction,
-                    Speed = _abilitySettings.ProjectileSettings.Speed,
-                    MaxDistance = _abilitySettings.ProjectileSettings.MaxDistance,
-                });
-
-                commandBuffer.Add(entity, new Damage
-                {
-                    Amount = _abilitySettings.ProjectileSettings.Damage,
-                    HitDistance = _abilitySettings.ProjectileSettings.HitDistance,
-                });
+                commandBuffer.Add(entity, fraction);
             }
         }
     }

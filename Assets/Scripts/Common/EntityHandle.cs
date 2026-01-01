@@ -1,11 +1,12 @@
 #nullable enable
 
+using System;
 using Arch.Core;
 using Arch.Core.Extensions;
 
 namespace Game.Common
 {
-    public readonly struct EntityHandle
+    public readonly struct EntityHandle : IEquatable<EntityHandle>
     {
         public static EntityHandle Empty = new(Entity.Null);
 
@@ -26,5 +27,15 @@ namespace Game.Common
         }
 
         public Entity Value => _entity;
+        
+        public bool Equals(EntityHandle other)
+        {
+            return _entity.Id == other._entity.Id && _version == other._entity.Version;
+        }
+        
+        public override int GetHashCode()
+        {
+            return ((17 * 23 + _entity.Id) * 23 + _entity.WorldId) * 23 + _version;
+        }
     }
 }

@@ -5,6 +5,7 @@ using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.Components;
 using Game.Controllers;
+using Game.DamageSystem.Components;
 
 namespace Game.Systems
 {
@@ -18,7 +19,7 @@ namespace Game.Systems
         {
             // TODO: Filter by last hit component
             World.Query(_lastHitQuery, 
-                (ref InstanceLink instanceLink, ref HealthState  healthState) =>
+                (ref InstanceLink instanceLink, ref HealthState healthState) =>
                 {
                     var transform = instanceLink.Instance;
                     var hitAnimator = transform.gameObject.GetComponent<HitAnimator>();

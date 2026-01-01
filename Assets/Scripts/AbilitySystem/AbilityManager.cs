@@ -51,7 +51,7 @@ namespace Game.AbilitySystem
             });
         }
 
-        public void ActivateAbility(int abilityId, CommandBuffer commandBuffer, Vector3 ownerPosition)
+        public void ActivateAbility(int abilityId, CommandBuffer commandBuffer, Entity ownerEntity)
         {
             if (!_abilities.TryGetValue(abilityId, out var ability))
             {
@@ -59,7 +59,18 @@ namespace Game.AbilitySystem
                 return;
             }
             
-            ability.Activate(_worldHandle.Value, commandBuffer, ownerPosition);
+            ability.Activate(_worldHandle.Value, commandBuffer, ownerEntity);
+        }
+
+        public bool CanActivateAbility(int abilityId, Entity ownerEntity)
+        {
+            if (!_abilities.TryGetValue(abilityId, out var ability))
+            {
+                Debug.LogError($"Can't find ability (AbilityId={abilityId})");
+                return false;
+            }
+            
+            return ability.CanActivate(_worldHandle.Value, ownerEntity);
         }
     }
 }

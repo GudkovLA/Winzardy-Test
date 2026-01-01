@@ -1,8 +1,12 @@
 ﻿#nullable enable
 
+using Game.AbilitySystem;
+using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.Components;
+using Game.DamageSystem.Components;
+using Game.ProjectileSystem.Components;
 using Game.Settings;
 using UnityEngine;
 
@@ -15,6 +19,7 @@ namespace Game.Systems
         private EnemySettings _enemySettings = null!;
         private GameLevel _gameLevel = null!;
         private GameCamera _gameCamera = null!;
+        private AbilityManager _abilityManager = null!;
         
         private float _timeCounter;
         private bool _initialized;
@@ -26,7 +31,8 @@ namespace Game.Systems
             if (!ServiceLocator.TryGet(out _gameSettings)
                 || !ServiceLocator.TryGet(out _enemySettings)
                 || !ServiceLocator.TryGet(out _gameLevel)
-                || !ServiceLocator.TryGet(out _gameCamera))
+                || !ServiceLocator.TryGet(out _gameCamera)
+                || !ServiceLocator.TryGet(out _abilityManager))
             {
                 return;
             }
@@ -77,11 +83,20 @@ namespace Game.Systems
                 Speed = _enemySettings.Speed,
                 HitTimeout = _enemySettings.HitTimeout
             });
-            commandBuffer.Add(entity, new Damage
+            commandBuffer.Add(entity, new Fraction
             {
-                Amount = _enemySettings.DamageSettings.Amount,
-                HitDistance = _enemySettings.DamageSettings.HitDistance
+                AlliesMask = _enemySettings.Fraction,
+                EnemiesMask = _enemySettings.Enemies
             });
+            commandBuffer.Add(entity, new ProjectileCollider
+            {
+                Radius = _enemySettings.ColliderRadius
+            });
+            
+            foreach (var abilitySettings in _enemySettings.Abilities)
+            {
+                _abilityManager.CreateAbility(abilitySettings, entity);
+            }
         }
     }
 }

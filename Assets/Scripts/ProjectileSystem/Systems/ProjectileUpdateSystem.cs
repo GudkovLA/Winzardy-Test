@@ -1,17 +1,19 @@
 ﻿#nullable enable
 
 using Arch.Core;
+using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.Components;
+using Game.ProjectileSystem.Components;
 
-namespace Game.Systems
+namespace Game.ProjectileSystem.Systems
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public class ProjectileUpdateSystem : AbstractSystem
     {
         private static readonly QueryDescription _projectileQuery = new QueryDescription()
-            .WithAll<Position, Rotation, Projectile>();
+            .WithAll<Position, Rotation, ProjectileState>();
 
         protected override void OnUpdate()
         {
@@ -19,12 +21,12 @@ namespace Game.Systems
             var commandBuffer = Context.GetOrCreateCommandBuffer(this);
             
             World.Query(_projectileQuery, 
-                (Entity entity, ref Position position, ref Rotation rotation, ref Projectile projectile) =>
+                (Entity entity, ref Position position, ref Rotation rotation, ref ProjectileState projectileState) =>
                 {
-                    position.Value += projectile.Direction * projectile.Speed * deltaTime;
-                    projectile.PassedDistance += projectile.Speed * deltaTime;
+                    position.Value += projectileState.Direction * projectileState.Speed * deltaTime;
+                    projectileState.PassedDistance += projectileState.Speed * deltaTime;
 
-                    if (projectile.PassedDistance >= projectile.MaxDistance)
+                    if (projectileState.PassedDistance >= projectileState.MaxDistance)
                     {
                         commandBuffer.Add(entity, new Destroy());
                     }

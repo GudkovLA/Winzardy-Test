@@ -48,8 +48,6 @@ namespace Game.AbilitySystem.Systems
                         return;
                     }
 
-                    abilityState.LastActivateTime = Context.Time;
-
                     if (!abilityState.OwnerEntity.IsValid())
                     {
                         commandBuffer.Destroy(entity);
@@ -57,13 +55,18 @@ namespace Game.AbilitySystem.Systems
                     }
                     
                     var ownerEntity = abilityState.OwnerEntity.Value;
-                    if (ownerEntity.Has<IsDeadTag>()
-                        || !ownerEntity.TryGet<Position>(out var position))
+                    if (ownerEntity.Has<IsDeadTag>())
+                    {
+                        return;
+                    }
+
+                    if (!_abilityManager.CanActivateAbility(abilityState.AbilityId, ownerEntity))
                     {
                         return;
                     }
                     
-                    _abilityManager.ActivateAbility(abilityState.AbilityId, commandBuffer, position.Value);
+                    _abilityManager.ActivateAbility(abilityState.AbilityId, commandBuffer, ownerEntity);
+                    abilityState.LastActivateTime = Context.Time;
                 });
         }
     }

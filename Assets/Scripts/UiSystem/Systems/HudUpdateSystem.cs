@@ -6,7 +6,7 @@ using Game.Common.Systems.Attributes;
 using Game.Components;
 using Game.DamageSystem.Components;
 
-namespace Game.Systems
+namespace Game.UiSystem.Systems
 {
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     public class HudUpdateSystem : AbstractSystem

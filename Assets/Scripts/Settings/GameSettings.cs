@@ -10,7 +10,7 @@ namespace Game.Settings
     public class GameSettings : ScriptableObject, IDisposable
     {
         public CameraSettingsData CameraSettings = new();
-        public GameObject HealthViewPrefab;
+        public GameObject? HealthViewPrefab;
         public int HealthViewPoolSize;
         
         // TODO: MinMax range

@@ -1,8 +1,7 @@
-﻿namespace Game.Components
+﻿namespace Game.DamageSystem.Components
 {
     public struct Damage
     {
         public float Amount;
-        public float HitDistance;
     }
 }

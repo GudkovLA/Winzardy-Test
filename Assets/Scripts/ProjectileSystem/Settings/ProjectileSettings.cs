@@ -3,7 +3,7 @@
 using System;
 using UnityEngine;
 
-namespace Game.Settings
+namespace Game.ProjectileSystem.Settings
 {
     [CreateAssetMenu(fileName = nameof(ProjectileSettings), menuName = "Assets/Projectile Settings")]
     [Serializable]
@@ -16,7 +16,8 @@ namespace Game.Settings
         public float Damage;
         public float MaxDistance;
         public float HitRadius;
- 
+        public bool DestroyOnHit;
+        
         public void Dispose()
         {
         }
