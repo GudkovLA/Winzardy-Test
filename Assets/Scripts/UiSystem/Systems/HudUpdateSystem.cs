@@ -4,6 +4,7 @@ using Arch.Core;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.Components;
+using Game.DamageSystem.Components;
 
 namespace Game.Systems
 {

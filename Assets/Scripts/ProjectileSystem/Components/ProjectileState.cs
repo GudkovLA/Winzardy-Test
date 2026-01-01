@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Game.Components
+namespace Game.ProjectileSystem.Components
 {
     public struct Projectile
     {
