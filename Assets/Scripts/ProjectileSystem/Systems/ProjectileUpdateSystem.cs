@@ -4,8 +4,9 @@ using Arch.Core;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
-using Game.Components;
+using Game.LocomotionSystem.Components;
 using Game.ProjectileSystem.Components;
+using UnityEngine;
 
 namespace Game.ProjectileSystem.Systems
 {
@@ -13,25 +14,24 @@ namespace Game.ProjectileSystem.Systems
     public class ProjectileUpdateSystem : AbstractSystem
     {
         private static readonly QueryDescription _projectileQuery = new QueryDescription()
-            .WithAll<Position, Rotation, ProjectileState>();
+            .WithAll<Position, ProjectileState, LocomotionState>();
 
         protected override void OnUpdate()
         {
-            var deltaTime = Context.DeltaTime;
             var commandBuffer = Context.GetOrCreateCommandBuffer(this);
             
             World.Query(_projectileQuery, 
-                (Entity entity, ref Position position, ref Rotation rotation, ref ProjectileState projectileState) =>
+                (Entity entity, 
+                    ref Position position, 
+                    ref ProjectileState projectileState, 
+                    ref LocomotionState locomotionState) =>
                 {
-                    position.Value += projectileState.Direction * projectileState.Speed * deltaTime;
-                    projectileState.PassedDistance += projectileState.Speed * deltaTime;
-
+                    projectileState.PassedDistance += Vector3.Distance(position.Value, locomotionState.LastPosition);
                     if (projectileState.PassedDistance >= projectileState.MaxDistance)
                     {
                         commandBuffer.Add(entity, new Destroy());
                     }
                 });
         }
-
     }
 }

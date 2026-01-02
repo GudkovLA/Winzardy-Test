@@ -1,4 +1,4 @@
-﻿namespace Game.Components
+﻿namespace Game.Common.Components
 {
     public struct Destroy
     {

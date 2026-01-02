@@ -6,6 +6,7 @@ using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.Components;
+using Game.LocomotionSystem.Components;
 using Game.Settings;
 using Game.Utils;
 using UnityEngine;
@@ -39,17 +40,15 @@ namespace Game.Systems
                 return;
             }
 
-            var deltaTime = Context.DeltaTime;
             var moveInput = _gameInput.Player.Move.ReadValue<Vector2>();
-            var moveSpeed = _characterSettings.Speed * deltaTime;
 
             var playerEntity = World.GetPlayerSingleton();
             if (playerEntity != Entity.Null
                 && !playerEntity.Has<IsDeadTag>()
-                && playerEntity.TryGet<Position>(out var playerPosition))
+                && playerEntity.TryGet<LocomotionState>(out var locomotionState))
             {
-                playerPosition.Value += new Vector3(moveInput.x, 0, moveInput.y) * moveSpeed;
-                playerEntity.Set(playerPosition);
+                locomotionState.Direction = new Vector3(moveInput.x, 0, moveInput.y);
+                playerEntity.Set(locomotionState);
             }
         }
     }

@@ -4,9 +4,9 @@ using Arch.Buffer;
 using Arch.Core;
 using Game.Components;
 using Game.DamageSystem.Components;
+using Game.LocomotionSystem.Components;
 using Game.ProjectileSystem.Components;
 using Game.ProjectileSystem.Settings;
-using UnityEngine;
 
 namespace Game.AbilitySystem.Abilities
 {
@@ -15,17 +15,13 @@ namespace Game.AbilitySystem.Abilities
         public static Entity SpawnProjectile(
             World world, 
             CommandBuffer commandBuffer, 
-            ProjectileSettings projectileSettings,
-            // TODO: Must be part of another (Locomotion?) component
-            Vector3 direction)
+            ProjectileSettings projectileSettings)
         {
             var entity = world.Create();
 
             // TODO: Can be created by settings
             commandBuffer.Add(entity, new ProjectileState
             {
-                Direction = direction,
-                Speed = projectileSettings.Speed,
                 MaxDistance = projectileSettings.MaxDistance,
                 HitRadius = projectileSettings.HitRadius,
                 DestroyOnHit = projectileSettings.DestroyOnHit
@@ -35,6 +31,8 @@ namespace Game.AbilitySystem.Abilities
             {
                 Amount = projectileSettings.Damage
             });
+
+            commandBuffer.Add(entity, new IgnoreRotationTag());
 
             if (projectileSettings.Prefab != null)
             {

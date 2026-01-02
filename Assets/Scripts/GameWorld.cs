@@ -9,6 +9,7 @@ using Game.AbilitySystem;
 using Game.Common;
 using Game.Common.Systems;
 using Game.Components;
+using Game.LocomotionSystem.Components;
 using Game.ProjectileSystem.Components;
 using Game.Settings;
 using Game.Utils;
@@ -93,6 +94,13 @@ namespace Game
             {
                 Radius = characterSettings.ColliderRadius
             });
+
+            playerEntity.Add(new LocomotionState
+            {
+                Speed = characterSettings.Speed
+            });
+
+            playerEntity.Add(new IgnoreObstaclesTag());
         }
 
         private static List<Assembly> GatherAssemblies()

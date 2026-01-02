@@ -1,5 +1,4 @@
 ﻿using Game.Common;
-using UnityEngine;
 
 namespace Game.ProjectileSystem.Components
 {
@@ -11,9 +10,5 @@ namespace Game.ProjectileSystem.Components
 
         public EntityHandle LastHitEntity;
         public bool DestroyOnHit;
-        
-        // TODO: Separate shared component
-        public Vector3 Direction;
-        public float Speed;
     }
 }

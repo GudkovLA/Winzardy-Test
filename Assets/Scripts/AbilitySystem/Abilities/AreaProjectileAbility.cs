@@ -7,6 +7,7 @@ using Arch.Core.Extensions;
 using Game.AbilitySystem.Settings;
 using Game.Common.Components;
 using Game.Components;
+using Game.LocomotionSystem.Components;
 using Game.ProjectileSystem.Components;
 using Game.ProjectileSystem.Settings;
 using Game.Utils;
@@ -52,20 +53,30 @@ namespace Game.AbilitySystem.Abilities
                 Debug.LogError($"Can't find required component in ability owner (ComponentType={nameof(Position)})");
                 return;
             }
-             
+
+            if (!ownerEntity.TryGet<Size>(out var size))
+            {
+                Debug.LogError($"Can't find required component in ability owner (ComponentType={nameof(Size)})");
+                return;
+            }
+
             if (!ownerEntity.TryGet<Fraction>(out var fraction))
             {
                 Debug.LogError($"Can't find required component in ability owner (ComponentType={nameof(Fraction)})");
                 return;
             }
+            
+            var startPosition = position.Value;
+            startPosition.y += size.Value.y * 0.5f;
 
-            var entity = AbilityUtils.SpawnProjectile(world, 
-                commandBuffer, 
-                _abilitySettings.ProjectileSettings,
-                Vector3.zero);
-
-            commandBuffer.Add(entity, new Position { Value = position.Value });
+            var entity = AbilityUtils.SpawnProjectile(world, commandBuffer, _abilitySettings.ProjectileSettings);
+            commandBuffer.Add(entity, new Position { Value = startPosition });
             commandBuffer.Add(entity, new Rotation { Value = Quaternion.identity });
+            commandBuffer.Add(entity, new LocomotionState
+            {
+                Speed = _abilitySettings.ProjectileSettings.Speed,
+                Direction = Vector3.zero
+            });
             commandBuffer.Add(entity, fraction);
         }
 

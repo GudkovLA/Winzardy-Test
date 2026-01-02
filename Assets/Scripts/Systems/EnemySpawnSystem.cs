@@ -6,6 +6,7 @@ using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.Components;
 using Game.DamageSystem.Components;
+using Game.LocomotionSystem.Components;
 using Game.ProjectileSystem.Components;
 using Game.Settings;
 using UnityEngine;
@@ -78,10 +79,9 @@ namespace Game.Systems
                 MaxHealth = _enemySettings.MaxHealth,
                 Health = _enemySettings.MaxHealth
             });
-            commandBuffer.Add(entity, new Enemy
+            commandBuffer.Add(entity, new LocomotionState
             {
-                Speed = _enemySettings.Speed,
-                HitTimeout = _enemySettings.HitTimeout
+                Speed = _enemySettings.Speed
             });
             commandBuffer.Add(entity, new Fraction
             {

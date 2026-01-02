@@ -7,30 +7,29 @@ using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.Components;
+using Game.LocomotionSystem.Components;
 using Game.Utils;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Game.Systems
+namespace Game.LocomotionSystem.Systems
 {
+    // TODO: Might be a part of separate AI system
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public class EnemyMovementSystem : AbstractSystem
     {
         private const float kAvoidanceDirectionChangeTimeout = 1f;
-        private const float kRotationSpeed = 1f;
 
         private static readonly float _radiusFactor = Mathf.Sqrt(2) * 0.5f;
         private static readonly int[] _randomDirectionFactor = { -1, 1 };
 
         private static readonly QueryDescription _enemyInitQuery = new QueryDescription()
-            .WithAll<Position, Rotation, Size, Enemy>()
-            .WithNone<ObstacleAvoidance, Destroy>();
+            .WithAll<Position, LocomotionState>()
+            .WithNone<Destroy, PlayerTag, ObstacleAvoidance>();
 
         private static readonly QueryDescription _enemyQuery = new QueryDescription()
-            .WithAll<Position, Rotation, Size, Enemy, ObstacleAvoidance>()
-            .WithNone<Destroy>();
-        
-        private readonly Collider[] _colliders = new Collider[4];  
+            .WithAll<Position, Size, LocomotionState, ObstacleAvoidance>()
+            .WithNone<Destroy, PlayerTag>();
 
         protected override void OnUpdate()
         {
@@ -54,38 +53,16 @@ namespace Game.Systems
 
             World.Query(_enemyQuery,
                 (ref Position position, 
-                    ref Rotation rotation, 
                     ref Size size, 
-                    ref Enemy enemy, 
+                    ref LocomotionState locomotionState, 
                     ref ObstacleAvoidance obstacleAvoidance) =>
                 {
-                    var delta = playerPosition.Value - position.Value;
-                    delta.y = 0;
-
-                    var newPosition = position.Value;
-                    var radius = _radiusFactor * size.Value.x;
-                    
-                    // Calculate the direction of movement in accordance with obstacles on the way to the goal.
-                    // Simple algorithm for bypassing an obstacle in the selected direction (left handed or right handed). 
-                    var direction = ResolveMovementDirection(position.Value, 
-                        size.Value, 
-                        delta.normalized,
-                        radius,
-                        obstacleAvoidance.DirectionFactor);
-
-                    newPosition += direction.normalized * (enemy.Speed * Context.DeltaTime);
-                    
-                    // Detects collisions with obstacles to avoid crossing their boundaries.
-                    // If the enemy comes into contact with an obstacle, it will be pushed beyond its boundaries. 
-                    var collisionCorrection = ResolveColliderOverlap(newPosition, radius, _colliders);
-                    newPosition += collisionCorrection + collisionCorrection * Context.DeltaTime;
-
                     // A small workaround to prevent enemies from getting stuck inside the corners.
                     // This can happen when an enemy tries to move toward an obstacle (while avoiding another obstacle),
                     // but is pushed back by collision correction.
                     // When the enemy's movement speed becomes too slow, it changes the direction in which it avoids the obstacle.
-                    var movementThreshold = enemy.Speed * Context.DeltaTime * 0.5f;
-                    if (Vector3.Distance(newPosition, position.Value) < movementThreshold)
+                    var movementThreshold = locomotionState.LastVelocity.magnitude * 0.5f;
+                    if (Vector3.Distance(locomotionState.LastPosition, position.Value) < movementThreshold)
                     {
                         if (obstacleAvoidance.ChangeTime + kAvoidanceDirectionChangeTimeout < Context.Time)
                         {
@@ -93,13 +70,19 @@ namespace Game.Systems
                             obstacleAvoidance.ChangeTime = Context.Time;
                         }
                     }
+                    
+                    var delta = playerPosition.Value - position.Value;
+                    delta.y = 0;
 
-                    position.Value = newPosition;
-                    rotation.Value = Quaternion.RotateTowards(
-                        rotation.Value,
-                        Quaternion.LookRotation(direction, Vector3.up),
-                        360f * Context.DeltaTime * kRotationSpeed
-                    );
+                    var radius = _radiusFactor * size.Value.x;
+                    
+                    // Calculate the direction of movement in accordance with obstacles on the way to the goal.
+                    // Simple algorithm for bypassing an obstacle in the selected direction (left handed or right handed). 
+                    locomotionState.Direction = ResolveMovementDirection(position.Value, 
+                        size.Value, 
+                        delta.normalized,
+                        radius,
+                        obstacleAvoidance.DirectionFactor);
                 });
         }
 
@@ -126,22 +109,6 @@ namespace Game.Systems
 
             return targetDirection * (hitPoint.distance / maxDistance)
                         + avoidanceDirection * ((maxDistance - hitPoint.distance) / maxDistance);
-        }
-
-        private static Vector3 ResolveColliderOverlap(Vector3 position, float radius, Collider[] collidersCache)
-        {
-            var collisionCorrection  = Vector3.zero;
-            var count = Physics.OverlapSphereNonAlloc(position, radius, collidersCache);
-            for (var i = 0; i < count; i++)
-            {
-                var closest = collidersCache[i].ClosestPoint(position);
-                var delta = position - closest;
-                delta.y = 0;
-
-                collisionCorrection += delta.normalized * Math.Abs(radius - delta.magnitude);
-            }
-            
-            return collisionCorrection;
         }
 
         private struct ObstacleAvoidance

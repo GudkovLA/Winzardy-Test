@@ -16,7 +16,7 @@ MonoBehaviour:
   PoolSize: 30
   Fraction: 2
   Enemies: 1
-  Speed: 1
+  Speed: 2
   Size: {x: 1, y: 1, z: 1}
   MaxHealth: 100
   HitTimeout: 1

@@ -32,10 +32,17 @@ namespace Game.Utils
             {
                 return;
             }
-            
+
+            if (characterSettings.Prefab == null)
+            {
+                Debug.LogError($"Character prefab is not defined");
+                return;
+            }
+
             var entity = world.Create();
             entity.Add(entity, new Position { Value = gameLevel.StartPosition });
             entity.Add(entity, new Rotation { Value = gameLevel.StartRotation });
+            entity.Add(entity, new Size { Value = characterSettings.Size });
             entity.Add(entity, new PrefabId { Value = characterSettings.Prefab.GetInstanceID() });
             entity.Add(entity, new HealthState
             {

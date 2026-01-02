@@ -17,6 +17,7 @@ namespace Game.Settings
         public FractionMask Fraction; 
         public FractionMask Enemies; 
         
+        public Vector3 Size;
         public float MaxHealth;
         public float Speed;
         public float CoinsCollectRadius;

@@ -18,12 +18,12 @@ namespace Game.UiSystem.Systems
     public class EnemyHealthUpdateSystem : AbstractSystem
     {
         private static readonly QueryDescription _enemyQuery = new QueryDescription()
-            .WithAll<HealthState, Enemy>()
-            .WithNone<Destroy, HandledTag>();
+            .WithAll<HealthState>()
+            .WithNone<Destroy, HandledTag, PlayerTag>();
 
         private static readonly QueryDescription _healthViewQuery = new QueryDescription()
             .WithAll<HealthView, InstanceLink>()
-            .WithNone<Destroy>();
+            .WithNone<Destroy, PlayerTag>();
         
         private GameSettings _gameSettings = null!;
         private GameUi _gameUi = null!;
