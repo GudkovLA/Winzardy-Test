@@ -2,26 +2,20 @@
 
 using System;
 using Game.AbilitySystem.Settings;
-using Game.Components;
+using Game.CharacterSystem.Components;
 using UnityEngine;
 
-namespace Game.Settings
+namespace Game.CharacterSystem.Settings
 {
     [CreateAssetMenu(fileName = nameof(EnemySettings), menuName = "Assets/Enemy Settings")]
     [Serializable]
     public class EnemySettings : ScriptableObject, IDisposable
     {
-        public GameObject? Prefab;
+        public CharacterSettings Character;
         public int PoolSize;
-
+        
         public FractionMask Fraction; 
         public FractionMask Enemies; 
-
-        public float Speed;
-        public Vector3 Size;
-        public float MaxHealth;
-        public float HitTimeout;
-        public float ColliderRadius; 
 
         // TODO: Possible to make several coins
         public CoinSettingsData CoinSettings;

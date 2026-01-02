@@ -7,7 +7,7 @@ using Game.Components;
 using Game.Controllers;
 using Game.DamageSystem.Components;
 
-namespace Game.Systems
+namespace Game.CharacterSystem.Systems
 {
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     public class LastHitUpdateSystem : AbstractSystem

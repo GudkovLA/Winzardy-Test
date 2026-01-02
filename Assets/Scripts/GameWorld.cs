@@ -6,9 +6,10 @@ using System.Reflection;
 using Arch.Core;
 using Arch.Core.Extensions;
 using Game.AbilitySystem;
+using Game.CharacterSystem.Components;
+using Game.CharacterSystem.Settings;
 using Game.Common;
 using Game.Common.Systems;
-using Game.Components;
 using Game.LocomotionSystem.Components;
 using Game.ProjectileSystem.Components;
 using Game.Settings;
@@ -25,7 +26,7 @@ namespace Game
 
         public GameWorld(
             GameSettings gameSettings, 
-            CharacterSettings characterSettings, 
+            PlayerSettings playerSettings, 
             EnemySettings enemySettings,
             GameLevel gameLevel,
             GameCamera gameCamera,
@@ -42,7 +43,7 @@ namespace Game
 
             _serviceLocator = new ServiceLocator();
             _serviceLocator.Register(gameSettings);
-            _serviceLocator.Register(characterSettings);
+            _serviceLocator.Register(playerSettings);
             _serviceLocator.Register(enemySettings);
             _serviceLocator.Register(gameLevel);
             _serviceLocator.Register(gameCamera);
@@ -59,7 +60,7 @@ namespace Game
             _systemManager.LogStructure();
             
             world.CreatePlayerSingleton(_serviceLocator);
-            ConfigurePlayer(world, characterSettings, abilityManager);
+            ConfigurePlayer(world, playerSettings, abilityManager);
         }
 
         public void Dispose()
@@ -75,29 +76,29 @@ namespace Game
 
         private static void ConfigurePlayer(
             World world, 
-            CharacterSettings characterSettings,
+            PlayerSettings playerSettings,
             AbilityManager abilityManager)
         {
             var playerEntity = world.GetPlayerSingleton();
-            foreach (var abilitySettings in characterSettings.Abilities)
+            foreach (var abilitySettings in playerSettings.Abilities)
             {
                 abilityManager.CreateAbility(abilitySettings, playerEntity);
             }
 
             playerEntity.Add(new Fraction
             {
-                AlliesMask = characterSettings.Fraction,
-                EnemiesMask = characterSettings.Enemies
+                AlliesMask = playerSettings.Fraction,
+                EnemiesMask = playerSettings.Enemies
             });
 
             playerEntity.Add(new ProjectileCollider
             {
-                Radius = characterSettings.ColliderRadius
+                Radius = playerSettings.Character.ColliderRadius
             });
 
             playerEntity.Add(new LocomotionState
             {
-                Speed = characterSettings.Speed
+                Speed = playerSettings.Character.Speed
             });
 
             playerEntity.Add(new IgnoreObstaclesTag());

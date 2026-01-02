@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Game.Components
+namespace Game.CharacterSystem.Components
 {
     public struct Fraction
     {

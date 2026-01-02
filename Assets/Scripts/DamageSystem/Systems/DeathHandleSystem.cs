@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using Arch.Core;
+using Game.CharacterSystem.Components;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;

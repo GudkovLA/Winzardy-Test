@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dce5bfef7b2c42639f5933b184c9dc12, type: 3}
+  m_Name: PlayerCharacterSettings
+  m_EditorClassIdentifier: 
+  Prefab: {fileID: 7943218971982778878, guid: fec70327d7255c2439c9153433ded449, type: 3}
+  PoolSize: 1
+  Fraction: 1
+  Enemies: 2
+  Size: {x: 1, y: 2, z: 1}
+  MaxHealth: 200
+  Speed: 5
+  CoinsCollectRadius: 3
+  ColliderRadius: 1
+  Abilities:
+  - {fileID: 11400000, guid: 2af7265b613a661429efe6efba876a64, type: 2}

@@ -1,11 +1,12 @@
 ﻿#nullable enable
 
 using Arch.Core;
+using Game.CharacterSystem.Components;
+using Game.CharacterSystem.Settings;
 using Game.Common;
 using Game.Common.Components;
 using Game.Components;
 using Game.DamageSystem.Components;
-using Game.Settings;
 using UnityEngine;
 
 namespace Game.Utils
@@ -27,13 +28,13 @@ namespace Game.Utils
                 return;
             }
 
-            if (!serviceLocator.TryGet<CharacterSettings>(out var characterSettings)
+            if (!serviceLocator.TryGet<PlayerSettings>(out var playerSettings)
                 || !serviceLocator.TryGet<GameLevel>(out var gameLevel))
             {
                 return;
             }
 
-            if (characterSettings.Prefab == null)
+            if (playerSettings.Character.Prefab == null)
             {
                 Debug.LogError($"Character prefab is not defined");
                 return;
@@ -42,16 +43,16 @@ namespace Game.Utils
             var entity = world.Create();
             entity.Add(entity, new Position { Value = gameLevel.StartPosition });
             entity.Add(entity, new Rotation { Value = gameLevel.StartRotation });
-            entity.Add(entity, new Size { Value = characterSettings.Size });
-            entity.Add(entity, new PrefabId { Value = characterSettings.Prefab.GetInstanceID() });
+            entity.Add(entity, new Size { Value = playerSettings.Character.Size });
+            entity.Add(entity, new PrefabId { Value = playerSettings.Character.Prefab.GetInstanceID() });
             entity.Add(entity, new HealthState
             {
-                MaxHealth = characterSettings.MaxHealth,
-                Health = characterSettings.MaxHealth
+                MaxHealth = playerSettings.Character.MaxHealth,
+                Health = playerSettings.Character.MaxHealth
             });
             entity.Add(entity, new CoinCollector
             {
-                CollectRadius = characterSettings.CoinsCollectRadius
+                CollectRadius = playerSettings.CoinsCollectRadius
             });
             entity.Add(entity, new PlayerTag());
         }

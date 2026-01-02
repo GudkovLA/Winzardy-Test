@@ -3,10 +3,10 @@
 using Arch.Core;
 using Arch.Core.Extensions;
 using Game.AbilitySystem.Components;
+using Game.CharacterSystem.Components;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
-using Game.Components;
 
 namespace Game.AbilitySystem.Systems
 {

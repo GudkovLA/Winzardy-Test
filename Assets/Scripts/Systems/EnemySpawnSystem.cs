@@ -1,6 +1,8 @@
 ﻿#nullable enable
 
 using Game.AbilitySystem;
+using Game.CharacterSystem.Components;
+using Game.CharacterSystem.Settings;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
@@ -67,8 +69,8 @@ namespace Game.Systems
             var commandBuffer = Context.GetOrCreateCommandBuffer(this);
             commandBuffer.Add(entity, new Position { Value = positon });
             commandBuffer.Add(entity, new Rotation { Value = rotation });
-            commandBuffer.Add(entity, new Size { Value = _enemySettings.Size });
-            commandBuffer.Add(entity, new PrefabId { Value = _enemySettings.Prefab.GetInstanceID() });
+            commandBuffer.Add(entity, new Size { Value = _enemySettings.Character.Size });
+            commandBuffer.Add(entity, new PrefabId { Value = _enemySettings.Character.Prefab.GetInstanceID() });
             commandBuffer.Add(entity, new CoinSpawner
             {
                 Chance = _enemySettings.CoinSettings.DropChance,
@@ -76,12 +78,12 @@ namespace Game.Systems
             });
             commandBuffer.Add(entity, new HealthState
             {
-                MaxHealth = _enemySettings.MaxHealth,
-                Health = _enemySettings.MaxHealth
+                MaxHealth = _enemySettings.Character.MaxHealth,
+                Health = _enemySettings.Character.MaxHealth
             });
             commandBuffer.Add(entity, new LocomotionState
             {
-                Speed = _enemySettings.Speed
+                Speed = _enemySettings.Character.Speed
             });
             commandBuffer.Add(entity, new Fraction
             {
@@ -90,7 +92,7 @@ namespace Game.Systems
             });
             commandBuffer.Add(entity, new ProjectileCollider
             {
-                Radius = _enemySettings.ColliderRadius
+                Radius = _enemySettings.Character.ColliderRadius
             });
             
             foreach (var abilitySettings in _enemySettings.Abilities)

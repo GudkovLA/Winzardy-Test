@@ -1,22 +1,20 @@
 ﻿#nullable enable
 
-using System;
 using Arch.Core;
 using Arch.Core.Extensions;
+using Game.CharacterSystem.Components;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
-using Game.Components;
 using Game.LocomotionSystem.Components;
 using Game.Utils;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Game.LocomotionSystem.Systems
+namespace Game.CharacterSystem.Systems
 {
-    // TODO: Might be a part of separate AI system
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    public class EnemyMovementSystem : AbstractSystem
+    public class EnemyControlSystem : AbstractSystem
     {
         private const float kAvoidanceDirectionChangeTimeout = 1f;
 

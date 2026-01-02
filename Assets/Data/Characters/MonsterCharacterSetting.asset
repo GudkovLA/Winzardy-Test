@@ -10,16 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dce5bfef7b2c42639f5933b184c9dc12, type: 3}
-  m_Name: CharacterSettings
+  m_Name: MonsterCharacterSetting
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 7943218971982778878, guid: fec70327d7255c2439c9153433ded449, type: 3}
-  PoolSize: 1
-  Fraction: 1
-  Enemies: 2
-  Size: {x: 1, y: 2, z: 1}
-  MaxHealth: 200
-  Speed: 5
-  CoinsCollectRadius: 3
+  Prefab: {fileID: 4139666738509060230, guid: 9c0e58e6e75de714f8666df2d4bba979, type: 3}
+  Fraction: 2
+  Enemies: 1
+  Size: {x: 1, y: 1, z: 1}
   ColliderRadius: 1
+  MaxHealth: 100
+  Speed: 2
   Abilities:
-  - {fileID: 11400000, guid: 2af7265b613a661429efe6efba876a64, type: 2}
+  - {fileID: 11400000, guid: e6e7d834c094a924fbad17ddfb947a68, type: 2}

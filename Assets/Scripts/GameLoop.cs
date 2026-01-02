@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using Game.CharacterSystem.Settings;
 using Game.Settings;
 using Game.Utils;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace Game
         private GameSettings _gameSettings;
         
         [SerializeField]
-        private CharacterSettings _characterSettings;
+        private PlayerSettings _playerSettings;
 
         [SerializeField]
         // TODO: Add more types of enemies
@@ -48,7 +49,7 @@ namespace Game
             var gameUi = new GameUi(_camera, canvas);
 
             _gameWorld = new GameWorld(_gameSettings, 
-                _characterSettings, 
+                _playerSettings, 
                 _enemySettings, 
                 gameLevel, 
                 gameCamera,
@@ -71,9 +72,9 @@ namespace Game
 
         private void InitializeInstancePool(InstancePool instancePool)
         {
-            InitializeInstancePool(instancePool, _characterSettings.Prefab, _characterSettings.PoolSize);
+            InitializeInstancePool(instancePool, _playerSettings.Character.Prefab, _playerSettings.PoolSize);
             // InitializeInstancePool(instancePool.Register(characterSettings.Projectile.Prefab, 20);
-            InitializeInstancePool(instancePool, _enemySettings.Prefab, _enemySettings.PoolSize);
+            InitializeInstancePool(instancePool, _enemySettings.Character.Prefab, _enemySettings.PoolSize);
             InitializeInstancePool(instancePool, _enemySettings.CoinSettings.Prefab, _enemySettings.CoinSettings.PoolSize);
             InitializeInstancePool(instancePool, _gameSettings.HealthViewPrefab, _gameSettings.HealthViewPoolSize);
         }

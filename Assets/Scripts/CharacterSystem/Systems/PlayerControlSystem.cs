@@ -2,21 +2,18 @@
 
 using Arch.Core;
 using Arch.Core.Extensions;
-using Game.Common.Components;
+using Game.CharacterSystem.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
-using Game.Components;
 using Game.LocomotionSystem.Components;
-using Game.Settings;
 using Game.Utils;
 using UnityEngine;
 
-namespace Game.Systems
+namespace Game.CharacterSystem.Systems
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public class PlayerControlSystem : AbstractSystem
     {
-        private CharacterSettings _characterSettings = null!;
         private GameInput _gameInput = null!;
         private bool _initialized;
         
@@ -24,8 +21,7 @@ namespace Game.Systems
         {
             base.OnCreate();
             
-            if (!ServiceLocator.TryGet(out _characterSettings)
-                || !ServiceLocator.TryGet(out _gameInput))
+            if (!ServiceLocator.TryGet(out _gameInput))
             {
                 return;
             }

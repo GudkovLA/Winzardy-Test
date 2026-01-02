@@ -2,6 +2,7 @@
 
 using Arch.Core;
 using Arch.Core.Extensions;
+using Game.CharacterSystem.Components;
 using Game.Common;
 using Game.Common.Components;
 using Game.Common.Systems;

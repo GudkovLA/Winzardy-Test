@@ -713,7 +713,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameSettings: {fileID: 11400000, guid: 36153d04d28d1674a8af239b29942306, type: 2}
-  _characterSettings: {fileID: 11400000, guid: 378af8b57d3fb1845bd63eee0b595b30, type: 2}
+  _playerSettings: {fileID: 11400000, guid: 93da20d7f64a83949ad213990d5e2d5a, type: 2}
   _enemySettings: {fileID: 11400000, guid: b6a0dcdaa8078dc49bbaa67243e5fc76, type: 2}
   _levelRoot: {fileID: 1861657121}
   _instancePoolRoot: {fileID: 1494441982}

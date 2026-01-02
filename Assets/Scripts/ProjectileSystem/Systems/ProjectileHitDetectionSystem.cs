@@ -1,11 +1,11 @@
 ﻿#nullable enable
 
 using Arch.Core;
+using Game.CharacterSystem.Components;
 using Game.Common;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
-using Game.Components;
 using Game.ProjectileSystem.Components;
 using UnityEngine;
 using UnityEngine.Pool;
