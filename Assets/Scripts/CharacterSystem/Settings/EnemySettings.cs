@@ -1,8 +1,6 @@
 ﻿#nullable enable
 
 using System;
-using Game.AbilitySystem.Settings;
-using Game.CharacterSystem.Components;
 using Game.ResourceSystem.Settings;
 using UnityEngine;
 
@@ -10,21 +8,14 @@ namespace Game.CharacterSystem.Settings
 {
     [CreateAssetMenu(fileName = nameof(EnemySettings), menuName = "Assets/Enemy Settings")]
     [Serializable]
-    public class EnemySettings : ScriptableObject, IDisposable
+    public class EnemySettings : AbstractPlayerSettings, IDisposable
     {
-        public CharacterSettings Character;
-        public int PoolSize;
-        
-        public FractionMask Fraction; 
-        public FractionMask Enemies; 
-        
-        public AbstractAbilitySettings[] Abilities;
         public LootSettingsData[] Loot;
         
         public void Dispose()
         {
         }
-        
+
         [Serializable]
         public class LootSettingsData
         {

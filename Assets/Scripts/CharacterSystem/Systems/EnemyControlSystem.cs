@@ -3,6 +3,7 @@
 using Arch.Core;
 using Arch.Core.Extensions;
 using Game.CharacterSystem.Components;
+using Game.Common;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
@@ -95,7 +96,12 @@ namespace Game.CharacterSystem.Systems
             var maxDistance = size.x;
             
             if (maxDistance <= 0
-                || !Physics.SphereCast(castFrom, radius, targetDirection, out var hitPoint, maxDistance))
+                || !Physics.SphereCast(castFrom, 
+                    radius, 
+                    targetDirection, 
+                    out var hitPoint, 
+                    maxDistance, 
+                    (int) PhysicsLayer.Obstacle))
             {
                 return targetDirection;
             }

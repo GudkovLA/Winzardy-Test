@@ -1,28 +1,28 @@
 ﻿#nullable enable
 
 using System;
-using Game.AbilitySystem.Settings;
+using Arch.Buffer;
+using Arch.Core;
 using Game.CharacterSystem.Components;
+using Game.LocomotionSystem.Components;
+using Game.ResourceSystem.Components;
 using UnityEngine;
 
 namespace Game.CharacterSystem.Settings
 {
     [CreateAssetMenu(fileName = nameof(PlayerSettings), menuName = "Assets/Player Settings")]
     [Serializable]
-    public class PlayerSettings : ScriptableObject, IDisposable
+    public class PlayerSettings : AbstractPlayerSettings, IDisposable
     {
-        public CharacterSettings Character;
-        public int PoolSize;
-
-        public FractionMask Fraction; 
-        public FractionMask Enemies; 
-
         public float CoinsCollectRadius;
 
-        public AbstractAbilitySettings[] Abilities;
-
-        public void Dispose()
+        public override void Initialize(Entity entity, CommandBuffer commandBuffer)
         {
+            base.Initialize(entity, commandBuffer);
+            
+            commandBuffer.Add(entity, new ResourceCollector { CollectRadius = CoinsCollectRadius });
+            commandBuffer.Add(entity, new PlayerTag());
+            commandBuffer.Add(entity, new IgnoreObstaclesTag());
         }
     }
 }

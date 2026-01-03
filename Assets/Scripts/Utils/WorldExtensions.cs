@@ -1,13 +1,12 @@
 ﻿#nullable enable
 
+using Arch.Buffer;
 using Arch.Core;
+using Game.AbilitySystem;
+using Game.CharacterSystem;
 using Game.CharacterSystem.Components;
 using Game.CharacterSystem.Settings;
 using Game.Common;
-using Game.Common.Components;
-using Game.Components;
-using Game.DamageSystem.Components;
-using Game.ResourceSystem.Components;
 using UnityEngine;
 
 namespace Game.Utils
@@ -30,32 +29,26 @@ namespace Game.Utils
             }
 
             if (!serviceLocator.TryGet<PlayerSettings>(out var playerSettings)
-                || !serviceLocator.TryGet<GameLevel>(out var gameLevel))
+                || !serviceLocator.TryGet<GameLevel>(out var gameLevel)
+                || !serviceLocator.TryGet<AbilityManager>(out var abilityManager))
             {
                 return;
             }
 
-            if (playerSettings.Character.Prefab == null)
+            var commandBuffer = new CommandBuffer();
+            var entity = CharacterUtils.SpawnCharacter(world, 
+                playerSettings,
+                abilityManager,
+                commandBuffer,
+                gameLevel.StartPosition,
+                gameLevel.StartRotation);
+
+            if (entity == Entity.Null)
             {
-                Debug.LogError($"Character prefab is not defined");
                 return;
             }
-
-            var entity = world.Create();
-            entity.Add(entity, new Position { Value = gameLevel.StartPosition });
-            entity.Add(entity, new Rotation { Value = gameLevel.StartRotation });
-            entity.Add(entity, new Size { Value = playerSettings.Character.Size });
-            entity.Add(entity, new PrefabId { Value = playerSettings.Character.Prefab.GetInstanceID() });
-            entity.Add(entity, new HealthState
-            {
-                MaxHealth = playerSettings.Character.MaxHealth,
-                Health = playerSettings.Character.MaxHealth
-            });
-            entity.Add(entity, new ResourceCollector
-            {
-                CollectRadius = playerSettings.CoinsCollectRadius
-            });
-            entity.Add(entity, new PlayerTag());
+            
+            commandBuffer.Playback(world);
         }
 
         public static Entity GetPlayerSingleton(this World world)

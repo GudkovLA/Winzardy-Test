@@ -1,15 +1,11 @@
 ﻿#nullable enable
 
+using Arch.Core;
 using Game.AbilitySystem;
-using Game.CharacterSystem.Components;
+using Game.CharacterSystem;
 using Game.CharacterSystem.Settings;
-using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
-using Game.Components;
-using Game.DamageSystem.Components;
-using Game.LocomotionSystem.Components;
-using Game.ProjectileSystem.Components;
 using Game.ResourceSystem;
 using Game.ResourceSystem.Components;
 using Game.Settings;
@@ -75,40 +71,23 @@ namespace Game.Systems
             var lookDirection = (center - positon).normalized;
             var rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
             
-            var entity = Context.World.Create();
             var commandBuffer = Context.GetOrCreateCommandBuffer(this);
-            commandBuffer.Add(entity, new Position { Value = positon });
-            commandBuffer.Add(entity, new Rotation { Value = rotation });
-            commandBuffer.Add(entity, new Size { Value = _enemySettings.Character.Size });
-            commandBuffer.Add(entity, new PrefabId { Value = _enemySettings.Character.Prefab.GetInstanceID() });
+            var entity = CharacterUtils.SpawnCharacter(
+                World, 
+                _enemySettings,
+                _abilityManager,
+                commandBuffer,
+                positon,
+                rotation);
+
+            if (entity == Entity.Null)
+            {
+                return;
+            }
 
             if (_resourcesManager.TryGetDroppedResource(_enemySettings.GetInstanceID(), out var resourceId))
             {
                 commandBuffer.Add(entity, new ResourceSpawner { ResourceId = resourceId });
-            }
-            
-            commandBuffer.Add(entity, new HealthState
-            {
-                MaxHealth = _enemySettings.Character.MaxHealth,
-                Health = _enemySettings.Character.MaxHealth
-            });
-            commandBuffer.Add(entity, new LocomotionState
-            {
-                Speed = _enemySettings.Character.Speed
-            });
-            commandBuffer.Add(entity, new Fraction
-            {
-                AlliesMask = _enemySettings.Fraction,
-                EnemiesMask = _enemySettings.Enemies
-            });
-            commandBuffer.Add(entity, new ProjectileCollider
-            {
-                Radius = _enemySettings.Character.ColliderRadius
-            });
-            
-            foreach (var abilitySettings in _enemySettings.Abilities)
-            {
-                _abilityManager.CreateAbility(abilitySettings, entity);
             }
         }
     }

@@ -31,6 +31,14 @@ namespace Game.AbilitySystem
             _abilities.Clear();
         }
 
+        public void CreateAbilities(AbstractAbilitySettings[] abilitySettings, Entity abilityOwner)
+        {
+            foreach (var settings in abilitySettings)
+            {
+                CreateAbility(settings, abilityOwner);
+            }
+        }
+
         public void CreateAbility(AbstractAbilitySettings abilitySettings, Entity abilityOwner)
         {
             var abilityId = abilitySettings.GetInstanceID();

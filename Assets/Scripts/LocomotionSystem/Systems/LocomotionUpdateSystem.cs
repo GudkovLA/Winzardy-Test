@@ -2,6 +2,7 @@
 
 using System;
 using Arch.Core;
+using Game.Common;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
@@ -68,7 +69,7 @@ namespace Game.LocomotionSystem.Systems
         private static Vector3 ResolveColliderOverlap(Vector3 position, float radius, Collider[] collidersCache)
         {
             var collisionCorrection  = Vector3.zero;
-            var count = Physics.OverlapSphereNonAlloc(position, radius, collidersCache);
+            var count = Physics.OverlapSphereNonAlloc(position, radius, collidersCache, (int) PhysicsLayer.Obstacle);
             for (var i = 0; i < count; i++)
             {
                 var closest = collidersCache[i].ClosestPoint(position);

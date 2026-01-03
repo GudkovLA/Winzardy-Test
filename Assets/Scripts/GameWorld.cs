@@ -4,14 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Arch.Core;
-using Arch.Core.Extensions;
 using Game.AbilitySystem;
-using Game.CharacterSystem.Components;
 using Game.CharacterSystem.Settings;
 using Game.Common;
 using Game.Common.Systems;
-using Game.LocomotionSystem.Components;
-using Game.ProjectileSystem.Components;
 using Game.ResourceSystem;
 using Game.Settings;
 using Game.Utils;
@@ -65,7 +61,6 @@ namespace Game
             _systemManager.LogStructure();
             
             world.CreatePlayerSingleton(_serviceLocator);
-            ConfigurePlayer(world, playerSettings, abilityManager);
         }
 
         public void Dispose()
@@ -77,36 +72,6 @@ namespace Game
         public void Update()
         {
             _systemManager.Update(Time.deltaTime, Time.realtimeSinceStartup);
-        }
-
-        private static void ConfigurePlayer(
-            World world, 
-            PlayerSettings playerSettings,
-            AbilityManager abilityManager)
-        {
-            var playerEntity = world.GetPlayerSingleton();
-            foreach (var abilitySettings in playerSettings.Abilities)
-            {
-                abilityManager.CreateAbility(abilitySettings, playerEntity);
-            }
-
-            playerEntity.Add(new Fraction
-            {
-                AlliesMask = playerSettings.Fraction,
-                EnemiesMask = playerSettings.Enemies
-            });
-
-            playerEntity.Add(new ProjectileCollider
-            {
-                Radius = playerSettings.Character.ColliderRadius
-            });
-
-            playerEntity.Add(new LocomotionState
-            {
-                Speed = playerSettings.Character.Speed
-            });
-
-            playerEntity.Add(new IgnoreObstaclesTag());
         }
 
         private static List<Assembly> GatherAssemblies()
