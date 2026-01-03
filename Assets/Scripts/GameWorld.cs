@@ -12,6 +12,7 @@ using Game.Common;
 using Game.Common.Systems;
 using Game.LocomotionSystem.Components;
 using Game.ProjectileSystem.Components;
+using Game.ResourceSystem;
 using Game.Settings;
 using Game.Utils;
 using UnityEngine;
@@ -41,6 +42,9 @@ namespace Game
             var assemblies =  GatherAssemblies();
             var abilityManager = new AbilityManager(_worldHandle, instancePool);
 
+            var resourceManager = new ResourcesManager();
+            resourceManager.CreateResources(enemySettings);
+
             _serviceLocator = new ServiceLocator();
             _serviceLocator.Register(gameSettings);
             _serviceLocator.Register(playerSettings);
@@ -52,6 +56,7 @@ namespace Game
             _serviceLocator.Register(instancePool);
             _serviceLocator.Register(instanceFactory);
             _serviceLocator.Register(abilityManager);
+            _serviceLocator.Register(resourceManager);
             
             _systemManager = new SystemManager(_worldHandle, _serviceLocator);
             _serviceLocator.Register(_systemManager);

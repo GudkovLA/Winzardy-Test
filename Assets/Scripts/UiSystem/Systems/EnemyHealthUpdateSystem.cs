@@ -10,7 +10,6 @@ using Game.Common.Systems.Attributes;
 using Game.Components;
 using Game.DamageSystem.Components;
 using Game.Settings;
-using Game.Ui;
 using UnityEngine;
 
 namespace Game.UiSystem.Systems

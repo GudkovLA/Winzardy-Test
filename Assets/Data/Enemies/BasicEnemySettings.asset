@@ -12,13 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 638f4106e08046c881619ea3620bb1b4, type: 3}
   m_Name: BasicEnemySettings
   m_EditorClassIdentifier: 
-  Character: {fileID: 11400000, guid: 378af8b57d3fb1845bd63eee0b595b30, type: 2}
+  Character: {fileID: 11400000, guid: aeaa807c9975fcc4d8d138f0fcf5f494, type: 2}
   PoolSize: 30
   Fraction: 2
   Enemies: 1
-  CoinSettings:
-    Prefab: {fileID: 1212067499461965912, guid: 31d09fb37f51e614b9c1ab37309b97e5, type: 3}
-    PoolSize: 30
-    DropChance: 0.5
   Abilities:
   - {fileID: 11400000, guid: e6e7d834c094a924fbad17ddfb947a68, type: 2}
+  Loot:
+  - Resource: {fileID: 11400000, guid: dbd4d8b7e51ea0a4f8663e114fa68855, type: 2}
+    PoolSize: 30
+    DropChance: 0.5
+  - Resource: {fileID: 11400000, guid: 7169d343a3ca7d24a94d1020df89414a, type: 2}
+    PoolSize: 30
+    DropChance: 0.5

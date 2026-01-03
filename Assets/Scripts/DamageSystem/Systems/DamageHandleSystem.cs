@@ -8,6 +8,8 @@ using Game.Common.Systems.Attributes;
 using Game.Components;
 using Game.DamageSystem.Components;
 using Game.ProjectileSystem.Components;
+using Game.ResourceSystem;
+using Game.ResourceSystem.Components;
 using UnityEngine;
 
 namespace Game.DamageSystem.Systems
@@ -18,9 +20,29 @@ namespace Game.DamageSystem.Systems
         private static readonly QueryDescription _projectileHitQuery = new QueryDescription()
             .WithAll<ProjectileHit>()
             .WithNone<Destroy>();
+        
+        private ResourcesManager _resourcesManager = null!;
+        private bool _initialized;
 
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+
+            if (!ServiceLocator.TryGet(out _resourcesManager))
+            {
+                return;
+            }
+
+            _initialized = true;
+        }
+        
         protected override void OnUpdate()
         {
+            if (!_initialized)
+            {
+                return;
+            }
+
             var commandBuffer = Context.GetOrCreateCommandBuffer(this); 
                 
             World.Query(_projectileHitQuery, 
@@ -61,17 +83,22 @@ namespace Game.DamageSystem.Systems
                     healthState.Health = 0;
                     commandBuffer.Add(targetEntity, new Destroy());
 
-                    // Try to spawn a coin
-                    // TODO: Drop result can be managed by ResourceDropManager or set drop on spawn
-                    if (targetEntity.TryGet<CoinSpawner>(out var coinSpawner)
-                        && targetEntity.TryGet<Position>(out var position)
-                        && Random.value < coinSpawner.Chance)
+                    // TODO: Spawn must be a part of ResourceSystem
+                    if (targetEntity.TryGet<ResourceSpawner>(out var coinSpawner)
+                        && targetEntity.TryGet<Position>(out var position))
                     {
-                        var coinEntity = Context.World.Create();
-                        commandBuffer.Add(coinEntity, new Position { Value = position.Value });
-                        commandBuffer.Add(coinEntity, new Rotation { Value = Quaternion.identity });
-                        commandBuffer.Add(coinEntity, new PrefabId { Value = coinSpawner.CoinPrefabId});
-                        commandBuffer.Add(coinEntity, new Coin());
+                        var resourceSettings = _resourcesManager.GetResource(coinSpawner.ResourceId);
+                        if (resourceSettings != null
+                            && resourceSettings.Prefab != null)
+                        {
+                            var coinEntity = Context.World.Create();
+                            commandBuffer.Add(coinEntity, new Position { Value = position.Value });
+                            commandBuffer.Add(coinEntity, new Rotation { Value = Quaternion.identity });
+                            commandBuffer.Add(coinEntity, new Resource { ResourceId = coinSpawner.ResourceId });
+                        
+                            commandBuffer.Add(coinEntity,
+                                new PrefabId { Value = resourceSettings.Prefab.GetInstanceID() });
+                        }
                     }
                 });
         }

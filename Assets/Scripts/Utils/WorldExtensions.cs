@@ -7,6 +7,7 @@ using Game.Common;
 using Game.Common.Components;
 using Game.Components;
 using Game.DamageSystem.Components;
+using Game.ResourceSystem.Components;
 using UnityEngine;
 
 namespace Game.Utils
@@ -50,7 +51,7 @@ namespace Game.Utils
                 MaxHealth = playerSettings.Character.MaxHealth,
                 Health = playerSettings.Character.MaxHealth
             });
-            entity.Add(entity, new CoinCollector
+            entity.Add(entity, new ResourceCollector
             {
                 CollectRadius = playerSettings.CoinsCollectRadius
             });

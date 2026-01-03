@@ -3,6 +3,7 @@
 using System;
 using Game.AbilitySystem.Settings;
 using Game.CharacterSystem.Components;
+using Game.ResourceSystem.Settings;
 using UnityEngine;
 
 namespace Game.CharacterSystem.Settings
@@ -16,20 +17,18 @@ namespace Game.CharacterSystem.Settings
         
         public FractionMask Fraction; 
         public FractionMask Enemies; 
-
-        // TODO: Possible to make several coins
-        public CoinSettingsData CoinSettings;
         
         public AbstractAbilitySettings[] Abilities;
+        public LootSettingsData[] Loot;
         
         public void Dispose()
         {
         }
         
         [Serializable]
-        public class CoinSettingsData
+        public class LootSettingsData
         {
-            public GameObject Prefab;
+            public ResourceSettings Resource = null!;
             public int PoolSize;
             
             [Tooltip("Chance of coin will be dropped, where 1 means 100% of chance")]

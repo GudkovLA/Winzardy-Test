@@ -4,8 +4,9 @@ using Arch.Core;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
-using Game.Components;
 using Game.DamageSystem.Components;
+using Game.ResourceSystem;
+using Game.ResourceSystem.Components;
 
 namespace Game.UiSystem.Systems
 {
@@ -13,17 +14,19 @@ namespace Game.UiSystem.Systems
     public class HudUpdateSystem : AbstractSystem
     {
         private static readonly QueryDescription _playerInfoQuery = new QueryDescription()
-            .WithAll<HealthState, CoinCollector>()
+            .WithAll<HealthState, ResourceCollector>()
             .WithNone<Destroy>();
 
         private GameUi _gameUi = null!;
+        private ResourcesManager _resourcesManager = null!;
         private bool _initialized;
 
         protected override void OnCreate()
         {
             base.OnCreate();
 
-            if (!ServiceLocator.TryGet(out _gameUi))
+            if (!ServiceLocator.TryGet(out _gameUi)
+                || !ServiceLocator.TryGet(out _resourcesManager))
             {
                 return;
             }
@@ -39,11 +42,19 @@ namespace Game.UiSystem.Systems
             }
             
             World.Query(_playerInfoQuery,
-                (ref HealthState healthState, ref CoinCollector coinCollector) =>
+                (ref HealthState healthState) =>
                 {
                     _gameUi.HudController.SetHealthAmount(healthState.Health, healthState.MaxHealth);
-                    _gameUi.HudController.SetCoinsAmount(coinCollector.CoinsAmount);
                 });
+
+            var i = 0;
+            foreach (var resourceData in _resourcesManager.GetResources())
+            {
+                var resourceView = _gameUi.HudController.GetResourceView(i);
+                resourceView.SetIcon(resourceData.Settings.Icon);
+                resourceView.SetAmount(resourceData.Amount);
+                i++;
+            }
         }
     }
 }

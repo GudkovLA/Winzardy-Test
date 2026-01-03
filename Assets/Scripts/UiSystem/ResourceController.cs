@@ -1,10 +1,14 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace Game.Ui
+namespace Game.UiSystem
 {
     public class ResourceController : MonoBehaviour
     {
+        [SerializeField]
+        private Image _icon;
+
         [SerializeField]
         private TextMeshProUGUI _amountLabel;
 
@@ -16,6 +20,14 @@ namespace Game.Ui
 
         private int _currentAmount; 
         private float _increaseTime; 
+
+        public void SetIcon(Sprite sprite)
+        {
+            if (_icon.sprite != sprite)
+            {
+                _icon.sprite = sprite;
+            }
+        }
 
         public void SetAmount(int value)
         {

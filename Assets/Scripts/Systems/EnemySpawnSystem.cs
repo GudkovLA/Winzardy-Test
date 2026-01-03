@@ -10,6 +10,8 @@ using Game.Components;
 using Game.DamageSystem.Components;
 using Game.LocomotionSystem.Components;
 using Game.ProjectileSystem.Components;
+using Game.ResourceSystem;
+using Game.ResourceSystem.Components;
 using Game.Settings;
 using UnityEngine;
 
@@ -23,6 +25,7 @@ namespace Game.Systems
         private GameLevel _gameLevel = null!;
         private GameCamera _gameCamera = null!;
         private AbilityManager _abilityManager = null!;
+        private ResourcesManager _resourcesManager = null!;
         
         private float _timeCounter;
         private bool _initialized;
@@ -35,7 +38,8 @@ namespace Game.Systems
                 || !ServiceLocator.TryGet(out _enemySettings)
                 || !ServiceLocator.TryGet(out _gameLevel)
                 || !ServiceLocator.TryGet(out _gameCamera)
-                || !ServiceLocator.TryGet(out _abilityManager))
+                || !ServiceLocator.TryGet(out _abilityManager)
+                || !ServiceLocator.TryGet(out _resourcesManager))
             {
                 return;
             }
@@ -56,6 +60,12 @@ namespace Game.Systems
                 return;
             }
 
+            if (_enemySettings.Character.Prefab == null)
+            {
+                Debug.LogError($"Character prefab is not defined");
+                return;
+            }
+
             _timeCounter -= _gameSettings.EnemySpawnTimeout;
             
             var center = _gameCamera.Camera.transform.position;
@@ -71,11 +81,12 @@ namespace Game.Systems
             commandBuffer.Add(entity, new Rotation { Value = rotation });
             commandBuffer.Add(entity, new Size { Value = _enemySettings.Character.Size });
             commandBuffer.Add(entity, new PrefabId { Value = _enemySettings.Character.Prefab.GetInstanceID() });
-            commandBuffer.Add(entity, new CoinSpawner
+
+            if (_resourcesManager.TryGetDroppedResource(_enemySettings.GetInstanceID(), out var resourceId))
             {
-                Chance = _enemySettings.CoinSettings.DropChance,
-                CoinPrefabId = _enemySettings.CoinSettings.Prefab.GetInstanceID()
-            });
+                commandBuffer.Add(entity, new ResourceSpawner { ResourceId = resourceId });
+            }
+            
             commandBuffer.Add(entity, new HealthState
             {
                 MaxHealth = _enemySettings.Character.MaxHealth,

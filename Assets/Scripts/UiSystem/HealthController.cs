@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Ui
+namespace Game.UiSystem
 {
     public class HealthController : MonoBehaviour
     {

@@ -1,5 +1,8 @@
-﻿using System;
-using Game.Ui;
+﻿#nullable enable
+
+using System;
+using Game.UiSystem;
+using Game.Utils;
 using UnityEngine;
 
 namespace Game
@@ -12,11 +15,12 @@ namespace Game
         public HudController HudController { private set; get; }
         public Transform Root => Canvas.transform;
 
-        public GameUi(Camera camera, Canvas canvas)
+        public GameUi(Camera camera, Canvas canvas, InstancePool instancePool)
         {
             _camera = camera;
             Canvas = canvas;
             HudController = Canvas.GetComponentInChildren<HudController>();
+            HudController.InitializeFrom(instancePool);
         }
 
         public Vector2 GetScreenPosition(Vector3 worldPosition)
