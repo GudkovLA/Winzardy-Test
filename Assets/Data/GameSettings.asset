@@ -14,6 +14,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CameraSettings:
     Angle: {x: 90, y: 0, z: 0}
-    Offset: {x: 0, y: 25, z: 0}
+    Offset: {x: 0, y: 20, z: 0}
+  SpawnSettings:
+    EnemySpawnTimeout: 7
+    CameraAreaScale: 1.15
+    AreaMaxDepth: 10
+    SpawnRetryCountLimit: 10
+    SpawnCollisionSafeRadius: 1
+    DebugEnable: 0
+    SpawnAreas:
+    - AreaId: 1
+      Weight: 2
+    - AreaId: 2
+      Weight: 0.7
+    - AreaId: 3
+      Weight: 0.5
+    - AreaId: 4
+      Weight: 0.5
+    - AreaId: 5
+      Weight: 0.2
+    - AreaId: 6
+      Weight: 0.2
+    - AreaId: 7
+      Weight: 0.2
+    - AreaId: 8
+      Weight: 0.2
   HealthViewPrefab: {fileID: 6093953003324607494, guid: d66cc3b7766314f4d812cc1ce3d4c3b3, type: 3}
-  EnemySpawnTimeout: 1
+  HealthViewPoolSize: 30

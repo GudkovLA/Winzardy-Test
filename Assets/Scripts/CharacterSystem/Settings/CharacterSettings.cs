@@ -37,12 +37,16 @@ namespace Game.CharacterSystem.Settings
             }
             
             commandBuffer.Add(entity, new Size { Value = Size });
-            commandBuffer.Add(entity, new LocomotionState { Speed = Speed });
             commandBuffer.Add(entity, new PrefabId { Value = Prefab.GetInstanceID() });
             commandBuffer.Add(entity, new HealthState
             {
                 MaxHealth = MaxHealth,
                 Health = MaxHealth
+            });
+            commandBuffer.Add(entity, new LocomotionState
+            {
+                MaxSpeed = Speed,
+                Speed = Speed
             });
             
             commandBuffer.Add(entity, GetProjectileCollider());

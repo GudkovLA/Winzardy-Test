@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using Game.SpawnSystem;
 using UnityEngine;
 
 namespace Game.Settings
@@ -10,11 +11,9 @@ namespace Game.Settings
     public class GameSettings : ScriptableObject, IDisposable
     {
         public CameraSettingsData CameraSettings = new();
+        public SpawnSettingsData SpawnSettings = new();
         public GameObject? HealthViewPrefab;
         public int HealthViewPoolSize;
-        
-        // TODO: MinMax range
-        public float EnemySpawnTimeout;
         
         public void Dispose()
         {
@@ -25,6 +24,27 @@ namespace Game.Settings
         {
             public Vector3 Angle;
             public Vector3 Offset;
+        }
+ 
+        [Serializable]
+        public class SpawnSettingsData
+        {
+            public float EnemySpawnTimeout;
+            public float CameraAreaScale;
+            public float AreaMaxDepth;
+            public float SpawnRetryCountLimit;
+            public float SpawnCollisionSafeRadius;
+
+            public bool DebugEnable;
+
+            public SpawnAreaWeight[] SpawnAreas;
+        }
+
+        [Serializable]
+        public class SpawnAreaWeight
+        {
+            public SpawnAreaId AreaId;
+            public float Weight;
         }
     }
 }

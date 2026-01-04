@@ -8,6 +8,7 @@ using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.LocomotionSystem.Components;
+using Game.Settings;
 using Game.Utils;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -23,15 +24,35 @@ namespace Game.CharacterSystem.Systems
         private static readonly int[] _randomDirectionFactor = { -1, 1 };
 
         private static readonly QueryDescription _enemyInitQuery = new QueryDescription()
-            .WithAll<Position, LocomotionState>()
-            .WithNone<Destroy, PlayerTag, ObstacleAvoidance>();
+            .WithAll<Position, LocomotionState, EnemyControlState>()
+            .WithNone<Destroy, ObstacleAvoidance>();
 
         private static readonly QueryDescription _enemyQuery = new QueryDescription()
-            .WithAll<Position, Size, LocomotionState, ObstacleAvoidance>()
-            .WithNone<Destroy, PlayerTag>();
+            .WithAll<Position, Size, LocomotionState, EnemyControlState, ObstacleAvoidance>()
+            .WithNone<Destroy>();
 
+        private GameSettings _gameSettings = null!;
+        private bool _initialized;
+        
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            
+            if (!ServiceLocator.TryGet(out _gameSettings))
+            {
+                return;
+            }
+
+            _initialized = true;
+        }
+        
         protected override void OnUpdate()
         {
+            if (!_initialized)
+            {
+                return;
+            }
+            
             var playerEntity = World.GetPlayerSingleton();
             if (playerEntity == Entity.Null
                 || !playerEntity.TryGet<Position>(out var playerPosition))
@@ -53,7 +74,8 @@ namespace Game.CharacterSystem.Systems
             World.Query(_enemyQuery,
                 (ref Position position, 
                     ref Size size, 
-                    ref LocomotionState locomotionState, 
+                    ref LocomotionState locomotionState,
+                    ref EnemyControlState controlState,
                     ref ObstacleAvoidance obstacleAvoidance) =>
                 {
                     // A small workaround to prevent enemies from getting stuck inside the corners.
@@ -63,24 +85,27 @@ namespace Game.CharacterSystem.Systems
                     var movementThreshold = locomotionState.LastVelocity.magnitude * 0.5f;
                     if (Vector3.Distance(locomotionState.LastPosition, position.Value) < movementThreshold)
                     {
-                        if (obstacleAvoidance.ChangeTime + kAvoidanceDirectionChangeTimeout < Context.Time)
+                        if (obstacleAvoidance.LastChangeTime + kAvoidanceDirectionChangeTimeout < Context.Time)
                         {
                             obstacleAvoidance.DirectionFactor *= -1;
-                            obstacleAvoidance.ChangeTime = Context.Time;
+                            obstacleAvoidance.LastChangeTime = Context.Time;
                         }
                     }
                     
                     var delta = playerPosition.Value - position.Value;
                     delta.y = 0;
 
-                    var radius = _radiusFactor * size.Value.x;
+                    // Don't move when close enough to player
+                    locomotionState.Speed = delta.magnitude > controlState.MinDistanceToPlayer
+                        ? locomotionState.MaxSpeed
+                        : 0f;
                     
                     // Calculate the direction of movement in accordance with obstacles on the way to the goal.
                     // Simple algorithm for bypassing an obstacle in the selected direction (left handed or right handed). 
                     locomotionState.Direction = ResolveMovementDirection(position.Value, 
                         size.Value, 
                         delta.normalized,
-                        radius,
+                        _radiusFactor * size.Value.x,
                         obstacleAvoidance.DirectionFactor);
                 });
         }
@@ -118,7 +143,7 @@ namespace Game.CharacterSystem.Systems
         private struct ObstacleAvoidance
         {
             public int DirectionFactor;
-            public float ChangeTime;
+            public float LastChangeTime;
         }
     }
 }

@@ -18,10 +18,8 @@ MonoBehaviour:
   Enemies: 1
   Abilities:
   - {fileID: 11400000, guid: e6e7d834c094a924fbad17ddfb947a68, type: 2}
+  MinDistanceToPlayer: 1.25
   Loot:
   - Resource: {fileID: 11400000, guid: dbd4d8b7e51ea0a4f8663e114fa68855, type: 2}
-    PoolSize: 30
-    DropChance: 0.5
-  - Resource: {fileID: 11400000, guid: 7169d343a3ca7d24a94d1020df89414a, type: 2}
     PoolSize: 30
     DropChance: 0.5

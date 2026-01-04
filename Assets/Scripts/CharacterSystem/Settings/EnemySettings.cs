@@ -1,6 +1,9 @@
 ﻿#nullable enable
 
 using System;
+using Arch.Buffer;
+using Arch.Core;
+using Game.CharacterSystem.Components;
 using Game.ResourceSystem.Settings;
 using UnityEngine;
 
@@ -10,10 +13,19 @@ namespace Game.CharacterSystem.Settings
     [Serializable]
     public class EnemySettings : AbstractPlayerSettings, IDisposable
     {
+        public float MinDistanceToPlayer;
+
         public LootSettingsData[] Loot;
         
         public void Dispose()
         {
+        }
+        
+        public override void Initialize(Entity entity, CommandBuffer commandBuffer)
+        {
+            base.Initialize(entity, commandBuffer);
+            
+            commandBuffer.Add(entity, new EnemyControlState { MinDistanceToPlayer = MinDistanceToPlayer });
         }
 
         [Serializable]

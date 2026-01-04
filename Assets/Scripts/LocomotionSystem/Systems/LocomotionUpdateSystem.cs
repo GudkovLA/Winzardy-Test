@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using System;
 using Arch.Core;
 using Game.Common;
 using Game.Common.Components;
@@ -59,8 +58,8 @@ namespace Game.LocomotionSystem.Systems
                 {
                     var direction = (position.Value - locomotionState.LastPosition).normalized;
                     var lookDirection = direction != Vector3.zero
-                        ? Quaternion.LookRotation(locomotionState.Direction, Vector3.up)
-                        : Quaternion.identity;
+                        ? Quaternion.LookRotation(direction, Vector3.up)
+                        : Quaternion.LookRotation(locomotionState.Direction, Vector3.up);
 
                     rotation.Value = Quaternion.RotateTowards(rotation.Value, lookDirection, rotationSpeed);
                 });
@@ -76,7 +75,7 @@ namespace Game.LocomotionSystem.Systems
                 var delta = position - closest;
                 delta.y = 0;
 
-                collisionCorrection += delta.normalized * Math.Abs(radius - delta.magnitude);
+                collisionCorrection += delta.normalized * Mathf.Abs(radius - delta.magnitude);
             }
             
             return collisionCorrection;
