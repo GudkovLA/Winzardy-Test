@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System.Collections.Generic;
 using Arch.Core;
 using Game.CharacterSystem.Components;
 using Game.Common;
@@ -18,6 +19,10 @@ namespace Game.ProjectileSystem.Systems
     {
         private static readonly QueryDescription _projectileQuery = new QueryDescription()
             .WithAll<Position, ProjectileState, Fraction>()
+            .WithNone<Destroy>();
+
+        private static readonly QueryDescription _contactQuery = new QueryDescription()
+            .WithAll<ProjectileContact>()
             .WithNone<Destroy>();
 
         private static readonly QueryDescription _targetQuery = new QueryDescription()
@@ -39,6 +44,18 @@ namespace Game.ProjectileSystem.Systems
                     });
                 });
 
+            using var __ = ListPool<ContactData>.Get(out var exisingContacts);
+            World.Query(_contactQuery,
+                (Entity entity, ref ProjectileContact projectileContact) =>
+                {
+                    projectileContact.ContactPhase = ProjectileContactPhase.Finish;
+                    exisingContacts.Add(new ContactData
+                    {
+                        Entity = entity,
+                        ProjectileContact = projectileContact,
+                    });
+                });
+
             var commandBuffer = Context.GetOrCreateCommandBuffer(this); 
                 
             // TODO: Heavy operation, possible to optimize with burst
@@ -49,6 +66,7 @@ namespace Game.ProjectileSystem.Systems
                     {
                         var projectileState = projectileData[i].ProjectileState;
                         var projectileFraction = projectileData[i].Fraction;
+                        var projectileEntity = projectileData[i].Entity;
                         if ((projectileFraction.EnemiesMask & fraction.AlliesMask) == 0)
                         {
                             continue;
@@ -62,11 +80,21 @@ namespace Game.ProjectileSystem.Systems
                             continue;
                         }
 
-                        var hitEntity = Context.World.Create();
-                        commandBuffer.Add(hitEntity, new ProjectileHit
+                        var contactData = GetExistingProjectileContact(exisingContacts, entity, projectileEntity);
+                        if (contactData != null)
                         {
-                            ProjectileEntity = new EntityHandle(projectileData[i].Entity),
-                            TargetEntity = new EntityHandle(entity)
+                            var projectileContact = contactData.Value.ProjectileContact; 
+                            projectileContact.ContactPhase = ProjectileContactPhase.Continue;
+                            commandBuffer.Set(contactData.Value.Entity, projectileContact);
+                            return;
+                        }
+
+                        var hitEntity = Context.World.Create();
+                        commandBuffer.Add(hitEntity, new ProjectileContact
+                        {
+                            ProjectileEntity = new EntityHandle(projectileEntity),
+                            TargetEntity = new EntityHandle(entity),
+                            ContactPhase = ProjectileContactPhase.Start 
                         });
 
                         if (projectileState.DestroyOnHit)
@@ -78,12 +106,35 @@ namespace Game.ProjectileSystem.Systems
                 });
         }
 
+        private static ContactData? GetExistingProjectileContact(
+            List<ContactData> existingContacts, 
+            Entity targetEntity,
+            Entity projectileEntity)
+        {
+            for (var i = 0; i < existingContacts.Count; i++)
+            {
+                if (existingContacts[i].ProjectileContact.TargetEntity.Value == targetEntity
+                    && existingContacts[i].ProjectileContact.ProjectileEntity.Value == projectileEntity)
+                {
+                    return existingContacts[i];
+                }
+            }
+            
+            return null;
+        }
+
         private struct ProjectileData
         {
             public Entity Entity;
             public Vector3 Position;
             public ProjectileState ProjectileState;
             public Fraction Fraction;
+        }
+
+        private struct ContactData
+        {
+            public Entity Entity;
+            public ProjectileContact ProjectileContact;
         }
     }
 }

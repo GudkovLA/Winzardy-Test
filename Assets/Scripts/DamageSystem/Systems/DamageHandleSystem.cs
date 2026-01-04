@@ -7,6 +7,7 @@ using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.Components;
 using Game.DamageSystem.Components;
+using Game.ProjectileSystem;
 using Game.ProjectileSystem.Components;
 using Game.ResourceSystem;
 using Game.ResourceSystem.Components;
@@ -18,7 +19,7 @@ namespace Game.DamageSystem.Systems
     public class DamageHandleSystem : AbstractSystem
     {
         private static readonly QueryDescription _projectileHitQuery = new QueryDescription()
-            .WithAll<ProjectileHit>()
+            .WithAll<ProjectileContact>()
             .WithNone<Destroy>();
         
         private ResourcesManager _resourcesManager = null!;
@@ -46,18 +47,29 @@ namespace Game.DamageSystem.Systems
             var commandBuffer = Context.GetOrCreateCommandBuffer(this); 
                 
             World.Query(_projectileHitQuery, 
-                (Entity entity, ref ProjectileHit projectileHit) =>
+                (Entity entity, ref ProjectileContact projectileContact) =>
                 {
-                    commandBuffer.Add(entity, new Destroy());
+                    if (projectileContact.ContactPhase == ProjectileContactPhase.Finish)
+                    {
+                        commandBuffer.Add(entity, new Destroy());
+                        return;
+                    }
 
-                    if (!projectileHit.ProjectileEntity.IsValid()
-                        || !projectileHit.TargetEntity.IsValid())
+                    if (!projectileContact.ProjectileEntity.IsValid()
+                        || !projectileContact.TargetEntity.IsValid())
+                    {
+                        commandBuffer.Add(entity, new Destroy());
+                        return;
+                    }
+
+                    // Handle damage only for start contact phase
+                    if (projectileContact.ContactPhase != ProjectileContactPhase.Start)
                     {
                         return;
                     }
-                    
-                    var projectileEntity = projectileHit.ProjectileEntity.Value;
-                    var targetEntity = projectileHit.TargetEntity.Value;
+
+                    var projectileEntity = projectileContact.ProjectileEntity.Value;
+                    var targetEntity = projectileContact.TargetEntity.Value;
 
                     if (!projectileEntity.TryGet<Damage>(out var damage))
                     {

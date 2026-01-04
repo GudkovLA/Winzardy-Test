@@ -2,9 +2,10 @@
 
 namespace Game.ProjectileSystem.Components
 {
-    public struct ProjectileHit
+    public struct ProjectileContact
     {
         public EntityHandle ProjectileEntity;
         public EntityHandle TargetEntity;
+        public ProjectileContactPhase ContactPhase;
     }
 }
