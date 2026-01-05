@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
 using Arch.Core;
-using Game.AbilitySystem;
 using Game.CharacterSystem;
 using Game.CharacterSystem.Settings;
 using Game.Common;
@@ -26,7 +25,6 @@ namespace Game.SpawnSystem.Systems
         private EnemySettings _enemySettings = null!;
         private GameLevel _gameLevel = null!;
         private GameCamera _gameCamera = null!;
-        private AbilityManager _abilityManager = null!;
         private ResourcesManager _resourcesManager = null!;
 
         private float[] _weights;
@@ -43,7 +41,6 @@ namespace Game.SpawnSystem.Systems
                 || !ServiceLocator.TryGet(out _enemySettings)
                 || !ServiceLocator.TryGet(out _gameLevel)
                 || !ServiceLocator.TryGet(out _gameCamera)
-                || !ServiceLocator.TryGet(out _abilityManager)
                 || !ServiceLocator.TryGet(out _resourcesManager))
             {
                 return;
@@ -62,6 +59,7 @@ namespace Game.SpawnSystem.Systems
                 return;
             }
 
+            var world = Context.World;
             var groundPlane = _gameLevel.GroundPlane;
             var spawnSettings = _gameSettings.SpawnSettings;
 
@@ -106,10 +104,8 @@ namespace Game.SpawnSystem.Systems
             }
 
             var commandBuffer = Context.GetOrCreateCommandBuffer(this);
-            var entity = CharacterUtils.SpawnCharacter(
-                World,
-                _enemySettings,
-                _abilityManager,
+            var entity = CharacterUtils.SpawnCharacter(_enemySettings,
+                world,
                 commandBuffer,
                 spawnPosition,
                 Quaternion.identity);

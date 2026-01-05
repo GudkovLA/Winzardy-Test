@@ -4,11 +4,9 @@ using Game.Common;
 
 namespace Game.AbilitySystem.Components
 {
-    public struct AbilityState
+    public struct Ability
     {
-        public int AbilityId;
         public EntityHandle OwnerEntity;
         public float LastActivateTime;
-        public float ActivateTimeout;
     }
 }

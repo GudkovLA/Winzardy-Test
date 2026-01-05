@@ -15,7 +15,7 @@ namespace Game.Systems
     {
         private static readonly QueryDescription _instanceQuery = new QueryDescription()
             .WithAll<PrefabId>()
-            .WithNone<InstanceLink>();
+            .WithNone<InstanceLink, InvisibleTag>();
 
         private InstanceFactory _instanceFactory = null!;
         private GameLevel _gameLevel = null!;

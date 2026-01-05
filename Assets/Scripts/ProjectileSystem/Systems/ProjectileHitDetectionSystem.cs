@@ -31,15 +31,15 @@ namespace Game.ProjectileSystem.Systems
 
         protected override void OnUpdate()
         {
-            using var _ = ListPool<ProjectileData>.Get(out var projectileData);
+            using var _ = ListPool<ProjectileCachedData>.Get(out var projectilesCache);
             World.Query(_projectileQuery,
-                (Entity entity, ref Position position, ref ProjectileState projectileState, ref Fraction fraction) =>
+                (Entity entity, ref Position position, ref ProjectileData projectileData, ref Fraction fraction) =>
                 {
-                    projectileData.Add(new ProjectileData
+                    projectilesCache.Add(new ProjectileCachedData
                     {
                         Entity = entity,
                         Position = position.Value,
-                        ProjectileState = projectileState,
+                        ProjectileData = projectileData,
                         Fraction = fraction
                     });
                 });
@@ -62,20 +62,20 @@ namespace Game.ProjectileSystem.Systems
             World.Query(_targetQuery, 
                 (Entity entity, ref Position position, ref ProjectileCollider projectileCollider, ref Fraction fraction) =>
                 {
-                    for (var i = projectileData.Count - 1; i >= 0; i--)
+                    for (var i = projectilesCache.Count - 1; i >= 0; i--)
                     {
-                        var projectileState = projectileData[i].ProjectileState;
-                        var projectileFraction = projectileData[i].Fraction;
-                        var projectileEntity = projectileData[i].Entity;
+                        var projectileData = projectilesCache[i].ProjectileData;
+                        var projectileFraction = projectilesCache[i].Fraction;
+                        var projectileEntity = projectilesCache[i].Entity;
                         if ((projectileFraction.EnemiesMask & fraction.AlliesMask) == 0)
                         {
                             continue;
                         }
                         
-                        var delta = position.Value - projectileData[i].Position;
+                        var delta = position.Value - projectilesCache[i].Position;
                         delta.y = 0;
                         
-                        if (delta.magnitude > projectileState.HitRadius + projectileCollider.Radius)
+                        if (delta.magnitude > projectileData.HitRadius + projectileCollider.Radius)
                         {
                             continue;
                         }
@@ -97,10 +97,10 @@ namespace Game.ProjectileSystem.Systems
                             ContactPhase = ProjectileContactPhase.Start 
                         });
 
-                        if (projectileState.DestroyOnHit)
+                        if (projectileData.DestroyOnHit)
                         {
-                            commandBuffer.Add(projectileData[i].Entity, new Destroy());
-                            projectileData.RemoveAt(i);
+                            commandBuffer.Add(projectilesCache[i].Entity, new Destroy());
+                            projectilesCache.RemoveAt(i);
                         }
                     }
                 });
@@ -123,11 +123,11 @@ namespace Game.ProjectileSystem.Systems
             return null;
         }
 
-        private struct ProjectileData
+        private struct ProjectileCachedData
         {
             public Entity Entity;
             public Vector3 Position;
-            public ProjectileState ProjectileState;
+            public ProjectileData ProjectileData;
             public Fraction Fraction;
         }
 

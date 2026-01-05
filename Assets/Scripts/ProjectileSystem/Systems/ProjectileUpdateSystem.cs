@@ -14,7 +14,7 @@ namespace Game.ProjectileSystem.Systems
     public class ProjectileUpdateSystem : AbstractSystem
     {
         private static readonly QueryDescription _projectileQuery = new QueryDescription()
-            .WithAll<Position, ProjectileState, LocomotionState>();
+            .WithAll<Position, ProjectileData, ProjectileState, LocomotionState>();
 
         protected override void OnUpdate()
         {
@@ -23,11 +23,12 @@ namespace Game.ProjectileSystem.Systems
             World.Query(_projectileQuery, 
                 (Entity entity, 
                     ref Position position, 
+                    ref ProjectileData projectileData,
                     ref ProjectileState projectileState, 
                     ref LocomotionState locomotionState) =>
                 {
                     projectileState.PassedDistance += Vector3.Distance(position.Value, locomotionState.LastPosition);
-                    if (projectileState.PassedDistance >= projectileState.MaxDistance)
+                    if (projectileState.PassedDistance >= projectileData.MaxDistance)
                     {
                         commandBuffer.Add(entity, new Destroy());
                     }

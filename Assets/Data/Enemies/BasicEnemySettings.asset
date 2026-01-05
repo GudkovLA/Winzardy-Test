@@ -17,7 +17,7 @@ MonoBehaviour:
   Fraction: 2
   Enemies: 1
   Abilities:
-  - {fileID: 11400000, guid: e6e7d834c094a924fbad17ddfb947a68, type: 2}
+  - {fileID: 11400000, guid: 3ff166e8c9f91bc409c2f950cd9e822a, type: 2}
   MinDistanceToPlayer: 1.25
   Loot:
   - Resource: {fileID: 11400000, guid: dbd4d8b7e51ea0a4f8663e114fa68855, type: 2}

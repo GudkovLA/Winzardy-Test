@@ -2,7 +2,6 @@
 
 using Arch.Buffer;
 using Arch.Core;
-using Game.AbilitySystem;
 using Game.CharacterSystem;
 using Game.CharacterSystem.Components;
 using Game.CharacterSystem.Settings;
@@ -29,16 +28,14 @@ namespace Game.Utils
             }
 
             if (!serviceLocator.TryGet<PlayerSettings>(out var playerSettings)
-                || !serviceLocator.TryGet<GameLevel>(out var gameLevel)
-                || !serviceLocator.TryGet<AbilityManager>(out var abilityManager))
+                || !serviceLocator.TryGet<GameLevel>(out var gameLevel))
             {
                 return;
             }
 
             var commandBuffer = new CommandBuffer();
-            var entity = CharacterUtils.SpawnCharacter(world, 
-                playerSettings,
-                abilityManager,
+            var entity = CharacterUtils.SpawnCharacter(playerSettings,
+                world,
                 commandBuffer,
                 gameLevel.StartPosition,
                 gameLevel.StartRotation);

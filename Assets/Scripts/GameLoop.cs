@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using Game.AbilitySystem.Settings;
 using Game.CharacterSystem.Settings;
 using Game.Common;
 using Game.Common.Events;
@@ -90,6 +91,17 @@ namespace Game
             InitializeInstancePool(instancePool, _playerSettings.Character.Prefab, _playerSettings.PoolSize);
             InitializeInstancePool(instancePool, _enemySettings.Character.Prefab, _enemySettings.PoolSize);
             InitializeInstancePool(instancePool, _gameSettings.HealthViewPrefab, _gameSettings.HealthViewPoolSize);
+
+            // TODO: Unify initialization for player and enemies
+            foreach (var abilityData in _playerSettings.Abilities)
+            {
+                if (abilityData is SpawnProjectileAbilitySettings spawnProjectileAbilitySettings)
+                {
+                    InitializeInstancePool(instancePool, 
+                        spawnProjectileAbilitySettings.ProjectileSettings.Prefab, 
+                        spawnProjectileAbilitySettings.ProjectileSettings.PoolSize);
+                }
+            }
 
             foreach (var lootData in _enemySettings.Loot)
             {

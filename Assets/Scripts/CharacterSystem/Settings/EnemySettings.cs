@@ -21,9 +21,9 @@ namespace Game.CharacterSystem.Settings
         {
         }
         
-        public override void Initialize(Entity entity, CommandBuffer commandBuffer)
+        public override void Initialize(World world, CommandBuffer commandBuffer, Entity entity)
         {
-            base.Initialize(entity, commandBuffer);
+            base.Initialize(world, commandBuffer, entity);
             
             commandBuffer.Add(entity, new EnemyControlState { MinDistanceToPlayer = MinDistanceToPlayer });
         }

@@ -28,7 +28,7 @@ namespace Game.CharacterSystem.Systems
             .WithNone<Destroy, ObstacleAvoidance>();
 
         private static readonly QueryDescription _enemyQuery = new QueryDescription()
-            .WithAll<Position, Size, LocomotionState, EnemyControlState, ObstacleAvoidance>()
+            .WithAll<Position, Size, LocomotionData, LocomotionState, EnemyControlState, ObstacleAvoidance>()
             .WithNone<Destroy>();
 
         private GameSettings _gameSettings = null!;
@@ -74,6 +74,7 @@ namespace Game.CharacterSystem.Systems
             World.Query(_enemyQuery,
                 (ref Position position, 
                     ref Size size, 
+                    ref LocomotionData locomotionData,
                     ref LocomotionState locomotionState,
                     ref EnemyControlState controlState,
                     ref ObstacleAvoidance obstacleAvoidance) =>
@@ -97,7 +98,7 @@ namespace Game.CharacterSystem.Systems
 
                     // Don't move when close enough to player
                     locomotionState.Speed = delta.magnitude > controlState.MinDistanceToPlayer
-                        ? locomotionState.MaxSpeed
+                        ? locomotionData.MaxSpeed
                         : 0f;
                     
                     // Calculate the direction of movement in accordance with obstacles on the way to the goal.

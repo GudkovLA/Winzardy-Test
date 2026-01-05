@@ -16,7 +16,7 @@ MonoBehaviour:
     Angle: {x: 90, y: 0, z: 0}
     Offset: {x: 0, y: 20, z: 0}
   SpawnSettings:
-    EnemySpawnTimeout: 7
+    EnemySpawnTimeout: 1
     CameraAreaScale: 1.15
     AreaMaxDepth: 10
     SpawnRetryCountLimit: 10

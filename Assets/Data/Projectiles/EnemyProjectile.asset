@@ -9,8 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e3a99e0fe0e41929527c94c6d656b53, type: 3}
-  m_Name: InvisibleAreaProjectileAbility
+  m_Script: {fileID: 11500000, guid: a2834cd4586f40528daf3f11facbd476, type: 3}
+  m_Name: EnemyProjectile
   m_EditorClassIdentifier: 
-  ActivateTimeout: 1
-  ProjectileSettings: {fileID: 11400000, guid: e60df618f50327d428532563e243b473, type: 2}
+  Prefab: {fileID: 0}
+  PoolSize: 0
+  Speed: 0
+  Damage: 5
+  MaxDistance: 0
+  HitRadius: 1
+  DestroyOnHit: 1

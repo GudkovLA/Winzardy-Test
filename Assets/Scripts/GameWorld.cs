@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Arch.Core;
-using Game.AbilitySystem;
 using Game.CharacterSystem.Settings;
 using Game.Common;
 using Game.Common.Systems;
@@ -39,7 +38,6 @@ namespace Game
             _worldHandle = new WorldHandle(null!);
             _gameUi = gameUi;
 
-            var abilityManager = new AbilityManager(_worldHandle, instancePool);
             var resourceManager = new ResourcesManager();
             resourceManager.CreateResources(enemySettings);
 
@@ -53,7 +51,6 @@ namespace Game
             _serviceLocator.Register(gameUi);
             _serviceLocator.Register(instancePool);
             _serviceLocator.Register(instanceFactory);
-            _serviceLocator.Register(abilityManager);
             _serviceLocator.Register(resourceManager);
             _serviceLocator.Register(eventsManager);
             
