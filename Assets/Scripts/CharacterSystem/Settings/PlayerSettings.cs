@@ -4,6 +4,7 @@ using System;
 using Arch.Buffer;
 using Arch.Core;
 using Game.CharacterSystem.Components;
+using Game.DamageSystem.Components;
 using Game.LocomotionSystem.Components;
 using Game.ResourceSystem.Components;
 using UnityEngine;
@@ -23,6 +24,7 @@ namespace Game.CharacterSystem.Settings
             commandBuffer.Add(entity, new ResourceCollector { CollectRadius = CoinsCollectRadius });
             commandBuffer.Add(entity, new PlayerTag());
             commandBuffer.Add(entity, new IgnoreObstaclesTag());
+            commandBuffer.Add(entity, new DontDestroyOnDeath());
         }
     }
 }

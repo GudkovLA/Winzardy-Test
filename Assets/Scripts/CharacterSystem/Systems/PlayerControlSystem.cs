@@ -39,13 +39,25 @@ namespace Game.CharacterSystem.Systems
             var moveInput = _gameInput.Player.Move.ReadValue<Vector2>();
 
             var playerEntity = World.GetPlayerSingleton();
-            if (playerEntity != Entity.Null
-                && !playerEntity.Has<IsDeadTag>()
-                && playerEntity.TryGet<LocomotionState>(out var locomotionState))
+            if (playerEntity == Entity.Null)
             {
-                locomotionState.Direction = new Vector3(moveInput.x, 0, moveInput.y);
-                playerEntity.Set(locomotionState);
+                Debug.LogError("Player entity not found");
+                _initialized = false;
+                return;
             }
+
+            if (!playerEntity.TryGet<LocomotionState>(out var locomotionState))
+            {
+                Debug.LogError("Player entity in not initialized");
+                _initialized = false;
+                return;
+            }
+            
+            locomotionState.Direction = !playerEntity.Has<IsDeadTag>()
+                ? new Vector3(moveInput.x, 0, moveInput.y)
+                : Vector3.zero;
+
+            playerEntity.Set(locomotionState);
         }
     }
 }

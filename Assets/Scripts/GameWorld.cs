@@ -18,13 +18,17 @@ namespace Game
     public class GameWorld : IDisposable
     {
         private readonly WorldHandle _worldHandle;
-        private readonly SystemManager _systemManager;
         private readonly ServiceLocator _serviceLocator;
+        private readonly GameUi _gameUi;
+        
+        
+        private SystemManager _systemManager = null!;
 
         public GameWorld(
             GameSettings gameSettings, 
             PlayerSettings playerSettings, 
             EnemySettings enemySettings,
+            EventsManager eventsManager,
             GameLevel gameLevel,
             GameCamera gameCamera,
             GameInput gameInput,
@@ -32,12 +36,10 @@ namespace Game
             InstancePool instancePool,
             InstanceFactory instanceFactory)
         {
-            var world = World.Create();
-            _worldHandle = new WorldHandle(world);
+            _worldHandle = new WorldHandle(null!);
+            _gameUi = gameUi;
 
-            var assemblies =  GatherAssemblies();
             var abilityManager = new AbilityManager(_worldHandle, instancePool);
-
             var resourceManager = new ResourcesManager();
             resourceManager.CreateResources(enemySettings);
 
@@ -53,14 +55,31 @@ namespace Game
             _serviceLocator.Register(instanceFactory);
             _serviceLocator.Register(abilityManager);
             _serviceLocator.Register(resourceManager);
+            _serviceLocator.Register(eventsManager);
             
-            _systemManager = new SystemManager(_worldHandle, _serviceLocator);
-            _serviceLocator.Register(_systemManager);
+            _gameUi.InitializeFrom(_serviceLocator);
+        }
 
+        public void StartGame()
+        {
+            var world = World.Create();
+            _worldHandle.Set(world);
+
+            var assemblies =  GatherAssemblies();
+            _systemManager = new SystemManager(_worldHandle, _serviceLocator);
             _systemManager.InitializeFrom(assemblies);
             _systemManager.LogStructure();
             
             world.CreatePlayerSingleton(_serviceLocator);
+
+            _gameUi.StartGame();
+        }
+
+        public void RestartGame()
+        {
+            _systemManager.Dispose();
+
+            StartGame();
         }
 
         public void Dispose()

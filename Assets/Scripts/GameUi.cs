@@ -1,7 +1,8 @@
 ﻿#nullable enable
 
 using System;
-using Game.UiSystem;
+using Game.Common;
+using Game.UiSystem.Controllers;
 using Game.Utils;
 using UnityEngine;
 
@@ -13,14 +14,28 @@ namespace Game
         
         public Canvas Canvas { private set; get; }
         public HudController HudController { private set; get; }
+        public GameMenuController GameMenuController { private set; get; }
         public Transform Root => Canvas.transform;
 
-        public GameUi(Camera camera, Canvas canvas, InstancePool instancePool)
+        public GameUi(Camera camera, Canvas canvas)
         {
             _camera = camera;
             Canvas = canvas;
-            HudController = Canvas.GetComponentInChildren<HudController>();
-            HudController.InitializeFrom(instancePool);
+            
+            HudController = Canvas.GetComponentInChildren<HudController>(true);
+            GameMenuController = Canvas.GetComponentInChildren<GameMenuController>(true);
+        }
+
+        public void InitializeFrom(ServiceLocator serviceLocator)
+        {
+            HudController.InitializeFrom(serviceLocator);
+            GameMenuController.InitializeFrom(serviceLocator);
+        }
+
+        public void StartGame()
+        {
+            HudController.StartGame();
+            GameMenuController.StartGame();
         }
 
         public Vector2 GetScreenPosition(Vector3 worldPosition)

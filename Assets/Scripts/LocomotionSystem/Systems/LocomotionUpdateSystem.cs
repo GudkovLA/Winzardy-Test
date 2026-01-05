@@ -57,9 +57,14 @@ namespace Game.LocomotionSystem.Systems
                 (ref Position position, ref Rotation rotation, ref LocomotionState locomotionState) =>
                 {
                     var direction = (position.Value - locomotionState.LastPosition).normalized;
+                    if (direction == Vector3.zero)
+                    {
+                        direction = locomotionState.Direction;
+                    }
+                    
                     var lookDirection = direction != Vector3.zero
                         ? Quaternion.LookRotation(direction, Vector3.up)
-                        : Quaternion.LookRotation(locomotionState.Direction, Vector3.up);
+                        : Quaternion.identity;
 
                     rotation.Value = Quaternion.RotateTowards(rotation.Value, lookDirection, rotationSpeed);
                 });

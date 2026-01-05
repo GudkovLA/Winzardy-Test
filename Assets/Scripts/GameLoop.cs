@@ -1,6 +1,8 @@
 ﻿#nullable enable
 
 using Game.CharacterSystem.Settings;
+using Game.Common;
+using Game.Common.Events;
 using Game.Settings;
 using Game.Utils;
 using UnityEngine;
@@ -31,10 +33,14 @@ namespace Game
         [SerializeField]
         private Camera _camera = null!;
 
+        private EventsManager? _eventsManager;
         private GameWorld? _gameWorld;
         
         private void Awake()
         {
+            _eventsManager = new EventsManager();
+            _eventsManager.Subscribe<RestartGameEvent>(this, OnRestartGameEvent);
+            
             var gameLevel = new GameLevel(_levelRoot, Vector3.zero, Quaternion.identity); 
             var gameCamera = new GameCamera(_camera);
 
@@ -46,21 +52,25 @@ namespace Game
             gameInput.Player.Enable();
 
             var canvas = _uiCanvas.gameObject.GetComponent<Canvas>();
-            var gameUi = new GameUi(_camera, canvas, instancePool);
+            var gameUi = new GameUi(_camera, canvas);
 
             _gameWorld = new GameWorld(_gameSettings, 
                 _playerSettings, 
-                _enemySettings, 
+                _enemySettings,
+                _eventsManager, 
                 gameLevel, 
                 gameCamera,
                 gameInput,
                 gameUi,
                 instancePool,
                 instanceFactory);
+
+            _gameWorld.StartGame();
         }
 
         private void Update()
         {
+            _eventsManager?.Update(Time.deltaTime);
             _gameWorld?.Update();
         }
         
@@ -68,6 +78,11 @@ namespace Game
         {
             _gameWorld?.Dispose();
             _gameWorld = null;
+        }
+
+        private void OnRestartGameEvent(RestartGameEvent eventArgs)
+        {
+            _gameWorld?.RestartGame();
         }
 
         private void InitializeInstancePool(InstancePool instancePool)

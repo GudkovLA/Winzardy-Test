@@ -1,11 +1,11 @@
 ﻿#nullable enable
 
 using Arch.Core;
+using Arch.Core.Extensions;
 using Game.CharacterSystem.Components;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
-using Game.Components;
 using Game.DamageSystem.Components;
 
 namespace Game.DamageSystem.Systems
@@ -31,7 +31,15 @@ namespace Game.DamageSystem.Systems
                     }
 
                     healthState.Health = 0;
-                    commandBuffer.Add(entity, new IsDeadTag());
+
+                    if (entity.Has<DontDestroyOnDeath>())
+                    {
+                        commandBuffer.Add(entity, new IsDeadTag());
+                    }
+                    else
+                    {
+                        commandBuffer.Add(entity, new Destroy());
+                    }
                 });
         }
     }

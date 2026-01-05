@@ -13,8 +13,11 @@ namespace Game.Systems
     [UpdateBefore(typeof(EntityDestroySystem))]
     public class InstanceReleaseSystem : AbstractSystem
     {
-        private static readonly QueryDescription _transformCleanupQuery = new QueryDescription()
+        private static readonly QueryDescription _transformDestroyQuery = new QueryDescription()
             .WithAll<InstanceLink, PrefabId, Destroy>();
+
+        private static readonly QueryDescription _transformDestroyAllQuery = new QueryDescription()
+            .WithAll<InstanceLink, PrefabId>();
 
         private InstanceFactory _instanceFactory = null!;
         private bool _initialized;
@@ -31,9 +34,25 @@ namespace Game.Systems
             _initialized = true;
         }
 
+        protected override void OnDestroy()
+        {
+            World.Query(_transformDestroyAllQuery,
+                (ref InstanceLink instanceLink, ref PrefabId prefabId) =>
+                {
+                    _instanceFactory.Destroy(prefabId.Value, instanceLink.Instance.gameObject);
+                });
+
+            base.OnDestroy();
+        }        
+
         protected override void OnUpdate()
         {
-            World.Query(_transformCleanupQuery,
+            if (!_initialized)
+            {
+                return;
+            }
+            
+            World.Query(_transformDestroyQuery,
                 (ref InstanceLink instanceLink, ref PrefabId prefabId) =>
                 {
                     _instanceFactory.Destroy(prefabId.Value, instanceLink.Instance.gameObject);

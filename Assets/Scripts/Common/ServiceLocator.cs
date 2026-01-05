@@ -37,10 +37,11 @@ namespace Game.Common
                 return;
             }
         }
-        
-        public T? Get<T>()
+
+        public T GetRequired<T>()
         {
-            return (T?) _services.GetValueOrDefault(typeof(T));
+            var result = (T?) _services.GetValueOrDefault(typeof(T));
+            return result ?? throw new NullReferenceException($"Can't find service (ServicerType={typeof(T).Name})");
         }
 
         public bool TryGet<T>([NotNullWhen(true)] out T service)

@@ -92,9 +92,6 @@ namespace Game.DamageSystem.Systems
                         return;
                     }
                     
-                    healthState.Health = 0;
-                    commandBuffer.Add(targetEntity, new Destroy());
-
                     // TODO: Spawn must be a part of ResourceSystem
                     if (targetEntity.TryGet<ResourceSpawner>(out var coinSpawner)
                         && targetEntity.TryGet<Position>(out var position))

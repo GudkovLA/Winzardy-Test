@@ -1,10 +1,11 @@
 ﻿#nullable enable
 
 using System.Collections.Generic;
+using Game.Common;
 using Game.Utils;
 using UnityEngine;
 
-namespace Game.UiSystem
+namespace Game.UiSystem.Controllers
 {
     public class HudController : MonoBehaviour
     {
@@ -24,10 +25,14 @@ namespace Game.UiSystem
 
         private InstancePool _instancePool = null!;
         
-        public void InitializeFrom(InstancePool instancePool)
+        public void InitializeFrom(ServiceLocator serviceLocator)
         {
-            _instancePool = instancePool;
+            _instancePool = serviceLocator.GetRequired<InstancePool>();
             _instancePool.Register(_resourceViewPrefab, 2);
+        }
+
+        public void StartGame()
+        {
         }
         
         public ResourceController GetResourceView(int index)
