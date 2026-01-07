@@ -6,13 +6,16 @@ Assets
 ├── Prefabs
 ├── Scenes
 ├── Scripts
+│   ├── AbilitySystem
+│   ├── CharacterSystem
 │   ├── Common
-│   │   └── Systems
-│   ├── Components
-│   ├── Controllers
-│   ├── Settings
-│   ├── Systems
-│   └── Ui
+│   ├── DamageSystem
+│   ├── GameplaySystem
+│   ├── LocomotionSystem
+│   ├── PresentationSystem
+│   ├── ProjectileSystem
+│   ├── ResourceSystem
+│   ├── UiSystem
 │   └── Utils
 └── Textures
 ```
