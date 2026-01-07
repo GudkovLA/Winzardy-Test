@@ -2,7 +2,7 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Game.SpawnSystem
+namespace Game.GameplaySystem
 {
     public enum SpawnAreaId
     {

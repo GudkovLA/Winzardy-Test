@@ -8,7 +8,7 @@ using Game.Common.Systems.Attributes;
 using Game.Utils;
 using UnityEngine;
 
-namespace Game.Systems
+namespace Game.PresentationSystem.Systems
 {
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     public class CameraUpdateSystem : AbstractSystem

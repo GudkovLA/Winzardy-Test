@@ -7,7 +7,7 @@ using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.Utils;
 
-namespace Game.Systems
+namespace Game.GameplaySystem.Systems
 {
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     public class GameOverHandleSystem : AbstractSystem

@@ -4,9 +4,8 @@ using Arch.Core;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
+using Game.GameplaySystem.Systems;
 using Game.PresentationSystem.Components;
-using Game.Systems;
-using Game.Utils;
 
 namespace Game.PresentationSystem.Systems
 {

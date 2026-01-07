@@ -11,7 +11,7 @@ using Game.ResourceSystem.Components;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Game.SpawnSystem.Systems
+namespace Game.GameplaySystem.Systems
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public class EnemySpawnSystem : AbstractSystem

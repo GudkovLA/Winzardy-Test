@@ -4,6 +4,7 @@ using Arch.Core;
 using Arch.Core.Extensions;
 using Game.AbilitySystem.Components;
 using Game.CharacterSystem.Components;
+using Game.Common;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
@@ -26,6 +27,8 @@ namespace Game.AbilitySystem.Systems
         private static readonly QueryDescription _blockedAbilitiesQuery = new QueryDescription()
             .WithAll<Ability, AbilityConditionTargetInRange, AbilityBlockedTag>()
             .WithNone<Destroy>();
+
+        private EntityHandle? _playerEntity;
 
         protected override void OnUpdate()
         {
@@ -123,6 +126,6 @@ namespace Game.AbilitySystem.Systems
             });
 
             return result;
-        }        
+        }
     }
 }

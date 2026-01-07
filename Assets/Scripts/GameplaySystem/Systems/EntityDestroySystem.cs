@@ -5,7 +5,7 @@ using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 
-namespace Game.Systems
+namespace Game.GameplaySystem.Systems
 {
     [UpdateInGroup(typeof(CleanupSystemGroup))]
     public class EntityDestroySystem : AbstractSystem
