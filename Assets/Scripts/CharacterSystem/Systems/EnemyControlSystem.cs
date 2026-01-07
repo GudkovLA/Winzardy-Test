@@ -7,6 +7,7 @@ using Game.Common;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
+using Game.DamageSystem.Components;
 using Game.LocomotionSystem.Components;
 using Game.Utils;
 using UnityEngine;
@@ -26,6 +27,10 @@ namespace Game.CharacterSystem.Systems
 
         private readonly QueryDescription _enemyQuery = new QueryDescription()
             .WithAll<Position, Size, LocomotionData, LocomotionState, EnemyControlState, ObstacleAvoidance>()
+            .WithNone<Destroy, DeathState>();
+
+        private readonly QueryDescription _deadEnemyQuery = new QueryDescription()
+            .WithAll<LocomotionState, EnemyControlState, DeathState>()
             .WithNone<Destroy>();
 
         private float _avoidanceDirectionChangeTimeout;
@@ -97,6 +102,13 @@ namespace Game.CharacterSystem.Systems
                         delta.normalized,
                         _radiusFactor * size.Value.x,
                         obstacleAvoidance.DirectionFactor);
+                });
+            
+            World.Query(_deadEnemyQuery,
+                (ref LocomotionState locomotionState) =>
+                {
+                    locomotionState.Speed = 0f;
+                    locomotionState.Direction = Vector3.zero;
                 });
         }
 

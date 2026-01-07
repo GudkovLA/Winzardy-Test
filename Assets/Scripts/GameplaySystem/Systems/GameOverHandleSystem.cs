@@ -13,6 +13,7 @@ namespace Game.GameplaySystem.Systems
     public class GameOverHandleSystem : AbstractSystem
     {
         private GameUi _gameUi = null!;
+        private float _deathCameraDuration;
         private bool _initialized;
         
         protected override void OnCreate()
@@ -24,6 +25,10 @@ namespace Game.GameplaySystem.Systems
                 return;
             }
 
+            _deathCameraDuration = ServiceLocator.TryGet<GameSettings>(out var gameSettings)
+                ? gameSettings.DeathCameraDuration
+                : 0f;
+            
             _initialized = true;
         }
 
@@ -34,10 +39,14 @@ namespace Game.GameplaySystem.Systems
                 return;
             }
 
+            var time = Context.Time;
             var playerEntity = World.GetPlayerSingleton();
-            if (playerEntity != Entity.Null && playerEntity.Has<DeathState>())
+            if (playerEntity != Entity.Null && playerEntity.TryGet<DeathState>(out var deathState))
             {
-                _gameUi.GameMenuController.ShowGameOverMenu();
+                if (deathState.DeathTime + deathState.Duration + _deathCameraDuration < time)
+                {
+                    _gameUi.GameMenuController.ShowGameOverMenu();
+                }
             }
         }        
     }

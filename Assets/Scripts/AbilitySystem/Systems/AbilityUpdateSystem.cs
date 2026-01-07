@@ -38,7 +38,11 @@ namespace Game.AbilitySystem.Systems
                     var ownerEntity = ability.OwnerEntity.Value;
                     if (ownerEntity.Has<DeathState>())
                     {
-                        commandBuffer.Remove<AbilityReadyTag>(entity);
+                        if (entity.Has<AbilityReadyTag>())
+                        {
+                            commandBuffer.Remove<AbilityReadyTag>(entity);
+                        }
+                        
                         return;
                     }
                     

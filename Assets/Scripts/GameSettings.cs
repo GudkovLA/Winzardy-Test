@@ -23,6 +23,7 @@ namespace Game
         public float LocomotionTurnSpeed;
         public float AvoidanceDirectionChangeTimeout;
         public float ResourceCaptureAcceleration;
+        public float DeathCameraDuration;
         
         public void Dispose()
         {

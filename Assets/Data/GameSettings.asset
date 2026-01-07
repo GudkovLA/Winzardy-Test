@@ -17,7 +17,7 @@ MonoBehaviour:
     Offset: {x: 0, y: 20, z: 0}
   Spawn:
     CameraAreaScale: 1.15
-    AreaMaxDepth: 10
+    AreaMaxDepth: 2
     SpawnRetryCountLimit: 10
     SpawnCollisionSafeRadius: 1
     DebugEnable: 0
@@ -48,3 +48,4 @@ MonoBehaviour:
   LocomotionTurnSpeed: 1
   AvoidanceDirectionChangeTimeout: 1
   ResourceCaptureAcceleration: 0.2
+  DeathCameraDuration: 1
