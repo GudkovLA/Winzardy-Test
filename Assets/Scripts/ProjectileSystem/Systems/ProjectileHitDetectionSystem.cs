@@ -13,7 +13,7 @@ using UnityEngine.Pool;
 
 namespace Game.ProjectileSystem.Systems
 {
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(ProjectileSystemGroup))]
     [UpdateAfter(typeof(ProjectileUpdateSystem))]
     public class ProjectileHitDetectionSystem : AbstractSystem
     {

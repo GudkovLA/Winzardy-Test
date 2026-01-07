@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Game.ProjectileSystem.Systems
 {
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(ProjectileSystemGroup))]
     public class ProjectileUpdateSystem : AbstractSystem
     {
         private readonly QueryDescription _projectileQuery = new QueryDescription()

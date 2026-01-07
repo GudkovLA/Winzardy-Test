@@ -12,7 +12,7 @@ using UnityEngine;
 namespace Game.ResourceSystem.Systems
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    public class ResourceCollectingSystem : AbstractSystem
+    public class ResourceCaptureSystem : AbstractSystem
     {
         private readonly QueryDescription _coinsQuery = new QueryDescription()
             .WithAll<Position, Resource>()

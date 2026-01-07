@@ -9,12 +9,14 @@ using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.DamageSystem.Components;
 using Game.PresentationSystem.Components;
+using Game.PresentationSystem.Systems;
 using Game.UiSystem.Views;
 using UnityEngine;
 
 namespace Game.UiSystem.Systems
 {
     [UpdateInGroup(typeof(PresentationSystemGroup))]
+    [UpdateAfter(typeof(TransformUpdateSystem))]
     public class HealthViewUpdateSystem : AbstractSystem
     {
         private readonly QueryDescription _enemyQuery = new QueryDescription()

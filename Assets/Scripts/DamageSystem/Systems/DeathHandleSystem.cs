@@ -10,7 +10,7 @@ using Game.DamageSystem.Components;
 
 namespace Game.DamageSystem.Systems
 {
-    [UpdateInGroup(typeof(LateSimulationSystemGroup))]
+    [UpdateInGroup(typeof(DamageHandleSystemGroup))]
     [UpdateAfter(typeof(DamageHandleSystem))]
     public class DeathHandleSystem : AbstractSystem
     {

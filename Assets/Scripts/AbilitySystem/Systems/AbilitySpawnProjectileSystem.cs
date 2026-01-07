@@ -16,7 +16,7 @@ using UnityEngine;
 
 namespace Game.AbilitySystem.Systems
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateInGroup(typeof(AbilitySystemGroup))]
     public class AbilitySpawnProjectileSystem : AbstractSystem
     {
         private readonly QueryDescription _abilitiesQuery = new QueryDescription()

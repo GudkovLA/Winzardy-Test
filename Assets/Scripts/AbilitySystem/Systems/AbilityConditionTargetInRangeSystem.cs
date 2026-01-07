@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace Game.AbilitySystem.Systems
 {
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(AbilitySystemGroup))]
     public class AbilityConditionTargetInRangeSystem : AbstractSystem
     {
         private readonly QueryDescription _enemyQuery = new QueryDescription()

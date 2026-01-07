@@ -15,7 +15,7 @@ using UnityEngine;
 
 namespace Game.DamageSystem.Systems
 {
-    [UpdateInGroup(typeof(LateSimulationSystemGroup))]
+    [UpdateInGroup(typeof(DamageHandleSystemGroup))]
     public class DamageHandleSystem : AbstractSystem
     {
         private readonly QueryDescription _projectileHitQuery = new QueryDescription()

@@ -17,54 +17,9 @@ namespace Game.Common.Systems
         public void AddSystem(AbstractSystem system)
         {
             _systems.Add(system);
-
-            OrderSystems();
         }
 
-        public void LogStructure(StringBuilder output, string tab)
-        {
-            var subTab = $"{tab}  ";
-            foreach (var system in _systems)
-            {
-                output.Append(tab).Append(system.GetType().Name).Append('\n');
-
-                if (system is AbstractSystemGroup systemGroup)
-                {
-                    systemGroup.LogStructure(output, subTab);
-                }
-            }
-        }
-
-        protected override void OnDestroy()
-        {
-            foreach (var system in _systems)
-            {
-                system.Dispose();
-            }
-
-            _systems.Clear();
-
-            base.OnDestroy();
-        }
-
-        protected override void OnUpdate()
-        {
-            base.OnUpdate();
-
-            foreach (var system in _systems)
-            {
-                system.Update();
-            }
-        }
-
-        protected override void OnAfterUpdate()
-        {
-            base.OnAfterUpdate();
-
-            Context.Playback(this);
-        }
-
-        private void OrderSystems()
+        public void UpdateOrder()
         {
             using var _ = ListPool<AbstractSystem>.Get(out var systemCache);
             systemCache.AddRange(_systems);
@@ -115,6 +70,49 @@ namespace Game.Common.Systems
                     }
                 }
             }
+        }
+
+        public void LogStructure(StringBuilder output, string tab)
+        {
+            var subTab = $"{tab}  ";
+            foreach (var system in _systems)
+            {
+                output.Append(tab).Append(system.GetType().Name).Append('\n');
+
+                if (system is AbstractSystemGroup systemGroup)
+                {
+                    systemGroup.LogStructure(output, subTab);
+                }
+            }
+        }
+
+        protected override void OnDestroy()
+        {
+            foreach (var system in _systems)
+            {
+                system.Dispose();
+            }
+
+            _systems.Clear();
+
+            base.OnDestroy();
+        }
+
+        protected override void OnUpdate()
+        {
+            base.OnUpdate();
+
+            foreach (var system in _systems)
+            {
+                system.Update();
+            }
+        }
+
+        protected override void OnAfterUpdate()
+        {
+            base.OnAfterUpdate();
+
+            Context.Playback(this);
         }
 
         private int GetSystemIndex(Type type)

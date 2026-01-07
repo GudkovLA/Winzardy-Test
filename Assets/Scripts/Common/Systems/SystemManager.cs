@@ -28,26 +28,12 @@ namespace Game.Common.Systems
 
         public void InitializeFrom(List<Assembly> assemblies)
         {
-            /*
-            var selfAssembly = typeof(LoopSystemGroup).Assembly;
-            if (!assemblies.Contains(selfAssembly))
-            {
-                CreateSystems(selfAssembly);
-            }
-            */
             foreach (var assembly in assemblies)
             {
                 CreateSystemGroups(assembly);
             }
             
             GroupSystemGroups();
-
-            /*
-            if (!assemblies.Contains(selfAssembly))
-            {
-                CreateSystems(selfAssembly);
-            }
-            */
             
             foreach (var assembly in assemblies)
             {
@@ -85,7 +71,7 @@ namespace Game.Common.Systems
             }
 
             AddSystemInternal(type, system);
-            GroupSystem(type, system);
+            AddSystemToGroup(type, system);
             return (T)system;
         }
 
@@ -104,7 +90,7 @@ namespace Game.Common.Systems
             }
 
             AddSystemInternal(type, system);
-            GroupSystem(type, system);
+            AddSystemToGroup(type, system)?.UpdateOrder();
             return system;
         }
 
@@ -208,33 +194,44 @@ namespace Game.Common.Systems
                 systemGroup.AddSystem(entry.Value);
                 _parentGroups.Add(entry.Value, systemGroup);
             }
+
+            foreach (var group in _allGroups.Values)
+            {
+                group.UpdateOrder();
+            }
         }
 
         private void GroupSystems()
         {
             foreach (var entry in _allSystems)
             {
-                GroupSystem(entry.Key, entry.Value);
+                AddSystemToGroup(entry.Key, entry.Value);
+            }
+
+            foreach (var group in _allGroups.Values)
+            {
+                group.UpdateOrder();
             }
         }
 
-        private void GroupSystem(Type systemType, AbstractSystem system)
+        private AbstractSystemGroup? AddSystemToGroup(Type systemType, AbstractSystem system)
         {
             var updateInGroup = systemType.GetCustomAttribute<UpdateInGroupAttribute>();
             if (updateInGroup == null)
             {
                 Debug.LogError($"Can't order system group of type (Type={systemType.Name})");
-                return;
+                return null;
             }
 
             if (!_allGroups.TryGetValue(updateInGroup.SystemType, out var systemGroup))
             {
                 Debug.LogError($"Can't find system group (Type={updateInGroup.SystemType.Name})");
-                return;
+                return null;
             }
 
             systemGroup.AddSystem(system);
             _parentGroups.Add(system, systemGroup);
+            return systemGroup;
         }
     }
 }

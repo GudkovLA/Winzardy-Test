@@ -10,7 +10,7 @@ using Game.Common.Systems.Attributes;
 
 namespace Game.AbilitySystem.Systems
 {
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateInGroup(typeof(AbilitySystemGroup))]
     public class AbilityUpdateSystem : AbstractSystem
     {
         private readonly QueryDescription _abilitiesQuery = new QueryDescription()

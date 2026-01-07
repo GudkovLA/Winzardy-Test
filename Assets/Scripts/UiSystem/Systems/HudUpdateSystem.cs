@@ -10,7 +10,7 @@ using Game.ResourceSystem.Components;
 
 namespace Game.UiSystem.Systems
 {
-    [UpdateInGroup(typeof(LateSimulationSystemGroup))]
+    [UpdateInGroup(typeof(PresentationSystemGroup))]
     public class HudUpdateSystem : AbstractSystem
     {
         private readonly QueryDescription _playerInfoQuery = new QueryDescription()

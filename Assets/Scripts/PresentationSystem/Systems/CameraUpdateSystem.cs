@@ -11,6 +11,7 @@ using UnityEngine;
 namespace Game.PresentationSystem.Systems
 {
     [UpdateInGroup(typeof(PresentationSystemGroup))]
+    [UpdateAfter(typeof(TransformUpdateSystem))]
     public class CameraUpdateSystem : AbstractSystem
     {
         private GameSettings _gameSettings = null!;
