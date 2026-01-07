@@ -5,6 +5,7 @@ using Arch.Buffer;
 using Arch.Core;
 using Game.AbilitySystem.Components;
 using Game.ProjectileSystem.Settings;
+using Game.Utils;
 using UnityEngine;
 
 namespace Game.AbilitySystem.Settings
@@ -17,6 +18,12 @@ namespace Game.AbilitySystem.Settings
         public ProjectileSettings ProjectileSettings = null!;
         public SpawnDirectionType SpawnDirection;
         public int ProjectilesAmountPerActivation;
+        
+        public override void Prepare(InstancePool instancePool)
+        {
+            base.Prepare(instancePool);
+            ProjectileSettings.Prepare(instancePool);
+        }
         
         public override void Initialize(CommandBuffer commandBuffer, Entity entity)
         {

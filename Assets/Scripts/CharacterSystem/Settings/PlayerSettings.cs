@@ -13,7 +13,7 @@ namespace Game.CharacterSystem.Settings
 {
     [CreateAssetMenu(fileName = nameof(PlayerSettings), menuName = "Assets/Player Settings")]
     [Serializable]
-    public class PlayerSettings : AbstractPlayerSettings, IDisposable
+    public class PlayerSettings : CharacterSettings
     {
         public float CoinsCollectRadius;
 

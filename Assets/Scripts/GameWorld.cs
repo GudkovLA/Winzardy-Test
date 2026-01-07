@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Arch.Core;
-using Game.CharacterSystem.Settings;
 using Game.Common;
 using Game.Common.Systems;
 using Game.ResourceSystem;
@@ -25,8 +24,6 @@ namespace Game
 
         public GameWorld(
             GameSettings gameSettings, 
-            PlayerSettings playerSettings, 
-            EnemySettings enemySettings,
             EventsManager eventsManager,
             GameLevel gameLevel,
             GameCamera gameCamera,
@@ -39,12 +36,10 @@ namespace Game
             _gameUi = gameUi;
 
             var resourceManager = new ResourcesManager();
-            resourceManager.CreateResources(enemySettings);
+            resourceManager.CreateResources(gameSettings);
 
             _serviceLocator = new ServiceLocator();
             _serviceLocator.Register(gameSettings);
-            _serviceLocator.Register(playerSettings);
-            _serviceLocator.Register(enemySettings);
             _serviceLocator.Register(gameLevel);
             _serviceLocator.Register(gameCamera);
             _serviceLocator.Register(gameInput);

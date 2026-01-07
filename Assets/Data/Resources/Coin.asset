@@ -9,10 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dce5bfef7b2c42639f5933b184c9dc12, type: 3}
-  m_Name: PlayerCharacterSettings
+  m_Script: {fileID: 11500000, guid: 5ffe9591f4494f6c95b61b2777c2ce82, type: 3}
+  m_Name: Coin
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 7943218971982778878, guid: fec70327d7255c2439c9153433ded449, type: 3}
-  Size: {x: 1, y: 2, z: 1}
-  MaxHealth: 200
-  Speed: 5
+  Prefab: {fileID: 1212067499461965912, guid: 31d09fb37f51e614b9c1ab37309b97e5, type: 3}
+  PoolSize: 30
+  Icon: {fileID: 21300000, guid: 33627f2ec863a6647aa07cba0da49207, type: 3}

@@ -7,13 +7,15 @@ using Game.Components;
 using Game.DamageSystem.Components;
 using Game.LocomotionSystem.Components;
 using Game.ProjectileSystem.Components;
+using Game.Settings;
+using Game.Utils;
 using UnityEngine;
 
 namespace Game.ProjectileSystem.Settings
 {
     [CreateAssetMenu(fileName = nameof(ProjectileSettings), menuName = "Assets/Projectile Settings")]
     [Serializable]
-    public class ProjectileSettings : ScriptableObject, IDisposable
+    public class ProjectileSettings : ScriptableObject, IDisposable, IPoolable
     { 
         public GameObject? Prefab;
         public int PoolSize;
@@ -26,6 +28,14 @@ namespace Game.ProjectileSystem.Settings
         
         public void Dispose()
         {
+        }
+
+        public void Prepare(InstancePool instancePool)
+        {
+            if (Prefab != null)
+            {
+                instancePool.Register(Prefab, PoolSize);
+            }
         }
 
         public void Initialize(CommandBuffer commandBuffer, Entity entity)

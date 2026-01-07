@@ -9,15 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dce5bfef7b2c42639f5933b184c9dc12, type: 3}
-  m_Name: MonsterCharacterSetting
+  m_Script: {fileID: 11500000, guid: 638f4106e08046c881619ea3620bb1b4, type: 3}
+  m_Name: Monster
   m_EditorClassIdentifier: 
   Prefab: {fileID: 4139666738509060230, guid: 9c0e58e6e75de714f8666df2d4bba979, type: 3}
+  PoolSize: 30
+  Size: {x: 1, y: 1, z: 1}
+  Health: 100
+  Speed: 2
   Fraction: 2
   Enemies: 1
-  Size: {x: 1, y: 1, z: 1}
-  ColliderRadius: 1
-  MaxHealth: 100
-  Speed: 2
   Abilities:
-  - {fileID: 11400000, guid: e6e7d834c094a924fbad17ddfb947a68, type: 2}
+  - {fileID: 11400000, guid: 3ff166e8c9f91bc409c2f950cd9e822a, type: 2}
+  MinDistanceToPlayer: 1.25
+  Loot:
+  - Resource: {fileID: 11400000, guid: dbd4d8b7e51ea0a4f8663e114fa68855, type: 2}
+    DropChance: 0.5

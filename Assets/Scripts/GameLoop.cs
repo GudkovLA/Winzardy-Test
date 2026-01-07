@@ -1,7 +1,5 @@
 ﻿#nullable enable
 
-using Game.AbilitySystem.Settings;
-using Game.CharacterSystem.Settings;
 using Game.Common;
 using Game.Common.Events;
 using Game.Settings;
@@ -14,13 +12,6 @@ namespace Game
     {
         [SerializeField]
         private GameSettings _gameSettings = null!;
-        
-        [SerializeField]
-        private PlayerSettings _playerSettings = null!;
-
-        [SerializeField]
-        // TODO: Add more types of enemies
-        private EnemySettings _enemySettings = null!;
         
         [SerializeField]
         private Transform _levelRoot = null!;
@@ -56,8 +47,6 @@ namespace Game
             var gameUi = new GameUi(_camera, canvas);
 
             _gameWorld = new GameWorld(_gameSettings, 
-                _playerSettings, 
-                _enemySettings,
                 _eventsManager, 
                 gameLevel, 
                 gameCamera,
@@ -88,33 +77,7 @@ namespace Game
 
         private void InitializeInstancePool(InstancePool instancePool)
         {
-            InitializeInstancePool(instancePool, _playerSettings.Character.Prefab, _playerSettings.PoolSize);
-            InitializeInstancePool(instancePool, _enemySettings.Character.Prefab, _enemySettings.PoolSize);
-            InitializeInstancePool(instancePool, _gameSettings.HealthViewPrefab, _gameSettings.HealthViewPoolSize);
-
-            // TODO: Unify initialization for player and enemies
-            foreach (var abilityData in _playerSettings.Abilities)
-            {
-                if (abilityData is SpawnProjectileAbilitySettings spawnProjectileAbilitySettings)
-                {
-                    InitializeInstancePool(instancePool, 
-                        spawnProjectileAbilitySettings.ProjectileSettings.Prefab, 
-                        spawnProjectileAbilitySettings.ProjectileSettings.PoolSize);
-                }
-            }
-
-            foreach (var lootData in _enemySettings.Loot)
-            {
-                InitializeInstancePool(instancePool, lootData.Resource.Prefab, lootData.PoolSize);
-            }
-        }
-
-        private static void InitializeInstancePool(InstancePool instancePool, GameObject? prefab, int poolSize)
-        {
-            if (prefab != null)
-            {
-                instancePool.Register(prefab, poolSize);
-            }
+            _gameSettings.Prepare(instancePool);
         }
     }
 }

@@ -32,7 +32,6 @@ namespace Game.Utils
             var prefabId = prefab.GetInstanceID();
             if (_pools.ContainsKey(prefabId))
             {
-                Debug.LogError($"Pool is already registered (PrefabId={prefabId})");
                 return;
             }
 
@@ -41,12 +40,12 @@ namespace Game.Utils
             _pools.Add(prefabId, entry);
         }
 
-        public GameObject Get(int prefabId)
+        public GameObject? Get(int prefabId)
         {
             if (!_pools.TryGetValue(prefabId, out var entry))
             {
                 Debug.LogError($"Pool is not registered (PrefabId={prefabId})");
-                return null!;
+                return null;
             }
 
             return entry.Get();

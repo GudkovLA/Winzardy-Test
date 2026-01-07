@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9238aea23c6c439384fb512a8286933a, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  CameraSettings:
+  Camera:
     Angle: {x: 90, y: 0, z: 0}
     Offset: {x: 0, y: 20, z: 0}
-  SpawnSettings:
-    EnemySpawnTimeout: 1
+  Spawn:
     CameraAreaScale: 1.15
     AreaMaxDepth: 10
     SpawnRetryCountLimit: 10
@@ -39,5 +38,10 @@ MonoBehaviour:
       Weight: 0.2
     - AreaId: 8
       Weight: 0.2
+  Enemies:
+  - EnemySettings: {fileID: 11400000, guid: b6a0dcdaa8078dc49bbaa67243e5fc76, type: 2}
+    SpawnTimeout: 7
+    FirstSpawnTimeout: 0
+  Player: {fileID: 11400000, guid: 93da20d7f64a83949ad213990d5e2d5a, type: 2}
   HealthViewPrefab: {fileID: 6093953003324607494, guid: d66cc3b7766314f4d812cc1ce3d4c3b3, type: 3}
   HealthViewPoolSize: 30

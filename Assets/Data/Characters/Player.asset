@@ -10,10 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac40793435b54e7e81eb83ff54fed11c, type: 3}
-  m_Name: PlayerSettings
+  m_Name: Player
   m_EditorClassIdentifier: 
-  Character: {fileID: 11400000, guid: 378af8b57d3fb1845bd63eee0b595b30, type: 2}
+  Prefab: {fileID: 7943218971982778878, guid: fec70327d7255c2439c9153433ded449, type: 3}
   PoolSize: 1
+  Size: {x: 1, y: 2, z: 1}
+  Health: 200
+  Speed: 5
   Fraction: 1
   Enemies: 2
   Abilities:

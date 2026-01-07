@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0326e71c421e44e8bafc9bb97cb932f7, type: 3}
-  m_Name: EnemyAbilitySpawnProjectile
+  m_Name: BossAbilitySpawnProjectile
   m_EditorClassIdentifier: 
-  CooldownDuration: 1
-  ConditionSettings: {fileID: 11400000, guid: 656b7cc47fb52174baf33598cf5076e6, type: 2}
-  ProjectileSettings: {fileID: 11400000, guid: e60df618f50327d428532563e243b473, type: 2}
+  CooldownDuration: 2
+  ConditionSettings: {fileID: 0}
+  ProjectileSettings: {fileID: 11400000, guid: 03bf79e9875d2554c9c482a4230240df, type: 2}
   SpawnDirection: 0
   ProjectilesAmountPerActivation: 1

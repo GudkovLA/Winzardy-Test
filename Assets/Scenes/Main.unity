@@ -1400,8 +1400,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameSettings: {fileID: 11400000, guid: 36153d04d28d1674a8af239b29942306, type: 2}
-  _playerSettings: {fileID: 11400000, guid: 93da20d7f64a83949ad213990d5e2d5a, type: 2}
-  _enemySettings: {fileID: 11400000, guid: b6a0dcdaa8078dc49bbaa67243e5fc76, type: 2}
   _levelRoot: {fileID: 1861657121}
   _instancePoolRoot: {fileID: 1494441982}
   _uiCanvas: {fileID: 1035471269}
@@ -1612,7 +1610,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _resourceViewPrefab: {fileID: 1342644963859670249, guid: 0e0f3da807eefaa43a085ec715d53a6c, type: 3}
   _resourceViewRoot: {fileID: 793061276}
-  _coinsAmount: {fileID: 0}
   _healthAmount: {fileID: 1106249870}
 --- !u!1 &705507993
 GameObject:

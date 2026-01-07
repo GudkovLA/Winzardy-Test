@@ -22,15 +22,14 @@ namespace Game.SpawnSystem.Systems
         private static readonly Collider[] _collidersCache = new Collider[4];
 
         private GameSettings _gameSettings = null!;
-        private EnemySettings _enemySettings = null!;
         private GameLevel _gameLevel = null!;
         private GameCamera _gameCamera = null!;
         private ResourcesManager _resourcesManager = null!;
 
         private float[] _weights;
         private SpawnAreaId[] _areasIds;
+        private float[] _timeCounter;
         
-        private float _timeCounter;
         private bool _initialized;
 
         protected override void OnCreate()
@@ -38,18 +37,14 @@ namespace Game.SpawnSystem.Systems
             base.OnCreate();
 
             if (!ServiceLocator.TryGet(out _gameSettings)
-                || !ServiceLocator.TryGet(out _enemySettings)
                 || !ServiceLocator.TryGet(out _gameLevel)
                 || !ServiceLocator.TryGet(out _gameCamera)
                 || !ServiceLocator.TryGet(out _resourcesManager))
             {
                 return;
             }
-
-            // Make first spawn immediately
-            _timeCounter = _gameSettings.SpawnSettings.EnemySpawnTimeout;
             
-            _initialized = InitializeSpawnAreas();
+            _initialized = InitializeSpawnTimers() && InitializeSpawnAreas();
         }
 
         protected override void OnUpdate()
@@ -61,7 +56,7 @@ namespace Game.SpawnSystem.Systems
 
             var world = Context.World;
             var groundPlane = _gameLevel.GroundPlane;
-            var spawnSettings = _gameSettings.SpawnSettings;
+            var spawnSettings = _gameSettings.Spawn;
 
 #if UNITY_EDITOR
             if (spawnSettings.DebugEnable)
@@ -69,61 +64,40 @@ namespace Game.SpawnSystem.Systems
                 DebugSpawnArea(groundPlane, spawnSettings.CameraAreaScale, spawnSettings.AreaMaxDepth);
             }
 #endif
-            
-            _timeCounter += Time.deltaTime;
-            if (_timeCounter < spawnSettings.EnemySpawnTimeout)
-            {
-                return;
-            }
 
-            if (_enemySettings.Character.Prefab == null)
+            for (var i = 0; i < _timeCounter.Length; i++)
             {
-                Debug.LogError($"Character prefab is not defined");
-                return;
-            }
-
-            _timeCounter -= spawnSettings.EnemySpawnTimeout;
-            _gameCamera.UpdateCameraBoundaries(groundPlane, _cameraBoundaries);
-            SpawnUtils.ResizeArea(_cameraBoundaries.Corners, spawnSettings.CameraAreaScale);
-
-            var triesCount = 0;
-            var result = false;
-            var spawnPosition = Vector3.zero;
-            while (!result && triesCount < spawnSettings.SpawnRetryCountLimit)
-            {
-                triesCount += 1;
-                result = TryGetSpawnPoint(spawnSettings.AreaMaxDepth, 
-                    spawnSettings.SpawnCollisionSafeRadius,
-                    out spawnPosition);
-            }
-            
-            if (!result)
-            {
-                Debug.LogError($"Can't find point for enemy spawn");
-                return;
-            }
-
-            var commandBuffer = Context.GetOrCreateCommandBuffer(this);
-            var entity = CharacterUtils.SpawnCharacter(_enemySettings,
-                world,
-                commandBuffer,
-                spawnPosition,
-                Quaternion.identity);
-
-            if (entity == Entity.Null)
-            {
-                return;
-            }
-
-            if (_resourcesManager.TryGetDroppedResource(_enemySettings.GetInstanceID(), out var resourceId))
-            {
-                commandBuffer.Add(entity, new ResourceSpawner { ResourceId = resourceId });
+                var enemySpawnSettings = _gameSettings.Enemies[i];
+                _timeCounter[i] -= Time.deltaTime;
+                
+                if (_timeCounter[i] < 0)
+                {
+                    TrySpawnEnemy(world, enemySpawnSettings.EnemySettings, spawnSettings, groundPlane);
+                    _timeCounter[i] += enemySpawnSettings.SpawnTimeout;
+                }
             }
         }
 
+        private bool InitializeSpawnTimers()
+        {
+            if (_gameSettings.Enemies.Length == 0)
+            {
+                Debug.LogError($"Enemies list is empty");
+                return false;
+            }
+
+            _timeCounter = new float[_gameSettings.Enemies.Length];  
+            for (var i = 0; i < _gameSettings.Enemies.Length; i++)
+            {
+                _timeCounter[i] = _gameSettings.Enemies[i].FirstSpawnTimeout;
+            }
+
+            return true;
+        }
+        
         private bool InitializeSpawnAreas()
         {
-            var spawnSettings = _gameSettings.SpawnSettings;
+            var spawnSettings = _gameSettings.Spawn;
             if (spawnSettings.SpawnAreas.Length == 0)
             {
                 Debug.LogError($"Spawn areas list is empty");
@@ -150,6 +124,56 @@ namespace Game.SpawnSystem.Systems
             }
 
             return true;
+        }
+
+        private void TrySpawnEnemy(
+            World world,
+            EnemySettings enemySettings, 
+            GameSettings.SpawnSettingsData spawnSettings, 
+            Plane groundPlane)
+        {
+            if (enemySettings.Prefab == null)
+            {
+                Debug.LogError($"Character prefab is not defined");
+                return;
+            }
+
+            _gameCamera.UpdateCameraBoundaries(groundPlane, _cameraBoundaries);
+            SpawnUtils.ResizeArea(_cameraBoundaries.Corners, spawnSettings.CameraAreaScale);
+
+            var triesCount = 0;
+            var result = false;
+            var spawnPosition = Vector3.zero;
+            while (!result && triesCount < spawnSettings.SpawnRetryCountLimit)
+            {
+                triesCount += 1;
+                result = TryGetSpawnPoint(spawnSettings.AreaMaxDepth, 
+                    spawnSettings.SpawnCollisionSafeRadius,
+                    out spawnPosition);
+            }
+            
+            if (!result)
+            {
+                Debug.LogError($"Can't find point for enemy spawn");
+                return;
+            }
+
+            var commandBuffer = Context.GetOrCreateCommandBuffer(this);
+            var entity = CharacterUtils.SpawnCharacter(enemySettings,
+                world,
+                commandBuffer,
+                spawnPosition,
+                Quaternion.identity);
+
+            if (entity == Entity.Null)
+            {
+                return;
+            }
+
+            if (_resourcesManager.TryGetDroppedResource(enemySettings.GetInstanceID(), out var resourceId))
+            {
+                commandBuffer.Add(entity, new ResourceSpawner { ResourceId = resourceId });
+            }
         }
 
         private bool TryGetSpawnPoint(float areaMaxDepth, float collisionSafeRadius, out Vector3 spawnPoint)

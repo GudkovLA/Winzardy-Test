@@ -9,13 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2834cd4586f40528daf3f11facbd476, type: 3}
-  m_Name: EnemyProjectile
+  m_Script: {fileID: 11500000, guid: 5ffe9591f4494f6c95b61b2777c2ce82, type: 3}
+  m_Name: Crystal
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 0}
-  PoolSize: 0
-  Speed: 0
-  Damage: 5
-  MaxDistance: 0
-  HitRadius: 1
-  DestroyOnHit: 1
+  Prefab: {fileID: 1212067499461965912, guid: 13dd0a8b804aeef439d518a93bf12b9a, type: 3}
+  PoolSize: 30
+  Icon: {fileID: 21300000, guid: 41459c7e3a927794599f187483a31a9d, type: 3}

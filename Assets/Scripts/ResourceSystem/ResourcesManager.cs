@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Game.CharacterSystem.Settings;
 using Game.ResourceSystem.Settings;
+using Game.Settings;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -17,6 +18,21 @@ namespace Game.ResourceSystem
         public void Dispose()
         {
             _resources.Clear();
+        }
+
+        public void CreateResources(GameSettings gameSettings)
+        {
+            for (var i = 0; i < gameSettings.Enemies.Length; i++)
+            {
+                var enemySettings = gameSettings.Enemies[i].EnemySettings;
+                if (enemySettings == null)
+                {
+                    Debug.LogError($"Enemy settings is not defined");
+                    continue;
+                }
+
+                CreateResources(enemySettings);
+            }
         }
 
         public void CreateResources(EnemySettings enemySettings)

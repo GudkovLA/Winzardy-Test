@@ -18,9 +18,6 @@ namespace Game.UiSystem.Controllers
         private Transform _resourceViewRoot = null!;
 
         [SerializeField]
-        private ResourceController _coinsAmount = null!;
-
-        [SerializeField]
         private HealthController _healthAmount = null!;
 
         private InstancePool _instancePool = null!;
@@ -45,11 +42,14 @@ namespace Game.UiSystem.Controllers
             while (index >= _resourceViews.Count)
             {
                 var instance = _instancePool.Get(_resourceViewPrefab.GetInstanceID());
-                instance.transform.SetParent(_resourceViewRoot);
-                instance.SetActive(true);
+                if (instance != null)
+                {
+                    instance.transform.SetParent(_resourceViewRoot);
+                    instance.SetActive(true);
                 
-                var resourceView = instance.GetComponent<ResourceController>(); 
-                _resourceViews.Add(resourceView);
+                    var resourceView = instance.GetComponent<ResourceController>(); 
+                    _resourceViews.Add(resourceView);
+                }
             }
 
             return _resourceViews[index];

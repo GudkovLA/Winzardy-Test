@@ -19,17 +19,27 @@ namespace Game.Utils
             _instancePool.Dispose();
         }
 
-        public GameObject Create(int prefabId, Transform parent)
+        public GameObject? Create(int prefabId, Transform parent)
         {
             var instance = _instancePool.Get(prefabId);
+            if (instance == null)
+            {
+                return null;
+            }
+            
             instance.transform.SetParent(parent);
             instance.SetActive(true);
             return instance;
         }
 
-        public GameObject Create(int prefabId, Transform parent, Vector3 position, Quaternion rotation)
+        public GameObject? Create(int prefabId, Transform parent, Vector3 position, Quaternion rotation)
         {
             var instance = _instancePool.Get(prefabId);
+            if (instance == null)
+            {
+                return null;
+            }
+
             var transform = instance.transform;
             transform.SetParent(parent);
             transform.position = position;

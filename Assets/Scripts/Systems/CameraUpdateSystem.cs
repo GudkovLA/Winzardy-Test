@@ -42,8 +42,8 @@ namespace Game.Systems
             if (playerEntity != Entity.Null
                 && playerEntity.TryGet<Position>(out var playerPosition))
             {
-                _gameCamera.SetTransform(playerPosition.Value + _gameSettings.CameraSettings.Offset,
-                    Quaternion.Euler(_gameSettings.CameraSettings.Angle));
+                _gameCamera.SetTransform(playerPosition.Value + _gameSettings.Camera.Offset,
+                    Quaternion.Euler(_gameSettings.Camera.Angle));
             }
         }
     }

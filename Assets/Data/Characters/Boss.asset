@@ -10,16 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 638f4106e08046c881619ea3620bb1b4, type: 3}
-  m_Name: BasicEnemySettings
+  m_Name: Boss
   m_EditorClassIdentifier: 
-  Character: {fileID: 11400000, guid: aeaa807c9975fcc4d8d138f0fcf5f494, type: 2}
-  PoolSize: 30
+  Prefab: {fileID: 9205600761144373587, guid: 8efef96534c727b4e8953481a6f6d85f, type: 3}
+  PoolSize: 10
+  Size: {x: 1, y: 1, z: 1}
+  Health: 250
+  Speed: 1
   Fraction: 2
   Enemies: 1
   Abilities:
-  - {fileID: 11400000, guid: 3ff166e8c9f91bc409c2f950cd9e822a, type: 2}
+  - {fileID: 11400000, guid: 3441b4dde8bdbd945b56a9fd92042981, type: 2}
   MinDistanceToPlayer: 1.25
   Loot:
   - Resource: {fileID: 11400000, guid: dbd4d8b7e51ea0a4f8663e114fa68855, type: 2}
-    PoolSize: 30
-    DropChance: 0.5
+    DropChance: 1
