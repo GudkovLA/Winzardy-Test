@@ -8,7 +8,6 @@ using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.LocomotionSystem.Components;
-using Game.Settings;
 using Game.Utils;
 using UnityEngine;
 using Random = UnityEngine.Random;

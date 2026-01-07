@@ -5,7 +5,6 @@ using Arch.Core.Extensions;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
-using Game.Settings;
 using Game.Utils;
 using UnityEngine;
 

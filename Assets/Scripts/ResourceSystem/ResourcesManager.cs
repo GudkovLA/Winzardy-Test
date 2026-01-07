@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using Game.CharacterSystem.Settings;
 using Game.ResourceSystem.Settings;
-using Game.Settings;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

@@ -2,11 +2,11 @@
 
 using System;
 using Game.CharacterSystem.Settings;
+using Game.PresentationSystem;
 using Game.SpawnSystem;
-using Game.Utils;
 using UnityEngine;
 
-namespace Game.Settings
+namespace Game
 {
     [CreateAssetMenu(fileName = nameof(GameSettings), menuName = "Assets/Game Settings")]
     [Serializable]

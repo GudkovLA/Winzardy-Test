@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Game.Controllers
+namespace Game.PresentationSystem.Controllers
 {
     public class HitAnimator : MonoBehaviour
     {

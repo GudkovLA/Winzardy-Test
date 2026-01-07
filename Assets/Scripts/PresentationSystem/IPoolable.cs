@@ -1,6 +1,4 @@
-﻿using Game.Utils;
-
-namespace Game.Settings
+﻿namespace Game.PresentationSystem
 {
     public interface IPoolable
     {

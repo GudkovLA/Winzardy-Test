@@ -3,12 +3,11 @@
 using System;
 using Arch.Buffer;
 using Arch.Core;
-using Game.Components;
 using Game.DamageSystem.Components;
 using Game.LocomotionSystem.Components;
+using Game.PresentationSystem;
+using Game.PresentationSystem.Components;
 using Game.ProjectileSystem.Components;
-using Game.Settings;
-using Game.Utils;
 using UnityEngine;
 
 namespace Game.ProjectileSystem.Settings

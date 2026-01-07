@@ -2,9 +2,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.UiSystem
+namespace Game.UiSystem.Views
 {
-    public class ResourceController : MonoBehaviour
+    public class ResourceView : MonoBehaviour
     {
         [SerializeField]
         private Image _icon;

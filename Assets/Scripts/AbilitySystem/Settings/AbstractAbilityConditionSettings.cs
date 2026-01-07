@@ -3,8 +3,6 @@
 using Arch.Buffer;
 using Arch.Core;
 using Game.AbilitySystem.Components;
-using Game.Settings;
-using Game.Utils;
 using UnityEngine;
 
 namespace Game.AbilitySystem.Settings

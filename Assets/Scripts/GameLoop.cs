@@ -2,8 +2,7 @@
 
 using Game.Common;
 using Game.Common.Events;
-using Game.Settings;
-using Game.Utils;
+using Game.PresentationSystem;
 using UnityEngine;
 
 namespace Game

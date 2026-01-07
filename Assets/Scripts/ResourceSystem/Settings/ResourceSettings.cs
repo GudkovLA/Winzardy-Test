@@ -1,8 +1,7 @@
 ﻿#nullable enable
 
 using System;
-using Game.Settings;
-using Game.Utils;
+using Game.PresentationSystem;
 using UnityEngine;
 
 namespace Game.ResourceSystem.Settings

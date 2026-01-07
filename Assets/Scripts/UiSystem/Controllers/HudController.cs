@@ -2,14 +2,15 @@
 
 using System.Collections.Generic;
 using Game.Common;
-using Game.Utils;
+using Game.PresentationSystem;
+using Game.UiSystem.Views;
 using UnityEngine;
 
 namespace Game.UiSystem.Controllers
 {
     public class HudController : MonoBehaviour
     {
-        private readonly List<ResourceController> _resourceViews = new() ;
+        private readonly List<ResourceView> _resourceViews = new() ;
 
         [SerializeField]
         private GameObject _resourceViewPrefab = null!;
@@ -18,7 +19,7 @@ namespace Game.UiSystem.Controllers
         private Transform _resourceViewRoot = null!;
 
         [SerializeField]
-        private HealthController _healthAmount = null!;
+        private HealthView _healthAmount = null!;
 
         private InstancePool _instancePool = null!;
         
@@ -32,7 +33,7 @@ namespace Game.UiSystem.Controllers
         {
         }
         
-        public ResourceController GetResourceView(int index)
+        public ResourceView GetResourceView(int index)
         {
             if (index < _resourceViews.Count)
             {
@@ -47,7 +48,7 @@ namespace Game.UiSystem.Controllers
                     instance.transform.SetParent(_resourceViewRoot);
                     instance.SetActive(true);
                 
-                    var resourceView = instance.GetComponent<ResourceController>(); 
+                    var resourceView = instance.GetComponent<ResourceView>(); 
                     _resourceViews.Add(resourceView);
                 }
             }

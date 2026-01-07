@@ -1,4 +1,4 @@
-﻿namespace Game.Components
+﻿namespace Game.PresentationSystem.Components
 {
     public struct PrefabId
     {

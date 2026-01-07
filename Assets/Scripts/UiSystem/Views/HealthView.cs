@@ -4,9 +4,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.UiSystem
+namespace Game.UiSystem.Views
 {
-    public class HealthController : MonoBehaviour
+    public class HealthView : MonoBehaviour
     {
         [SerializeField]
         public TextMeshProUGUI? _label;

@@ -3,9 +3,9 @@
 using Arch.Core;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
-using Game.Components;
-using Game.Controllers;
 using Game.DamageSystem.Components;
+using Game.PresentationSystem.Components;
+using Game.PresentationSystem.Controllers;
 
 namespace Game.CharacterSystem.Systems
 {

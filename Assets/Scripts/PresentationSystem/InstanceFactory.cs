@@ -3,7 +3,7 @@
 using System;
 using UnityEngine;
 
-namespace Game.Utils
+namespace Game.PresentationSystem
 {
     public class InstanceFactory : IDisposable
     {

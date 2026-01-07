@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Game.Utils
+namespace Game.PresentationSystem
 {
     public class InstancePool : IDisposable
     {
@@ -106,6 +106,7 @@ namespace Game.Utils
                     return result;
                 }
 
+                Debug.LogWarning($"Not enough pool size (PrefabId={_prefab.GetInstanceID()};PrefabName={_prefab.name})");
                 return Object.Instantiate(_prefab);
             }
 

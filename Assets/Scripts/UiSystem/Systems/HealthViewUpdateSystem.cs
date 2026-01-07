@@ -7,22 +7,22 @@ using Game.Common;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
-using Game.Components;
 using Game.DamageSystem.Components;
-using Game.Settings;
+using Game.PresentationSystem.Components;
+using Game.UiSystem.Views;
 using UnityEngine;
 
 namespace Game.UiSystem.Systems
 {
     [UpdateInGroup(typeof(PresentationSystemGroup))]
-    public class EnemyHealthUpdateSystem : AbstractSystem
+    public class HealthViewUpdateSystem : AbstractSystem
     {
         private static readonly QueryDescription _enemyQuery = new QueryDescription()
             .WithAll<HealthState>()
             .WithNone<Destroy, HandledTag, PlayerTag>();
 
         private static readonly QueryDescription _healthViewQuery = new QueryDescription()
-            .WithAll<HealthView, InstanceLink>()
+            .WithAll<HealthViewState, InstanceLink>()
             .WithNone<Destroy, PlayerTag>();
         
         private GameSettings _gameSettings = null!;
@@ -54,42 +54,48 @@ namespace Game.UiSystem.Systems
             World.Query(_enemyQuery,
                 entity =>
                 {
+                    commandBuffer.Add(entity, new HandledTag());
+
+                    if (_gameSettings.HealthViewPrefab == null)
+                    {
+                        return;
+                    }
+                        
                     var healthView = Context.World.Create();
-                    commandBuffer.Add(healthView, new HealthView
+                    commandBuffer.Add(healthView, new HealthViewState
                     {
                         EntityHandle = new EntityHandle(entity),
-                        HealthController = null
+                        View = null
                     });
                     commandBuffer.Add(healthView, new PrefabId
                     {
                         Value = _gameSettings.HealthViewPrefab.GetInstanceID()
                     });
-                    commandBuffer.Add(entity, new HandledTag());
                 });
                 
             World.Query(_healthViewQuery, 
-                (Entity entity, ref HealthView healthView, ref InstanceLink instanceLink) =>
+                (Entity entity, ref HealthViewState healthViewState, ref InstanceLink instanceLink) =>
                 {
-                    if (!healthView.EntityHandle.IsValid())
+                    if (!healthViewState.EntityHandle.IsValid())
                     {
                         commandBuffer.Add(entity, new Destroy());
                         return;
                     }
 
-                    if (healthView.HealthController == null)
+                    if (healthViewState.View == null)
                     {
-                        var healthController = instanceLink.Instance.GetComponent<HealthController>();
-                        if (healthController == null)
+                        var healthView = instanceLink.Instance.GetComponent<HealthView>();
+                        if (healthView == null)
                         {
-                            Debug.LogError($"Can't find {nameof(HealthController)} in health view entity");
+                            Debug.LogError($"Can't find {nameof(HealthView)} in health view entity");
                             return;
                         }
 
-                        healthView.HealthController = healthController;
+                        healthViewState.View = healthView;
                         instanceLink.Instance.transform.SetParent(_gameUi.Root);
                     }
 
-                    var enemyEntity = healthView.EntityHandle.Value;
+                    var enemyEntity = healthViewState.EntityHandle.Value;
                     if (!enemyEntity.TryGet<HealthState>(out var healthState))
                     {
                         Debug.LogError($"Can't find {nameof(HealthState)} in enemy entity");
@@ -109,16 +115,16 @@ namespace Game.UiSystem.Systems
                         : Vector3.zero;
                     var offset = new Vector3(0, size.y, 0);
                     
-                    healthView.HealthController.SetHealth(healthState.Health);
+                    healthViewState.View.SetHealth(healthState.Health);
                     instanceLink.Instance.transform.position= _gameUi.GetScreenPosition(position.Value + offset);
                     instanceLink.Instance.SetActive(true);
                 });
         }
         
-        private struct HealthView
+        private struct HealthViewState
         {
             public EntityHandle EntityHandle;
-            public HealthController? HealthController;
+            public HealthView? View;
         }
 
         private struct HandledTag

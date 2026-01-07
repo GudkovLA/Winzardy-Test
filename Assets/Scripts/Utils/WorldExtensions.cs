@@ -5,7 +5,6 @@ using Arch.Core;
 using Game.CharacterSystem;
 using Game.CharacterSystem.Components;
 using Game.Common;
-using Game.Settings;
 using UnityEngine;
 
 namespace Game.Utils

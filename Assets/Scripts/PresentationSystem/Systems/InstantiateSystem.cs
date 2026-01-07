@@ -5,10 +5,10 @@ using Arch.Core.Extensions;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
-using Game.Components;
+using Game.PresentationSystem.Components;
 using Game.Utils;
 
-namespace Game.Systems
+namespace Game.PresentationSystem.Systems
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public class InstantiateSystem : AbstractSystem
