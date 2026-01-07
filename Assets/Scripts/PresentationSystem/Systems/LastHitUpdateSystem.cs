@@ -13,11 +13,10 @@ namespace Game.PresentationSystem.Systems
     public class LastHitUpdateSystem : AbstractSystem
     {
         private readonly QueryDescription _lastHitQuery = new QueryDescription()
-            .WithAll<InstanceLink, HealthState>();
+            .WithAll<InstanceLink, HealthState, DamageHitTag>();
 
         protected override void OnUpdate()
         {
-            // TODO: Filter by last hit component
             World.Query(_lastHitQuery, 
                 (ref InstanceLink instanceLink, ref HealthState healthState) =>
                 {

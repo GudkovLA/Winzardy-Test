@@ -24,4 +24,4 @@ MonoBehaviour:
   MinDistanceToPlayer: 1.25
   Loot:
   - Resource: {fileID: 11400000, guid: dbd4d8b7e51ea0a4f8663e114fa68855, type: 2}
-    DropChance: 0.5
+    DropChance: 1

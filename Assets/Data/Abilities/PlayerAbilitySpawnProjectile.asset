@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0326e71c421e44e8bafc9bb97cb932f7, type: 3}
   m_Name: PlayerAbilitySpawnProjectile
   m_EditorClassIdentifier: 
-  CooldownDuration: 1
+  CooldownDuration: 0.2
   ConditionSettings: {fileID: 0}
   ProjectileSettings: {fileID: 11400000, guid: 7bd3d25ee66a20e428de3357954f5d30, type: 2}
   SpawnDirection: 1

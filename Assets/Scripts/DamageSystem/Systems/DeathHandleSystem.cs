@@ -30,12 +30,9 @@ namespace Game.DamageSystem.Systems
                     }
 
                     healthState.Health = 0;
+                    commandBuffer.Add(entity, new IsDeadTag());
 
-                    if (entity.Has<DontDestroyOnDeath>())
-                    {
-                        commandBuffer.Add(entity, new IsDeadTag());
-                    }
-                    else
+                    if (!entity.Has<DontDestroyOnDeath>())
                     {
                         commandBuffer.Add(entity, new Destroy());
                     }
