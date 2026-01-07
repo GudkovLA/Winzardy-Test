@@ -13,22 +13,31 @@ namespace Game.LocomotionSystem.Systems
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     public class LocomotionUpdateSystem : AbstractSystem
     {
-        private const float kRotationSpeed = 1f;
-        private static readonly float _radiusFactor = Mathf.Sqrt(2) * 0.5f;
-
-        private static readonly QueryDescription _locomotionQuery = new QueryDescription()
+        private readonly QueryDescription _locomotionQuery = new QueryDescription()
             .WithAll<Position, LocomotionState>()
             .WithNone<Destroy>();
         
-        private static readonly QueryDescription _collisionQuery = new QueryDescription()
+        private readonly QueryDescription _collisionQuery = new QueryDescription()
             .WithAll<Position, Size>()
             .WithNone<Destroy, IgnoreObstaclesTag>();
 
-        private static readonly QueryDescription _rotationQuery = new QueryDescription()
+        private readonly QueryDescription _rotationQuery = new QueryDescription()
             .WithAll<Position, Rotation, LocomotionState>()
             .WithNone<Destroy, IgnoreRotationTag>();
         
         private readonly Collider[] _colliders = new Collider[4];  
+        private readonly float _radiusFactor = Mathf.Sqrt(2) * 0.5f;
+
+        private float _turnSpeed;
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+
+            _turnSpeed = ServiceLocator.TryGet<GameSettings>(out var gameSettings)
+                ? gameSettings.LocomotionTurnSpeed
+                : 1f;
+        }
 
         protected override void OnUpdate()
         {
@@ -52,7 +61,7 @@ namespace Game.LocomotionSystem.Systems
                 });
             
             // Update rotation by moving direction
-            var rotationSpeed = 360f * Context.DeltaTime * kRotationSpeed;
+            var rotationSpeed = 360f * Context.DeltaTime * _turnSpeed;
             World.Query(_rotationQuery,
                 (ref Position position, ref Rotation rotation, ref LocomotionState locomotionState) =>
                 {

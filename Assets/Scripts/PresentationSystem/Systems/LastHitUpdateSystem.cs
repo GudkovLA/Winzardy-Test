@@ -12,7 +12,7 @@ namespace Game.PresentationSystem.Systems
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     public class LastHitUpdateSystem : AbstractSystem
     {
-        private static readonly QueryDescription _lastHitQuery = new QueryDescription()
+        private readonly QueryDescription _lastHitQuery = new QueryDescription()
             .WithAll<InstanceLink, HealthState>();
 
         protected override void OnUpdate()

@@ -13,10 +13,10 @@ namespace Game.PresentationSystem.Systems
     [UpdateBefore(typeof(EntityDestroySystem))]
     public class InstanceReleaseSystem : AbstractSystem
     {
-        private static readonly QueryDescription _transformDestroyQuery = new QueryDescription()
+        private readonly QueryDescription _transformDestroyQuery = new QueryDescription()
             .WithAll<InstanceLink, PrefabId, Destroy>();
 
-        private static readonly QueryDescription _transformDestroyAllQuery = new QueryDescription()
+        private readonly QueryDescription _transformDestroyAllQuery = new QueryDescription()
             .WithAll<InstanceLink, PrefabId>();
 
         private InstanceFactory _instanceFactory = null!;

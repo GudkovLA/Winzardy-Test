@@ -17,41 +17,30 @@ namespace Game.CharacterSystem.Systems
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public class EnemyControlSystem : AbstractSystem
     {
-        private const float kAvoidanceDirectionChangeTimeout = 1f;
+        private readonly float _radiusFactor = Mathf.Sqrt(2) * 0.5f;
+        private readonly int[] _randomDirectionFactor = { -1, 1 };
 
-        private static readonly float _radiusFactor = Mathf.Sqrt(2) * 0.5f;
-        private static readonly int[] _randomDirectionFactor = { -1, 1 };
-
-        private static readonly QueryDescription _enemyInitQuery = new QueryDescription()
+        private readonly QueryDescription _enemyInitQuery = new QueryDescription()
             .WithAll<Position, LocomotionState, EnemyControlState>()
             .WithNone<Destroy, ObstacleAvoidance>();
 
-        private static readonly QueryDescription _enemyQuery = new QueryDescription()
+        private readonly QueryDescription _enemyQuery = new QueryDescription()
             .WithAll<Position, Size, LocomotionData, LocomotionState, EnemyControlState, ObstacleAvoidance>()
             .WithNone<Destroy>();
 
-        private GameSettings _gameSettings = null!;
-        private bool _initialized;
-        
+        private float _avoidanceDirectionChangeTimeout;
+
         protected override void OnCreate()
         {
             base.OnCreate();
-            
-            if (!ServiceLocator.TryGet(out _gameSettings))
-            {
-                return;
-            }
 
-            _initialized = true;
+            _avoidanceDirectionChangeTimeout = ServiceLocator.TryGet<GameSettings>(out var gameSettings)
+                ? gameSettings.AvoidanceDirectionChangeTimeout
+                : 1f;
         }
-        
+
         protected override void OnUpdate()
         {
-            if (!_initialized)
-            {
-                return;
-            }
-            
             var playerEntity = World.GetPlayerSingleton();
             if (playerEntity == Entity.Null
                 || !playerEntity.TryGet<Position>(out var playerPosition))
@@ -59,7 +48,7 @@ namespace Game.CharacterSystem.Systems
                 return;
             }
 
-            var commandBuffer = Context.GetOrCreateCommandBuffer(this);
+            var commandBuffer = GetOrCreateCommandBuffer();
             World.Query(_enemyInitQuery,
                 entity =>
                 {
@@ -85,7 +74,7 @@ namespace Game.CharacterSystem.Systems
                     var movementThreshold = locomotionState.LastVelocity.magnitude * 0.5f;
                     if (Vector3.Distance(locomotionState.LastPosition, position.Value) < movementThreshold)
                     {
-                        if (obstacleAvoidance.LastChangeTime + kAvoidanceDirectionChangeTimeout < Context.Time)
+                        if (obstacleAvoidance.LastChangeTime + _avoidanceDirectionChangeTimeout < Context.Time)
                         {
                             obstacleAvoidance.DirectionFactor *= -1;
                             obstacleAvoidance.LastChangeTime = Context.Time;

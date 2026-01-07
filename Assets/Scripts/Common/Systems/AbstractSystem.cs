@@ -66,11 +66,6 @@ namespace Game.Common.Systems
         {
         }
 
-        protected CommandBuffer CreateCommandBuffer()
-        {
-            return new CommandBuffer();
-        }
-
         protected CommandBuffer GetOrCreateCommandBuffer()
         {
             return Context.GetOrCreateCommandBuffer(this);

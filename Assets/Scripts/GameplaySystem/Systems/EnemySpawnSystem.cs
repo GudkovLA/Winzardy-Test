@@ -16,18 +16,18 @@ namespace Game.GameplaySystem.Systems
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public class EnemySpawnSystem : AbstractSystem
     {
-        private static readonly CameraBoundaries _cameraBoundaries = new();
-        private static readonly Vector3[] _areaPoints = new Vector3[4];
-        private static readonly Collider[] _collidersCache = new Collider[4];
+        private readonly CameraBoundaries _cameraBoundaries = new();
+        private readonly Vector3[] _areaPoints = new Vector3[4];
+        private readonly Collider[] _collidersCache = new Collider[4];
 
         private GameSettings _gameSettings = null!;
         private GameLevel _gameLevel = null!;
         private GameCamera _gameCamera = null!;
-        private ResourcesManager _resourcesManager = null!;
+        private ResourcesRegistry _resourcesRegistry = null!;
 
-        private float[] _weights;
-        private SpawnAreaId[] _areasIds;
-        private float[] _timeCounter;
+        private float[] _weights = null!;
+        private SpawnAreaId[] _areasIds = null!;
+        private float[] _timeCounter = null!;
         
         private bool _initialized;
 
@@ -38,7 +38,7 @@ namespace Game.GameplaySystem.Systems
             if (!ServiceLocator.TryGet(out _gameSettings)
                 || !ServiceLocator.TryGet(out _gameLevel)
                 || !ServiceLocator.TryGet(out _gameCamera)
-                || !ServiceLocator.TryGet(out _resourcesManager))
+                || !ServiceLocator.TryGet(out _resourcesRegistry))
             {
                 return;
             }
@@ -157,7 +157,7 @@ namespace Game.GameplaySystem.Systems
                 return;
             }
 
-            var commandBuffer = Context.GetOrCreateCommandBuffer(this);
+            var commandBuffer = GetOrCreateCommandBuffer();
             var entity = CharacterUtils.SpawnCharacter(enemySettings,
                 world,
                 commandBuffer,
@@ -169,7 +169,7 @@ namespace Game.GameplaySystem.Systems
                 return;
             }
 
-            if (_resourcesManager.TryGetDroppedResource(enemySettings.GetInstanceID(), out var resourceId))
+            if (_resourcesRegistry.TryGetDroppedResource(enemySettings.GetInstanceID(), out var resourceId))
             {
                 commandBuffer.Add(entity, new ResourceSpawner { ResourceId = resourceId });
             }

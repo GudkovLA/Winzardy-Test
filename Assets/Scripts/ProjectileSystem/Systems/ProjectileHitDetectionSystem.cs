@@ -17,15 +17,15 @@ namespace Game.ProjectileSystem.Systems
     [UpdateAfter(typeof(ProjectileUpdateSystem))]
     public class ProjectileHitDetectionSystem : AbstractSystem
     {
-        private static readonly QueryDescription _projectileQuery = new QueryDescription()
+        private readonly QueryDescription _projectileQuery = new QueryDescription()
             .WithAll<Position, ProjectileState, Fraction>()
             .WithNone<Destroy>();
 
-        private static readonly QueryDescription _contactQuery = new QueryDescription()
+        private readonly QueryDescription _contactQuery = new QueryDescription()
             .WithAll<ProjectileContact>()
             .WithNone<Destroy>();
 
-        private static readonly QueryDescription _targetQuery = new QueryDescription()
+        private readonly QueryDescription _targetQuery = new QueryDescription()
             .WithAll<Position, ProjectileCollider, Fraction>()
             .WithNone<Destroy, IsDeadTag>();
 
@@ -56,9 +56,7 @@ namespace Game.ProjectileSystem.Systems
                     });
                 });
 
-            var commandBuffer = Context.GetOrCreateCommandBuffer(this); 
-                
-            // TODO: Heavy operation, possible to optimize with burst
+            var commandBuffer = GetOrCreateCommandBuffer(); 
             World.Query(_targetQuery, 
                 (Entity entity, ref Position position, ref ProjectileCollider projectileCollider, ref Fraction fraction) =>
                 {

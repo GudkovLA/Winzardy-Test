@@ -14,14 +14,13 @@ namespace Game.DamageSystem.Systems
     [UpdateAfter(typeof(DamageHandleSystem))]
     public class DeathHandleSystem : AbstractSystem
     {
-        private static readonly QueryDescription _unitsQuery = new QueryDescription()
+        private readonly QueryDescription _unitsQuery = new QueryDescription()
             .WithAll<HealthState>()
             .WithNone<Destroy, IsDeadTag>();
 
         protected override void OnUpdate()
         {
-            var commandBuffer = Context.GetOrCreateCommandBuffer(this);
-            
+            var commandBuffer = GetOrCreateCommandBuffer();
             World.Query(_unitsQuery,
                 (Entity entity, ref HealthState healthState) =>
                 {

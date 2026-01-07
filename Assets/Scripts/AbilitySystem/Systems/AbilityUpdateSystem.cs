@@ -13,14 +13,13 @@ namespace Game.AbilitySystem.Systems
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public class AbilityUpdateSystem : AbstractSystem
     {
-        private static readonly QueryDescription _abilitiesQuery = new QueryDescription()
+        private readonly QueryDescription _abilitiesQuery = new QueryDescription()
             .WithAll<Ability, AbilityCooldown>()
             .WithNone<Destroy, AbilityReadyTag>();
 
         protected override void OnUpdate()
         {
-            var commandBuffer = Context.GetOrCreateCommandBuffer(this);
-            
+            var commandBuffer = GetOrCreateCommandBuffer();
             World.Query(_abilitiesQuery,
                 (Entity entity, ref Ability ability, ref AbilityCooldown abilityCooldown) =>
                 {

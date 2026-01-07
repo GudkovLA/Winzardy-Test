@@ -9,10 +9,10 @@ namespace Game.UiSystem.Views
     public class HealthView : MonoBehaviour
     {
         [SerializeField]
-        public TextMeshProUGUI? _label;
+        private TextMeshProUGUI? _label;
         
         [SerializeField]
-        public Slider? _slider;
+        private Slider? _slider;
 
         public void SetHealth(float value)
         {

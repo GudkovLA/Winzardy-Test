@@ -16,15 +16,15 @@ namespace Game.AbilitySystem.Systems
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public class AbilityConditionTargetInRangeSystem : AbstractSystem
     {
-        private static readonly QueryDescription _enemyquery = new QueryDescription()
+        private readonly QueryDescription _enemyQuery = new QueryDescription()
             .WithAll<Position, Fraction>()
             .WithNone<PlayerTag>();
         
-        private static readonly QueryDescription _unblockedAbilitiesQuery = new QueryDescription()
+        private readonly QueryDescription _unblockedAbilitiesQuery = new QueryDescription()
             .WithAll<Ability, AbilityConditionTargetInRange>()
             .WithNone<Destroy, AbilityBlockedTag>();
 
-        private static readonly QueryDescription _blockedAbilitiesQuery = new QueryDescription()
+        private readonly QueryDescription _blockedAbilitiesQuery = new QueryDescription()
             .WithAll<Ability, AbilityConditionTargetInRange, AbilityBlockedTag>()
             .WithNone<Destroy>();
 
@@ -33,7 +33,7 @@ namespace Game.AbilitySystem.Systems
         protected override void OnUpdate()
         {
             var world = Context.World;
-            var commandBuffer = Context.GetOrCreateCommandBuffer(this);
+            var commandBuffer = GetOrCreateCommandBuffer();
             
             World.Query(_unblockedAbilitiesQuery,
                 (Entity entity, ref Ability ability, ref AbilityConditionTargetInRange condition) =>
@@ -68,7 +68,7 @@ namespace Game.AbilitySystem.Systems
                 });
         }
         
-        private static bool CanActivate(World world, Entity ownerEntity, float range)
+        private bool CanActivate(World world, Entity ownerEntity, float range)
         {
             var playerEntity = world.GetPlayerSingleton();
             return playerEntity != ownerEntity
@@ -76,7 +76,7 @@ namespace Game.AbilitySystem.Systems
                 : IsEnemyInRange(world, playerEntity, range);
         }
         
-        private static bool IsPlayerInRange(Entity ownerEntity, Entity playerEntity, float range)
+        private bool IsPlayerInRange(Entity ownerEntity, Entity playerEntity, float range)
         {
             if (!ownerEntity.TryGet<Fraction>(out var ownerFraction)
                 || !playerEntity.TryGet<Fraction>(out var playerFraction)
@@ -96,7 +96,7 @@ namespace Game.AbilitySystem.Systems
             return distance < range;
         }
 
-        private static bool IsEnemyInRange(World world, Entity playerEntity, float range)
+        private bool IsEnemyInRange(World world, Entity playerEntity, float range)
         {
             if (!playerEntity.TryGet<Position>(out var playerPosition)
                 || !playerEntity.TryGet<Fraction>(out var playerFraction))
@@ -105,7 +105,7 @@ namespace Game.AbilitySystem.Systems
             }
 
             var result = false;
-            world.Query(_enemyquery,
+            world.Query(_enemyQuery,
                 (ref Position position, ref Fraction fraction) =>
             {
                 if (result)

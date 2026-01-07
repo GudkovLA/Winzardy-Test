@@ -9,10 +9,10 @@ using Random = UnityEngine.Random;
 
 namespace Game.ResourceSystem
 {
-    public class ResourcesManager : IDisposable
+    public class ResourcesRegistry : IDisposable
     {
-        private static readonly Dictionary<int, ResourceData> _resources = new();
-        private static readonly Dictionary<int, DropData> _drops = new();
+        private readonly Dictionary<int, ResourceData> _resources = new();
+        private readonly Dictionary<int, DropData> _drops = new();
 
         public void Dispose()
         {
@@ -30,38 +30,8 @@ namespace Game.ResourceSystem
                     continue;
                 }
 
-                CreateResources(enemySettings);
+                CreateResourcesInternal(enemySettings);
             }
-        }
-
-        public void CreateResources(EnemySettings enemySettings)
-        {
-            var enemyId = enemySettings.GetInstanceID();
-            if (_drops.ContainsKey(enemyId))
-            {
-                return;
-            }
-            
-            var drop = new DropData();
-            foreach (var lootData in enemySettings.Loot)
-            {
-                if (lootData.Resource.Prefab == null)
-                {
-                    Debug.LogError($"Resource prefab is not defined");
-                    continue;
-                }
-
-                var resourceId = lootData.Resource.Prefab.GetInstanceID();
-                drop.ResourceIds.Add(resourceId);
-                drop.ResourceChances.Add(lootData.DropChance);
-
-                if (!_resources.ContainsKey(resourceId))
-                {
-                    _resources.Add(resourceId, new ResourceData(lootData.Resource));
-                }
-            }
-            
-            _drops.Add(enemyId, drop);
         }
 
         public void CollectResource(int resourceId, int amount = 1)
@@ -134,9 +104,39 @@ namespace Game.ResourceSystem
             return _resources.Values;
         }
 
+        private void CreateResourcesInternal(EnemySettings enemySettings)
+        {
+            var enemyId = enemySettings.GetInstanceID();
+            if (_drops.ContainsKey(enemyId))
+            {
+                return;
+            }
+            
+            var drop = new DropData();
+            foreach (var lootData in enemySettings.Loot)
+            {
+                if (lootData.Resource.Prefab == null)
+                {
+                    Debug.LogError($"Resource prefab is not defined");
+                    continue;
+                }
+
+                var resourceId = lootData.Resource.Prefab.GetInstanceID();
+                drop.ResourceIds.Add(resourceId);
+                drop.ResourceChances.Add(lootData.DropChance);
+
+                if (!_resources.ContainsKey(resourceId))
+                {
+                    _resources.Add(resourceId, new ResourceData(lootData.Resource));
+                }
+            }
+            
+            _drops.Add(enemyId, drop);
+        }
+        
         public class ResourceData
         {
-            public ResourceSettings Settings;
+            public readonly ResourceSettings Settings;
             public int Amount;
 
             public ResourceData(ResourceSettings settings, int amount = 0)
@@ -146,7 +146,7 @@ namespace Game.ResourceSystem
             }
         }
 
-        public class DropData
+        private class DropData
         {
             public readonly List<int> ResourceIds = new();
             public readonly List<float> ResourceChances = new();

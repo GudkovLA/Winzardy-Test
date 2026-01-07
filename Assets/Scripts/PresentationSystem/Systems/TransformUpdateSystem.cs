@@ -11,7 +11,7 @@ namespace Game.PresentationSystem.Systems
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     public class TransformUpdateSystem : AbstractSystem
     {
-        private static readonly QueryDescription _transformQuery = new QueryDescription()
+        private readonly QueryDescription _transformQuery = new QueryDescription()
             .WithAll<Position, Rotation, InstanceLink>()
             .WithNone<Destroy>();
 

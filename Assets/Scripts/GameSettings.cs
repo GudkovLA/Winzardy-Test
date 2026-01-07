@@ -19,6 +19,10 @@ namespace Game
 
         public GameObject? HealthViewPrefab;
         public int HealthViewPoolSize;
+
+        public float LocomotionTurnSpeed;
+        public float AvoidanceDirectionChangeTimeout;
+        public float ResourceCaptureAcceleration;
         
         public void Dispose()
         {

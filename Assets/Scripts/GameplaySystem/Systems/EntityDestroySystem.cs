@@ -10,12 +10,12 @@ namespace Game.GameplaySystem.Systems
     [UpdateInGroup(typeof(CleanupSystemGroup))]
     public class EntityDestroySystem : AbstractSystem
     {
-        private static readonly QueryDescription _destroyQuery = new QueryDescription()
+        private readonly QueryDescription _destroyQuery = new QueryDescription()
             .WithAll<Destroy>();
 
         protected override void OnUpdate()
         {
-            var commandBuffer = Context.GetOrCreateCommandBuffer(this); 
+            var commandBuffer = GetOrCreateCommandBuffer(); 
             World.Query(_destroyQuery, 
                 entity =>
                 {

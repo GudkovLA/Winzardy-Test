@@ -17,11 +17,11 @@ namespace Game.UiSystem.Systems
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     public class HealthViewUpdateSystem : AbstractSystem
     {
-        private static readonly QueryDescription _enemyQuery = new QueryDescription()
+        private readonly QueryDescription _enemyQuery = new QueryDescription()
             .WithAll<HealthState>()
             .WithNone<Destroy, HandledTag, PlayerTag>();
 
-        private static readonly QueryDescription _healthViewQuery = new QueryDescription()
+        private readonly QueryDescription _healthViewQuery = new QueryDescription()
             .WithAll<HealthViewState, InstanceLink>()
             .WithNone<Destroy, PlayerTag>();
         
@@ -49,8 +49,7 @@ namespace Game.UiSystem.Systems
                 return;
             }
             
-            var commandBuffer = Context.GetOrCreateCommandBuffer(this); 
-
+            var commandBuffer = GetOrCreateCommandBuffer();
             World.Query(_enemyQuery,
                 entity =>
                 {

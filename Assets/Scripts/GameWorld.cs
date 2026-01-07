@@ -35,7 +35,7 @@ namespace Game
             _worldHandle = new WorldHandle(null!);
             _gameUi = gameUi;
 
-            var resourceManager = new ResourcesManager();
+            var resourceManager = new ResourcesRegistry();
             resourceManager.CreateResources(gameSettings);
 
             _serviceLocator = new ServiceLocator();

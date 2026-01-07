@@ -45,3 +45,6 @@ MonoBehaviour:
   Player: {fileID: 11400000, guid: 93da20d7f64a83949ad213990d5e2d5a, type: 2}
   HealthViewPrefab: {fileID: 6093953003324607494, guid: d66cc3b7766314f4d812cc1ce3d4c3b3, type: 3}
   HealthViewPoolSize: 30
+  LocomotionTurnSpeed: 1
+  AvoidanceDirectionChangeTimeout: 1
+  ResourceCaptureAcceleration: 0.2

@@ -13,13 +13,12 @@ namespace Game.ProjectileSystem.Systems
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public class ProjectileUpdateSystem : AbstractSystem
     {
-        private static readonly QueryDescription _projectileQuery = new QueryDescription()
+        private readonly QueryDescription _projectileQuery = new QueryDescription()
             .WithAll<Position, ProjectileData, ProjectileState, LocomotionState>();
 
         protected override void OnUpdate()
         {
-            var commandBuffer = Context.GetOrCreateCommandBuffer(this);
-            
+            var commandBuffer = GetOrCreateCommandBuffer();
             World.Query(_projectileQuery, 
                 (Entity entity, 
                     ref Position position, 

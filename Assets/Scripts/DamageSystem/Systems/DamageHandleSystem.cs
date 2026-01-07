@@ -18,18 +18,18 @@ namespace Game.DamageSystem.Systems
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     public class DamageHandleSystem : AbstractSystem
     {
-        private static readonly QueryDescription _projectileHitQuery = new QueryDescription()
+        private readonly QueryDescription _projectileHitQuery = new QueryDescription()
             .WithAll<ProjectileContact>()
             .WithNone<Destroy>();
         
-        private ResourcesManager _resourcesManager = null!;
+        private ResourcesRegistry _resourcesRegistry = null!;
         private bool _initialized;
 
         protected override void OnCreate()
         {
             base.OnCreate();
 
-            if (!ServiceLocator.TryGet(out _resourcesManager))
+            if (!ServiceLocator.TryGet(out _resourcesRegistry))
             {
                 return;
             }
@@ -44,8 +44,7 @@ namespace Game.DamageSystem.Systems
                 return;
             }
 
-            var commandBuffer = Context.GetOrCreateCommandBuffer(this); 
-                
+            var commandBuffer = GetOrCreateCommandBuffer(); 
             World.Query(_projectileHitQuery, 
                 (Entity entity, ref ProjectileContact projectileContact) =>
                 {
@@ -96,7 +95,7 @@ namespace Game.DamageSystem.Systems
                     if (targetEntity.TryGet<ResourceSpawner>(out var coinSpawner)
                         && targetEntity.TryGet<Position>(out var position))
                     {
-                        var resourceSettings = _resourcesManager.GetResource(coinSpawner.ResourceId);
+                        var resourceSettings = _resourcesRegistry.GetResource(coinSpawner.ResourceId);
                         if (resourceSettings != null
                             && resourceSettings.Prefab != null)
                         {

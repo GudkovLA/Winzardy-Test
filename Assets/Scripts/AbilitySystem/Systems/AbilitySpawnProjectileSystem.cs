@@ -19,15 +19,14 @@ namespace Game.AbilitySystem.Systems
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public class AbilitySpawnProjectileSystem : AbstractSystem
     {
-        private static readonly QueryDescription _abilitiesQuery = new QueryDescription()
+        private readonly QueryDescription _abilitiesQuery = new QueryDescription()
             .WithAll<AbilitySpawnProjectile, Ability, ProjectileData, LocomotionData, AbilityReadyTag>()
             .WithNone<Destroy, AbilityBlockedTag>();
 
         protected override void OnUpdate()
         {
             var world = Context.World;
-            var commandBuffer = Context.GetOrCreateCommandBuffer(this);
-            
+            var commandBuffer = GetOrCreateCommandBuffer();
             World.Query(_abilitiesQuery,
                 (Entity entity, 
                     ref Ability ability, 

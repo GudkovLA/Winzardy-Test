@@ -3,7 +3,6 @@
 using System;
 using Game.Common;
 using Game.UiSystem.Controllers;
-using Game.Utils;
 using UnityEngine;
 
 namespace Game

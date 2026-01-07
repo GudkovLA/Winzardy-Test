@@ -13,12 +13,12 @@ namespace Game.UiSystem.Systems
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     public class HudUpdateSystem : AbstractSystem
     {
-        private static readonly QueryDescription _playerInfoQuery = new QueryDescription()
+        private readonly QueryDescription _playerInfoQuery = new QueryDescription()
             .WithAll<HealthState, ResourceCollector>()
             .WithNone<Destroy>();
 
         private GameUi _gameUi = null!;
-        private ResourcesManager _resourcesManager = null!;
+        private ResourcesRegistry _resourcesRegistry = null!;
         private bool _initialized;
 
         protected override void OnCreate()
@@ -26,7 +26,7 @@ namespace Game.UiSystem.Systems
             base.OnCreate();
 
             if (!ServiceLocator.TryGet(out _gameUi)
-                || !ServiceLocator.TryGet(out _resourcesManager))
+                || !ServiceLocator.TryGet(out _resourcesRegistry))
             {
                 return;
             }
@@ -48,7 +48,7 @@ namespace Game.UiSystem.Systems
                 });
 
             var i = 0;
-            foreach (var resourceData in _resourcesManager.GetResources())
+            foreach (var resourceData in _resourcesRegistry.GetResources())
             {
                 var resourceView = _gameUi.HudController.GetResourceView(i);
                 resourceView.SetIcon(resourceData.Settings.Icon);

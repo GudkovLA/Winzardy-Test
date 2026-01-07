@@ -5,7 +5,7 @@ namespace Game
 {
     public class GameLevel : IDisposable
     {
-        private static readonly Plane _groundPlane = new Plane(Vector3.up, Vector3.zero); 
+        private readonly Plane _groundPlane = new Plane(Vector3.up, Vector3.zero); 
             
         public Transform Root { private set; get; }
         public Vector3 StartPosition { private set; get; }

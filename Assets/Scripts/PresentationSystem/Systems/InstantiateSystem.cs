@@ -6,14 +6,13 @@ using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.PresentationSystem.Components;
-using Game.Utils;
 
 namespace Game.PresentationSystem.Systems
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public class InstantiateSystem : AbstractSystem
     {
-        private static readonly QueryDescription _instanceQuery = new QueryDescription()
+        private readonly QueryDescription _instanceQuery = new QueryDescription()
             .WithAll<PrefabId>()
             .WithNone<InstanceLink, InvisibleTag>();
 
@@ -41,7 +40,7 @@ namespace Game.PresentationSystem.Systems
                 return;
             }
             
-            var commandBuffer = Context.GetOrCreateCommandBuffer(this);
+            var commandBuffer = GetOrCreateCommandBuffer();
             World.Query(_instanceQuery, 
                 (Entity entity, ref PrefabId prefabId) =>
                 {

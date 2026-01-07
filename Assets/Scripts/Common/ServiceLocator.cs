@@ -26,15 +26,7 @@ namespace Game.Common
             var type = serviceInstance.GetType();
             if (!_services.TryAdd(type, serviceInstance) && !Equals(_services[type], serviceInstance))
             {
-                return;
-            }
-        }
-        
-        public void Register(Type type, IDisposable serviceInstance)
-        {
-            if (!_services.TryAdd(type, serviceInstance) && !Equals(_services[type], serviceInstance))
-            {
-                return;
+                Debug.LogError($"Service already registered {type.Name}");
             }
         }
 

@@ -14,25 +14,30 @@ namespace Game.ResourceSystem.Systems
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public class ResourceCollectingSystem : AbstractSystem
     {
-        private static readonly QueryDescription _coinsQuery = new QueryDescription()
+        private readonly QueryDescription _coinsQuery = new QueryDescription()
             .WithAll<Position, Resource>()
             .WithNone<Destroy, ResourceCapture>();
 
-        private static readonly QueryDescription _capturedCoinsQuery = new QueryDescription()
+        private readonly QueryDescription _capturedCoinsQuery = new QueryDescription()
             .WithAll<Position, ResourceCapture>()
             .WithNone<Destroy>();
 
-        private ResourcesManager _resourcesManager = null!;
+        private ResourcesRegistry _resourcesRegistry = null!;
+        private float _resourceCaptureAcceleration;
         private bool _initialized;
 
         protected override void OnCreate()
         {
             base.OnCreate();
 
-            if (!ServiceLocator.TryGet(out _resourcesManager))
+            if (!ServiceLocator.TryGet(out _resourcesRegistry))
             {
                 return;
             }
+
+            _resourceCaptureAcceleration = ServiceLocator.TryGet<GameSettings>(out var gameSettings)
+                ? gameSettings.ResourceCaptureAcceleration
+                : 0.2f;
 
             _initialized = true;
         }
@@ -52,8 +57,7 @@ namespace Game.ResourceSystem.Systems
                 return;
             }
 
-            // TODO: Heavy operation, possible to optimize with burst
-            var commandBuffer = Context.GetOrCreateCommandBuffer(this); 
+            var commandBuffer = GetOrCreateCommandBuffer(); 
             World.Query(_coinsQuery,
                 (Entity entity, ref Position position, ref Resource resource) =>
                 {
@@ -65,20 +69,18 @@ namespace Game.ResourceSystem.Systems
                         commandBuffer.Add(entity, new ResourceCapture
                         {
                             ResourceId = resource.ResourceId,
-                            // TODO: Make configurable
-                            Acceleration = 0.2f
+                            Acceleration = _resourceCaptureAcceleration
                         });
                     }
                 });
                 
-            // TODO: Heavy operation, possible to optimize with burst
             World.Query(_capturedCoinsQuery, 
                 (Entity entity, ref Position position, ref ResourceCapture resourceCapture) =>
                 {
                     var delta = playerPosition.Value - position.Value;
                     if (delta.magnitude < resourceCapture.Speed)
                     {
-                        _resourcesManager.CollectResource(resourceCapture.ResourceId);
+                        _resourcesRegistry.CollectResource(resourceCapture.ResourceId);
                         position.Value += playerPosition.Value;
                         commandBuffer.Add(entity, new Destroy());
                     }
