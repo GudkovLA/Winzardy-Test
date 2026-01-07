@@ -1,10 +1,10 @@
 ﻿#nullable enable
 
 using Arch.Core;
-using Game.CharacterSystem.Components;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
+using Game.DamageSystem.Components;
 using Game.PresentationSystem.Components;
 using Game.ResourceSystem.Components;
 using UnityEngine;
@@ -15,7 +15,7 @@ namespace Game.ResourceSystem.Systems
     public class ResourceSpawnSystem : AbstractSystem
     {
         private readonly QueryDescription _deadEnemyQuery = new QueryDescription()
-            .WithAll<Position, ResourceSpawner, IsDeadTag>();
+            .WithAll<Position, ResourceSpawner, DeathState>();
         
         private ResourcesRegistry _resourcesRegistry = null!;
         private bool _initialized;
@@ -39,6 +39,7 @@ namespace Game.ResourceSystem.Systems
                 return;
             }
 
+            var world = Context.World;
             var commandBuffer = GetOrCreateCommandBuffer(); 
             World.Query(_deadEnemyQuery, 
                 (Entity entity, ref Position position, ref ResourceSpawner resourceSpawner) =>
@@ -51,7 +52,7 @@ namespace Game.ResourceSystem.Systems
                         return;
                     }
 
-                    var resource = Context.World.Create();
+                    var resource = world.Create();
                     commandBuffer.Add(resource, new Position { Value = position.Value });
                     commandBuffer.Add(resource, new Rotation { Value = Quaternion.identity });
                     commandBuffer.Add(resource, new Resource { ResourceId = resourceSpawner.ResourceId });

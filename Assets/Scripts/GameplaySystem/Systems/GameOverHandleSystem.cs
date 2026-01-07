@@ -2,9 +2,9 @@
 
 using Arch.Core;
 using Arch.Core.Extensions;
-using Game.CharacterSystem.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
+using Game.DamageSystem.Components;
 using Game.Utils;
 
 namespace Game.GameplaySystem.Systems
@@ -35,7 +35,7 @@ namespace Game.GameplaySystem.Systems
             }
 
             var playerEntity = World.GetPlayerSingleton();
-            if (playerEntity != Entity.Null && playerEntity.Has<IsDeadTag>())
+            if (playerEntity != Entity.Null && playerEntity.Has<DeathState>())
             {
                 _gameUi.GameMenuController.ShowGameOverMenu();
             }

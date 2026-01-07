@@ -48,6 +48,7 @@ namespace Game.CharacterSystem.Systems
                 return;
             }
 
+            var time = Context.Time;
             var commandBuffer = GetOrCreateCommandBuffer();
             World.Query(_enemyInitQuery,
                 entity =>
@@ -74,10 +75,10 @@ namespace Game.CharacterSystem.Systems
                     var movementThreshold = locomotionState.LastVelocity.magnitude * 0.5f;
                     if (Vector3.Distance(locomotionState.LastPosition, position.Value) < movementThreshold)
                     {
-                        if (obstacleAvoidance.LastChangeTime + _avoidanceDirectionChangeTimeout < Context.Time)
+                        if (obstacleAvoidance.LastChangeTime + _avoidanceDirectionChangeTimeout < time)
                         {
                             obstacleAvoidance.DirectionFactor *= -1;
-                            obstacleAvoidance.LastChangeTime = Context.Time;
+                            obstacleAvoidance.LastChangeTime = time;
                         }
                     }
                     

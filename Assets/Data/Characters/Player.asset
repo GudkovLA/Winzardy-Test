@@ -17,6 +17,8 @@ MonoBehaviour:
   Size: {x: 1, y: 2, z: 1}
   Health: 200
   Speed: 5
+  IgnoreObstacles: 1
+  DontDestroyOnDeath: 1
   Fraction: 1
   Enemies: 2
   Abilities:

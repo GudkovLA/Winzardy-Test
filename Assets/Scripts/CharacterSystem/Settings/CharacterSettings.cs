@@ -27,6 +27,8 @@ namespace Game.CharacterSystem.Settings
         public Vector3 Size;
         public float Health;
         public float Speed;
+        public bool IgnoreObstacles;
+        public bool DontDestroyOnDeath;
 
         public FractionMask Fraction; 
         public FractionMask Enemies; 
@@ -69,6 +71,16 @@ namespace Game.CharacterSystem.Settings
                 Health = Health
             });
            
+            if (IgnoreObstacles)
+            {
+                commandBuffer.Add(entity, new IgnoreObstaclesTag());
+            }
+
+            if (DontDestroyOnDeath)
+            {
+                commandBuffer.Add(entity, new DontDestroyOnDeath());
+            }
+
             commandBuffer.Add(entity, GetProjectileCollider());
             
             commandBuffer.Add(entity, new Fraction

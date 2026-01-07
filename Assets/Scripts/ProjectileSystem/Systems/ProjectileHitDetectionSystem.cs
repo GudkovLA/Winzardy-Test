@@ -7,6 +7,7 @@ using Game.Common;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
+using Game.DamageSystem.Components;
 using Game.ProjectileSystem.Components;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -27,7 +28,7 @@ namespace Game.ProjectileSystem.Systems
 
         private readonly QueryDescription _targetQuery = new QueryDescription()
             .WithAll<Position, ProjectileCollider, Fraction>()
-            .WithNone<Destroy, IsDeadTag>();
+            .WithNone<Destroy, DeathState>();
 
         protected override void OnUpdate()
         {
@@ -56,6 +57,7 @@ namespace Game.ProjectileSystem.Systems
                     });
                 });
 
+            var world = Context.World;
             var commandBuffer = GetOrCreateCommandBuffer(); 
             World.Query(_targetQuery, 
                 (Entity entity, ref Position position, ref ProjectileCollider projectileCollider, ref Fraction fraction) =>
@@ -87,7 +89,7 @@ namespace Game.ProjectileSystem.Systems
                             return;
                         }
 
-                        var hitEntity = Context.World.Create();
+                        var hitEntity = world.Create();
                         commandBuffer.Add(hitEntity, new ProjectileContact
                         {
                             ProjectileEntity = new EntityHandle(projectileEntity),

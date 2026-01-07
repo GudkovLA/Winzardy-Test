@@ -8,6 +8,7 @@ using Game.Common;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
+using Game.DamageSystem.Components;
 using Game.Utils;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ namespace Game.AbilitySystem.Systems
     {
         private readonly QueryDescription _enemyQuery = new QueryDescription()
             .WithAll<Position, Fraction>()
-            .WithNone<PlayerTag>();
+            .WithNone<PlayerTag, DeathState>();
         
         private readonly QueryDescription _unblockedAbilitiesQuery = new QueryDescription()
             .WithAll<Ability, AbilityConditionTargetInRange>()
@@ -40,7 +41,7 @@ namespace Game.AbilitySystem.Systems
                 {
                     if (!ability.OwnerEntity.IsValid())
                     {
-                        commandBuffer.Destroy(entity);
+                        commandBuffer.Add(entity, new Destroy());
                         return;
                     }
                     
@@ -56,7 +57,7 @@ namespace Game.AbilitySystem.Systems
                 {
                     if (!ability.OwnerEntity.IsValid())
                     {
-                        commandBuffer.Destroy(entity);
+                        commandBuffer.Add(entity, new Destroy());
                         return;
                     }
                     

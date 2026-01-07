@@ -25,6 +25,7 @@ namespace Game.AbilitySystem.Systems
 
         protected override void OnUpdate()
         {
+            var time= Context.Time;
             var world = Context.World;
             var commandBuffer = GetOrCreateCommandBuffer();
             World.Query(_abilitiesQuery,
@@ -36,7 +37,7 @@ namespace Game.AbilitySystem.Systems
                 {
                     if (!ability.OwnerEntity.IsValid())
                     {
-                        commandBuffer.Destroy(entity);
+                        commandBuffer.Add(entity, new Destroy());
                         return;
                     }
 
@@ -68,7 +69,7 @@ namespace Game.AbilitySystem.Systems
                         commandBuffer.Add(projectile, projectileData);
                         commandBuffer.Add(projectile, locomotionData);
                         
-                        commandBuffer.Add(projectile, new Position { Value = position.Value });
+                        commandBuffer.Add(projectile, new Position { Value = startPosition });
                         commandBuffer.Add(projectile, new Rotation { Value = Quaternion.identity });
                         commandBuffer.Add(projectile, new ProjectileState());
                         commandBuffer.Add(projectile, new IgnoreRotationTag());
@@ -84,7 +85,7 @@ namespace Game.AbilitySystem.Systems
                         ownerEntity.CopyComponentToEntityIfExists<Fraction>(projectile);
                     }
 
-                    ability.LastActivateTime = Context.Time;
+                    ability.LastActivateTime = time;
                     commandBuffer.Remove<AbilityReadyTag>(entity);
                 });
         }

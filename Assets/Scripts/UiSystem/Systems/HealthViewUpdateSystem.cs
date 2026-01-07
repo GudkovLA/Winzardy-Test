@@ -21,11 +21,11 @@ namespace Game.UiSystem.Systems
     {
         private readonly QueryDescription _enemyQuery = new QueryDescription()
             .WithAll<HealthState>()
-            .WithNone<Destroy, HandledTag, PlayerTag>();
+            .WithNone<Destroy, HandledTag, PlayerTag, DeathState>();
 
         private readonly QueryDescription _healthViewQuery = new QueryDescription()
             .WithAll<HealthViewState, InstanceLink>()
-            .WithNone<Destroy, PlayerTag>();
+            .WithNone<Destroy>();
         
         private GameSettings _gameSettings = null!;
         private GameUi _gameUi = null!;
@@ -50,7 +50,8 @@ namespace Game.UiSystem.Systems
             {
                 return;
             }
-            
+
+            var world = Context.World;
             var commandBuffer = GetOrCreateCommandBuffer();
             World.Query(_enemyQuery,
                 entity =>
@@ -62,7 +63,7 @@ namespace Game.UiSystem.Systems
                         return;
                     }
                         
-                    var healthView = Context.World.Create();
+                    var healthView = world.Create();
                     commandBuffer.Add(healthView, new HealthViewState
                     {
                         EntityHandle = new EntityHandle(entity),
@@ -97,6 +98,12 @@ namespace Game.UiSystem.Systems
                     }
 
                     var enemyEntity = healthViewState.EntityHandle.Value;
+                    if (enemyEntity.Has<DeathState>())
+                    {
+                        instanceLink.Instance.SetActive(false);
+                        return;
+                    }
+                    
                     if (!enemyEntity.TryGet<HealthState>(out var healthState))
                     {
                         Debug.LogError($"Can't find {nameof(HealthState)} in enemy entity");

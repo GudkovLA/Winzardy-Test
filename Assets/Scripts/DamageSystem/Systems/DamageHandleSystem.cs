@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using Arch.Buffer;
 using Arch.Core;
 using Arch.Core.Extensions;
 using Game.Common.Components;
@@ -21,7 +22,9 @@ namespace Game.DamageSystem.Systems
 
         protected override void OnUpdate()
         {
-            var commandBuffer = GetOrCreateCommandBuffer(); 
+            var time = Context.Time;
+            var world = Context.World;
+            var commandBuffer = new CommandBuffer(); 
             World.Query(_projectileHitQuery, 
                 (Entity entity, ref ProjectileContact projectileContact) =>
                 {
@@ -60,10 +63,12 @@ namespace Game.DamageSystem.Systems
                     }
 
                     healthState.Health -= damage.Amount;
-                    healthState.LastHitTime = Context.Time;
+                    healthState.LastHitTime = time;
                     commandBuffer.Set(targetEntity, healthState);
                     commandBuffer.Add(targetEntity, new DamageHitTag());
                 });
+            
+            commandBuffer.Playback(world);
         }
     }
 }

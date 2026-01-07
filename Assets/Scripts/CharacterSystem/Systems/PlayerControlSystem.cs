@@ -2,9 +2,9 @@
 
 using Arch.Core;
 using Arch.Core.Extensions;
-using Game.CharacterSystem.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
+using Game.DamageSystem.Components;
 using Game.LocomotionSystem.Components;
 using Game.Utils;
 using UnityEngine;
@@ -53,7 +53,7 @@ namespace Game.CharacterSystem.Systems
                 return;
             }
             
-            locomotionState.Direction = !playerEntity.Has<IsDeadTag>()
+            locomotionState.Direction = !playerEntity.Has<DeathState>()
                 ? new Vector3(moveInput.x, 0, moveInput.y)
                 : Vector3.zero;
 

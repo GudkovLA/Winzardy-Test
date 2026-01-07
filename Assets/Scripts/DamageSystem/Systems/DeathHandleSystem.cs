@@ -15,11 +15,16 @@ namespace Game.DamageSystem.Systems
     public class DeathHandleSystem : AbstractSystem
     {
         private readonly QueryDescription _unitsQuery = new QueryDescription()
-            .WithAll<HealthState>()
-            .WithNone<Destroy, IsDeadTag>();
+            .WithAll<HealthState, DamageHitTag>()
+            .WithNone<Destroy, DeathState>();
+
+        private readonly QueryDescription _deadUnitsQuery = new QueryDescription()
+            .WithAll<DeathState>()
+            .WithNone<Destroy, PlayerTag>();
 
         protected override void OnUpdate()
         {
+            var time = Context.Time;
             var commandBuffer = GetOrCreateCommandBuffer();
             World.Query(_unitsQuery,
                 (Entity entity, ref HealthState healthState) =>
@@ -30,9 +35,18 @@ namespace Game.DamageSystem.Systems
                     }
 
                     healthState.Health = 0;
-                    commandBuffer.Add(entity, new IsDeadTag());
+                    commandBuffer.Add(entity, new DeathState { DeathTime = time });
 
                     if (!entity.Has<DontDestroyOnDeath>())
+                    {
+                        commandBuffer.Add(entity, new Destroy());
+                    }
+                });
+             
+            World.Query(_deadUnitsQuery, 
+                (Entity entity, ref DeathState deathState) =>
+                {
+                    if (deathState.DeathTime + deathState.Duration < time)
                     {
                         commandBuffer.Add(entity, new Destroy());
                     }
