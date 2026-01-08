@@ -1,9 +1,9 @@
 ﻿#nullable enable
 
 using System;
-using Arch.Buffer;
 using Arch.Core;
 using Game.CharacterSystem.Components;
+using Game.Common;
 using Game.PresentationSystem;
 using Game.ResourceSystem.Settings;
 using UnityEngine;
@@ -27,11 +27,11 @@ namespace Game.CharacterSystem.Settings
             }
         }
 
-        public override void Initialize(World world, CommandBuffer commandBuffer, Entity entity)
+        public override void Build(Entity entity, BuildContext context)
         {
-            base.Initialize(world, commandBuffer, entity);
+            base.Build(entity, context);
             
-            commandBuffer.Add(entity, new EnemyControlState { MinDistanceToPlayer = MinDistanceToPlayer });
+            context.CommandBuffer.Add(entity, new EnemyControlState { MinDistanceToPlayer = MinDistanceToPlayer });
         }
 
         [Serializable]

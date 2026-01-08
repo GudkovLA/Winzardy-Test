@@ -1,9 +1,9 @@
 ﻿#nullable enable
 
 using System;
-using Arch.Buffer;
 using Arch.Core;
 using Game.AbilitySystem.Components;
+using Game.Common;
 using Game.PresentationSystem;
 using Game.ProjectileSystem.Settings;
 using UnityEngine;
@@ -25,13 +25,13 @@ namespace Game.AbilitySystem.Settings
             ProjectileSettings.Prepare(instancePool);
         }
         
-        public override void Initialize(CommandBuffer commandBuffer, Entity entity)
+        public override void Build(Entity entity, BuildContext context)
         {
-            base.Initialize(commandBuffer, entity);
+            base.Build(entity, context);
             
-            ProjectileSettings.Initialize(commandBuffer, entity);
+            ProjectileSettings.Build(entity, context);
 
-            commandBuffer.Add(entity, new AbilitySpawnProjectile
+            context.CommandBuffer.Add(entity, new AbilitySpawnProjectile
             {
                 SpawnDirection = SpawnDirection,
                 ProjectilesAmount = ProjectilesAmountPerActivation,

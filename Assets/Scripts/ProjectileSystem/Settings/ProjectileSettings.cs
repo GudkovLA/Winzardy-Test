@@ -1,8 +1,8 @@
 ﻿#nullable enable
 
 using System;
-using Arch.Buffer;
 using Arch.Core;
+using Game.Common;
 using Game.DamageSystem.Components;
 using Game.LocomotionSystem.Components;
 using Game.PresentationSystem;
@@ -14,7 +14,7 @@ namespace Game.ProjectileSystem.Settings
 {
     [CreateAssetMenu(fileName = nameof(ProjectileSettings), menuName = "Assets/Projectile Settings")]
     [Serializable]
-    public class ProjectileSettings : ScriptableObject, IDisposable, IPoolable
+    public class ProjectileSettings : ScriptableObject, IDisposable, IPoolable, IEntityBuilder
     { 
         public GameObject? Prefab;
         public int PoolSize;
@@ -37,21 +37,21 @@ namespace Game.ProjectileSystem.Settings
             }
         }
 
-        public void Initialize(CommandBuffer commandBuffer, Entity entity)
+        public void Build(Entity entity, BuildContext context)
         {
-            commandBuffer.Add(entity, new ProjectileData
+            context.CommandBuffer.Add(entity, new ProjectileData
             {
                 MaxDistance = MaxDistance,
                 HitRadius = HitRadius,
                 DestroyOnHit = DestroyOnHit
             });
 
-            commandBuffer.Add(entity, new Damage { Amount = Damage });
-            commandBuffer.Add(entity, new LocomotionData { MaxSpeed = Speed });
+            context.CommandBuffer.Add(entity, new Damage { Amount = Damage });
+            context.CommandBuffer.Add(entity, new LocomotionData { MaxSpeed = Speed });
 
             if (Prefab != null)
             {
-                commandBuffer.Add(entity, new PrefabId { Value = Prefab.GetInstanceID() });
+                context.CommandBuffer.Add(entity, new PrefabId { Value = Prefab.GetInstanceID() });
             }            
         }
     }

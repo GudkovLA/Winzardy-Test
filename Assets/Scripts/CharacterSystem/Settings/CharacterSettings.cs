@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
 using System;
-using Arch.Buffer;
 using Arch.Core;
 using Game.AbilitySystem.Components;
 using Game.AbilitySystem.Settings;
@@ -19,7 +18,7 @@ namespace Game.CharacterSystem.Settings
 {
     [CreateAssetMenu(fileName = nameof(CharacterSettings), menuName = "Assets/Character Settings")]
     [Serializable]
-    public class CharacterSettings : ScriptableObject, IDisposable, IPoolable
+    public class CharacterSettings : ScriptableObject, IDisposable, IPoolable, IEntityBuilder
     {
         public GameObject? Prefab;
         public int PoolSize;
@@ -54,13 +53,14 @@ namespace Game.CharacterSystem.Settings
             }
         }
 
-        public virtual void Initialize(World world, CommandBuffer commandBuffer, Entity entity)
+        public virtual void Build(Entity entity, BuildContext context)
         {
             if (Prefab == null)
             {
                 throw new Exception("Character prefab is not defined");
             }
-            
+
+            var commandBuffer = context.CommandBuffer;
             commandBuffer.Add(entity, new Size { Value = Size });
             commandBuffer.Add(entity, new PrefabId { Value = Prefab.GetInstanceID() });
             commandBuffer.Add(entity, new LocomotionData { MaxSpeed = Speed });
@@ -91,14 +91,14 @@ namespace Game.CharacterSystem.Settings
             
             foreach (var abilitySettings in Abilities)
             {
-                var abilityEntity = world.Create();
+                var abilityEntity = context.World.Create();
                 commandBuffer.Add(abilityEntity, new Ability
                 {
                     OwnerEntity = new EntityHandle(entity),
                     LastActivateTime = Time.realtimeSinceStartup
                 });
                 
-                abilitySettings.Initialize(commandBuffer, abilityEntity);
+                abilitySettings.Build(abilityEntity, context);
             }
         }
 

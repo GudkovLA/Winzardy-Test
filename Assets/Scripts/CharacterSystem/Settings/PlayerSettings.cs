@@ -1,9 +1,9 @@
 ﻿#nullable enable
 
 using System;
-using Arch.Buffer;
 using Arch.Core;
 using Game.CharacterSystem.Components;
+using Game.Common;
 using Game.ResourceSystem.Components;
 using UnityEngine;
 
@@ -15,12 +15,12 @@ namespace Game.CharacterSystem.Settings
     {
         public float CoinsCollectRadius;
 
-        public override void Initialize(World world, CommandBuffer commandBuffer, Entity entity)
+        public override void Build(Entity entity, BuildContext context)
         {
-            base.Initialize(world, commandBuffer, entity);
+            base.Build(entity, context);
             
-            commandBuffer.Add(entity, new ResourceCollector { CollectRadius = CoinsCollectRadius });
-            commandBuffer.Add(entity, new PlayerTag());
+            context.CommandBuffer.Add(entity, new ResourceCollector { CollectRadius = CoinsCollectRadius });
+            context.CommandBuffer.Add(entity, new PlayerTag());
         }
     }
 }

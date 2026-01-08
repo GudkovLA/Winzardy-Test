@@ -19,7 +19,6 @@ namespace Game.PresentationSystem.Systems
 
         protected override void OnUpdate()
         {
-            var time = Context.Time;
             var commandBuffer = GetOrCreateCommandBuffer();
             World.Query(_deathStartQuery, 
                 (Entity entity, ref InstanceLink instanceLink, ref DeathState deathState) =>

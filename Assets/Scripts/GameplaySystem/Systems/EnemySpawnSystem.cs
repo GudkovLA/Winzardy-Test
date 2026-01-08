@@ -1,9 +1,10 @@
 ﻿#nullable enable
 
+using Arch.Buffer;
 using Arch.Core;
-using Game.CharacterSystem;
 using Game.CharacterSystem.Settings;
 using Game.Common;
+using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
 using Game.ResourceSystem;
@@ -56,6 +57,7 @@ namespace Game.GameplaySystem.Systems
             var world = Context.World;
             var groundPlane = _gameLevel.GroundPlane;
             var spawnSettings = _gameSettings.Spawn;
+            var commandBuffer = GetOrCreateCommandBuffer();
 
 #if UNITY_EDITOR
             if (spawnSettings.DebugEnable)
@@ -71,7 +73,7 @@ namespace Game.GameplaySystem.Systems
                 
                 if (_timeCounter[i] < 0)
                 {
-                    TrySpawnEnemy(world, enemySpawnSettings.EnemySettings, spawnSettings, groundPlane);
+                    TrySpawnEnemy(world, commandBuffer, enemySpawnSettings.EnemySettings, spawnSettings, groundPlane);
                     _timeCounter[i] += enemySpawnSettings.SpawnTimeout;
                 }
             }
@@ -127,6 +129,7 @@ namespace Game.GameplaySystem.Systems
 
         private void TrySpawnEnemy(
             World world,
+            CommandBuffer commandBuffer,
             EnemySettings enemySettings, 
             GameSettings.SpawnSettingsData spawnSettings, 
             Plane groundPlane)
@@ -157,17 +160,10 @@ namespace Game.GameplaySystem.Systems
                 return;
             }
 
-            var commandBuffer = GetOrCreateCommandBuffer();
-            var entity = CharacterUtils.SpawnCharacter(enemySettings,
-                world,
-                commandBuffer,
-                spawnPosition,
-                Quaternion.identity);
-
-            if (entity == Entity.Null)
-            {
-                return;
-            }
+            var entity = world.Create();
+            enemySettings.Build(entity, new BuildContext(world, commandBuffer));
+            commandBuffer.Add(entity, new Position { Value = spawnPosition });
+            commandBuffer.Add(entity, new Rotation { Value = Quaternion.identity });
 
             if (_resourcesRegistry.TryGetDroppedResource(enemySettings.GetInstanceID(), out var resourceId))
             {

@@ -2,9 +2,9 @@
 
 using Arch.Buffer;
 using Arch.Core;
-using Game.CharacterSystem;
 using Game.CharacterSystem.Components;
 using Game.Common;
+using Game.Common.Components;
 using UnityEngine;
 
 namespace Game.Utils
@@ -33,17 +33,10 @@ namespace Game.Utils
             }
 
             var commandBuffer = new CommandBuffer();
-            var entity = CharacterUtils.SpawnCharacter(gameSettings.Player,
-                world,
-                commandBuffer,
-                gameLevel.StartPosition,
-                gameLevel.StartRotation);
-
-            if (entity == Entity.Null)
-            {
-                return;
-            }
-            
+            var entity = world.Create();
+            gameSettings.Player.Build(entity, new BuildContext(world, commandBuffer));
+            commandBuffer.Add(entity, new Position { Value = gameLevel.StartPosition });
+            commandBuffer.Add(entity, new Rotation { Value = gameLevel.StartRotation });
             commandBuffer.Playback(world);
         }
 

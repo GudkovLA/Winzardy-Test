@@ -1,9 +1,9 @@
 ﻿#nullable enable
 
 using System;
-using Arch.Buffer;
 using Arch.Core;
 using Game.AbilitySystem.Components;
+using Game.Common;
 using UnityEngine;
 
 namespace Game.AbilitySystem.Settings
@@ -15,11 +15,11 @@ namespace Game.AbilitySystem.Settings
     {
         public float Distance;
         
-        public override void Initialize(CommandBuffer commandBuffer, Entity entity)
+        public override void Build(Entity entity, BuildContext context)
         {
-            base.Initialize(commandBuffer, entity);
+            base.Build(entity, context);
 
-            commandBuffer.Add(entity, new AbilityConditionTargetInRange
+            context.CommandBuffer.Add(entity, new AbilityConditionTargetInRange
             {
                 Distance = Distance
             });
