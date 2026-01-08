@@ -1,3 +1,5 @@
+#nullable enable
+
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,10 +9,10 @@ namespace Game.UiSystem.Views
     public class ResourceView : MonoBehaviour
     {
         [SerializeField]
-        private Image _icon;
+        private Image _icon = null!;
 
         [SerializeField]
-        private TextMeshProUGUI _amountLabel;
+        private TextMeshProUGUI _amountLabel = null!;
 
         [SerializeField] 
         private float _duration; 
@@ -21,7 +23,7 @@ namespace Game.UiSystem.Views
         private int _currentAmount; 
         private float _increaseTime; 
 
-        public void SetIcon(Sprite sprite)
+        public void SetIcon(Sprite? sprite)
         {
             if (_icon.sprite != sprite)
             {

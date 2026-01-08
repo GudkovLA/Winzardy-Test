@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using UnityEngine;
 
 namespace Game
@@ -22,7 +24,7 @@ namespace Game
 
         public void Dispose()
         {
-            Root =  null;
+            Root = null!;
         }
     }
 }
