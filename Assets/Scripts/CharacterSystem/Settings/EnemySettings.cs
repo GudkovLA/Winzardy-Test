@@ -7,6 +7,7 @@ using Game.Common;
 using Game.PresentationSystem;
 using Game.ResourceSystem.Settings;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.CharacterSystem.Settings
 {
@@ -14,7 +15,10 @@ namespace Game.CharacterSystem.Settings
     [Serializable]
     public class EnemySettings : CharacterSettings
     {
+        private readonly int[] _randomDirectionFactor = { -1, 1 };
+
         public float MinDistanceToPlayer;
+        public float ObstacleAvoidanceDistance;
         public LootSettingsData[] Loot = null!;
         
         public override void Prepare(InstancePool instancePool)
@@ -31,7 +35,13 @@ namespace Game.CharacterSystem.Settings
         {
             base.Build(entity, context);
             
-            context.CommandBuffer.Add(entity, new EnemyControlState { MinDistanceToPlayer = MinDistanceToPlayer });
+            var directionIndex = Random.Range(0, _randomDirectionFactor.Length);
+            context.CommandBuffer.Add(entity, new EnemyControlState
+            {
+                ObstacleAvoidanceDirection = _randomDirectionFactor[directionIndex],
+                ObstacleAvoidanceDistance = ObstacleAvoidanceDistance,
+                MinDistanceToPlayer = MinDistanceToPlayer
+            });
         }
 
         [Serializable]

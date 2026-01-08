@@ -118,10 +118,10 @@ namespace Game.UiSystem.Systems
                         return;
                     }
 
-                    var size = enemyEntity.Has<Size>()
-                        ? enemyEntity.Get<Size>().Value
-                        : Vector3.zero;
-                    var offset = new Vector3(0, size.y, 0);
+                    var height = enemyEntity.Has<Size>()
+                        ? enemyEntity.Get<Size>().Height
+                        : 0f;
+                    var offset = new Vector3(0, height, 0);
                     
                     healthViewState.View.SetHealth(healthState.Health);
                     instanceLink.Instance.transform.position= _gameUi.GetScreenPosition(position.Value + offset);

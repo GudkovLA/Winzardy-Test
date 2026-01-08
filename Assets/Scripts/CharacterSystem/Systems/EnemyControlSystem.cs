@@ -11,25 +11,17 @@ using Game.DamageSystem.Components;
 using Game.LocomotionSystem.Components;
 using Game.Utils;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.CharacterSystem.Systems
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public class EnemyControlSystem : AbstractSystem
     {
-        private readonly float _radiusFactor = Mathf.Sqrt(2) * 0.5f;
-        private readonly int[] _randomDirectionFactor = { -1, 1 };
-
-        private readonly QueryDescription _enemiesInitQuery = new QueryDescription()
-            .WithAll<Position, LocomotionState, EnemyControlState>()
-            .WithNone<Destroy, ObstacleAvoidance>();
-
         private readonly QueryDescription _enemiesQuery = new QueryDescription()
-            .WithAll<Position, Size, LocomotionData, LocomotionState, EnemyControlState, ObstacleAvoidance>()
-            .WithNone<Destroy, DeathState>();
+            .WithAll<Position, Size, LocomotionData, LocomotionState, EnemyControlState>()
+            .WithNone<Destroy, IgnoreObstaclesTag, DeathState>();
 
-        private readonly QueryDescription _deadEnemiesQuery = new QueryDescription()
+        private readonly QueryDescription _deadEnemyQuery = new QueryDescription()
             .WithAll<LocomotionState, EnemyControlState, DeathState>()
             .WithNone<Destroy>();
 
@@ -54,24 +46,12 @@ namespace Game.CharacterSystem.Systems
             }
 
             var time = Context.Time;
-            var commandBuffer = GetOrCreateCommandBuffer();
-            World.Query(_enemiesInitQuery,
-                entity =>
-                {
-                    var directionIndex = Random.Range(0, _randomDirectionFactor.Length);
-                    commandBuffer.Add(entity, new ObstacleAvoidance
-                    {
-                        DirectionFactor = _randomDirectionFactor[directionIndex]
-                    });
-                });
-
             World.Query(_enemiesQuery,
                 (ref Position position, 
                     ref Size size, 
                     ref LocomotionData locomotionData,
                     ref LocomotionState locomotionState,
-                    ref EnemyControlState controlState,
-                    ref ObstacleAvoidance obstacleAvoidance) =>
+                    ref EnemyControlState controlState) =>
                 {
                     // A small workaround to prevent enemies from getting stuck inside the corners.
                     // This can happen when an enemy tries to move toward an obstacle (while avoiding another obstacle),
@@ -80,10 +60,10 @@ namespace Game.CharacterSystem.Systems
                     var movementThreshold = locomotionState.LastVelocity.magnitude * 0.5f;
                     if (Vector3.Distance(locomotionState.LastPosition, position.Value) < movementThreshold)
                     {
-                        if (obstacleAvoidance.LastChangeTime + _avoidanceDirectionChangeTimeout < time)
+                        if (controlState.DirectionChangeLastTime + _avoidanceDirectionChangeTimeout < time)
                         {
-                            obstacleAvoidance.DirectionFactor *= -1;
-                            obstacleAvoidance.LastChangeTime = time;
+                            controlState.ObstacleAvoidanceDirection *= -1;
+                            controlState.DirectionChangeLastTime = time;
                         }
                     }
                     
@@ -98,13 +78,14 @@ namespace Game.CharacterSystem.Systems
                     // Calculate the direction of movement in accordance with obstacles on the way to the goal.
                     // Simple algorithm for bypassing an obstacle in the selected direction (left handed or right handed). 
                     locomotionState.Direction = ResolveMovementDirection(position.Value, 
-                        size.Value, 
                         delta.normalized,
-                        _radiusFactor * size.Value.x,
-                        obstacleAvoidance.DirectionFactor);
+                        size.Radius,
+                        size.Height,
+                        controlState.ObstacleAvoidanceDistance, 
+                        controlState.ObstacleAvoidanceDirection).normalized;
                 });
             
-            World.Query(_deadEnemiesQuery,
+            World.Query(_deadEnemyQuery,
                 (ref LocomotionState locomotionState) =>
                 {
                     locomotionState.Speed = 0f;
@@ -114,20 +95,20 @@ namespace Game.CharacterSystem.Systems
 
         private static Vector3 ResolveMovementDirection(
             Vector3 position, 
-            Vector3 size, 
             Vector3 targetDirection,
             float radius,
+            float height,
+            float avoidanceDistance,
             int avoidanceFactor)
         {
-            var castFrom = new Vector3(position.x, size.y * 0.5f, position.z);
-            var maxDistance = size.x;
+            var castFrom = new Vector3(position.x, height * 0.5f, position.z);
             
-            if (maxDistance <= 0
+            if (avoidanceDistance <= 0
                 || !Physics.SphereCast(castFrom, 
                     radius, 
                     targetDirection, 
                     out var hitPoint, 
-                    maxDistance, 
+                    avoidanceDistance, 
                     (int) PhysicsLayer.Obstacle))
             {
                 return targetDirection;
@@ -138,14 +119,8 @@ namespace Game.CharacterSystem.Systems
                     ? Vector3.up
                     : Vector3.down).normalized;
 
-            return targetDirection * (hitPoint.distance / maxDistance)
-                        + avoidanceDirection * ((maxDistance - hitPoint.distance) / maxDistance);
-        }
-
-        private struct ObstacleAvoidance
-        {
-            public int DirectionFactor;
-            public float LastChangeTime;
+            return targetDirection * (hitPoint.distance / avoidanceDistance)
+                        + avoidanceDirection * ((avoidanceDistance - hitPoint.distance) / avoidanceDistance);
         }
     }
 }

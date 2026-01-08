@@ -23,9 +23,11 @@ namespace Game.CharacterSystem.Settings
         public GameObject? Prefab;
         public int PoolSize;
         
-        public Vector3 Size;
-        public float Health;
-        public float Speed;
+        public float SizeRadius;
+        public float SizeHeight;
+        public float MaxHealth;
+        public float MoveSpeed;
+        public float ProjectileColliderRadius;
         public bool IgnoreObstacles;
         public bool DontDestroyOnDeath;
 
@@ -61,14 +63,18 @@ namespace Game.CharacterSystem.Settings
             }
 
             var commandBuffer = context.CommandBuffer;
-            commandBuffer.Add(entity, new Size { Value = Size });
             commandBuffer.Add(entity, new PrefabId { Value = Prefab.GetInstanceID() });
-            commandBuffer.Add(entity, new LocomotionData { MaxSpeed = Speed });
-            commandBuffer.Add(entity, new LocomotionState { Speed = Speed });
+            commandBuffer.Add(entity, new LocomotionData { MaxSpeed = MoveSpeed });
+            commandBuffer.Add(entity, new LocomotionState { Speed = MoveSpeed });
+            commandBuffer.Add(entity, new Size
+            {
+                Radius = SizeRadius,
+                Height =  SizeHeight
+            });
             commandBuffer.Add(entity, new HealthState
             {
-                MaxHealth = Health,
-                Health = Health
+                MaxHealth = MaxHealth,
+                Health = MaxHealth
             });
            
             if (IgnoreObstacles)
@@ -81,7 +87,10 @@ namespace Game.CharacterSystem.Settings
                 commandBuffer.Add(entity, new DontDestroyOnDeath());
             }
 
-            commandBuffer.Add(entity, GetProjectileCollider());
+            if (ProjectileColliderRadius > 0)
+            {
+                commandBuffer.Add(entity, new ProjectileCollider { Radius = ProjectileColliderRadius });
+            }
             
             commandBuffer.Add(entity, new Fraction
             {
@@ -100,23 +109,6 @@ namespace Game.CharacterSystem.Settings
                 
                 abilitySettings.Build(abilityEntity, context);
             }
-        }
-
-        private ProjectileCollider GetProjectileCollider()
-        {
-            if (_projectileColliderCache != null)
-            {
-                return _projectileColliderCache.Value;
-            }
-            
-            if (Prefab != null 
-                && Prefab.TryGetComponent<CapsuleCollider>(out var capsuleCollider))
-            {
-                _projectileColliderCache = new ProjectileCollider { Radius = capsuleCollider.radius };
-                return _projectileColliderCache.Value;
-            }
-
-            return default;
         }
     }
 }

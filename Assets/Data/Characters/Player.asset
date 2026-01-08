@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: 
   Prefab: {fileID: 7943218971982778878, guid: fec70327d7255c2439c9153433ded449, type: 3}
-  PoolSize: 200
-  Size: {x: 1, y: 2, z: 1}
-  Health: 200
-  Speed: 5
+  PoolSize: 1
+  SizeRadius: 1
+  SizeHeight: 2
+  MaxHealth: 200
+  MoveSpeed: 5
+  ProjectileColliderRadius: 1
   IgnoreObstacles: 1
   DontDestroyOnDeath: 1
   Fraction: 1

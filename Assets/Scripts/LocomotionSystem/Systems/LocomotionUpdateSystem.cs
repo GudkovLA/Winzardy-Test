@@ -26,7 +26,6 @@ namespace Game.LocomotionSystem.Systems
             .WithNone<Destroy, IgnoreRotationTag>();
         
         private readonly Collider[] _colliders = new Collider[4];  
-        private readonly float _radiusFactor = Mathf.Sqrt(2) * 0.5f;
 
         private float _turnSpeed;
 
@@ -56,8 +55,7 @@ namespace Game.LocomotionSystem.Systems
             World.Query(_collisionQuery,
                 (ref Position position, ref Size size) =>
                 {
-                    var radius = _radiusFactor * size.Value.x;
-                    position.Value += ResolveColliderOverlap(position.Value, radius, _colliders);
+                    position.Value += ResolveColliderOverlap(position.Value, size.Radius, _colliders);
                 });
             
             // Update rotation by moving direction

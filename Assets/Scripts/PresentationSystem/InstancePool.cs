@@ -53,6 +53,12 @@ namespace Game.PresentationSystem
 
         public void Release(int prefabId, GameObject instance)
         {
+            if (instance == null)
+            {
+                // Application has been closed
+                return;
+            }
+
             if (!_pools.TryGetValue(prefabId, out var entry))
             {
                 Debug.LogError($"Pool is not registered (PrefabId={prefabId})");

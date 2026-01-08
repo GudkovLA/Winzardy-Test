@@ -61,7 +61,7 @@ namespace Game.AbilitySystem.Systems
                     }
 
                     var startPosition = position.Value;
-                    startPosition.y += size.Value.y * 0.5f;
+                    startPosition.y += size.Height * 0.5f;
 
                     for (var i = 0; i < spawnAbility.ProjectilesAmount; i++)
                     {

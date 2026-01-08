@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prefab: {fileID: 9205600761144373587, guid: 8efef96534c727b4e8953481a6f6d85f, type: 3}
   PoolSize: 10
-  Size: {x: 1, y: 1, z: 1}
-  Health: 250
-  Speed: 1
+  SizeRadius: 1
+  SizeHeight: 1
+  MaxHealth: 250
+  MoveSpeed: 1
+  ProjectileColliderRadius: 1
   IgnoreObstacles: 0
   DontDestroyOnDeath: 1
   Fraction: 2
@@ -24,6 +26,7 @@ MonoBehaviour:
   Abilities:
   - {fileID: 11400000, guid: 3441b4dde8bdbd945b56a9fd92042981, type: 2}
   MinDistanceToPlayer: 1.25
+  ObstacleAvoidanceDistance: 1
   Loot:
   - Resource: {fileID: 11400000, guid: dbd4d8b7e51ea0a4f8663e114fa68855, type: 2}
     DropChance: 1
