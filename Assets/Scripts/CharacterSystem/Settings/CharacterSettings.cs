@@ -35,8 +35,6 @@ namespace Game.CharacterSystem.Settings
         public FractionMask Enemies; 
 
         public AbstractAbilitySettings[] Abilities = null!;
-        
-        private ProjectileCollider? _projectileColliderCache;
 
         public void Dispose()
         {
