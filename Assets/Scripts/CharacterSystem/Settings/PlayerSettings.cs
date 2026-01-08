@@ -13,13 +13,13 @@ namespace Game.CharacterSystem.Settings
     [Serializable]
     public class PlayerSettings : CharacterSettings
     {
-        public float CoinsCollectRadius;
+        public float ResourcesCollectRadius;
 
         public override void Build(Entity entity, BuildContext context)
         {
             base.Build(entity, context);
             
-            context.CommandBuffer.Add(entity, new ResourceCollector { CollectRadius = CoinsCollectRadius });
+            context.CommandBuffer.Add(entity, new ResourceCollector { CollectRadius = ResourcesCollectRadius });
             context.CommandBuffer.Add(entity, new PlayerTag());
         }
     }

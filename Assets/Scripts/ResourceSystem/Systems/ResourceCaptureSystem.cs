@@ -14,11 +14,11 @@ namespace Game.ResourceSystem.Systems
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public class ResourceCaptureSystem : AbstractSystem
     {
-        private readonly QueryDescription _coinsQuery = new QueryDescription()
+        private readonly QueryDescription _resourcesQuery = new QueryDescription()
             .WithAll<Position, Resource>()
             .WithNone<Destroy, ResourceCapture>();
 
-        private readonly QueryDescription _capturedCoinsQuery = new QueryDescription()
+        private readonly QueryDescription _capturedResourcesQuery = new QueryDescription()
             .WithAll<Position, ResourceCapture>()
             .WithNone<Destroy>();
 
@@ -52,19 +52,19 @@ namespace Game.ResourceSystem.Systems
             var playerEntity = World.GetPlayerSingleton();
             if (playerEntity == Entity.Null
                 || !playerEntity.TryGet<Position>(out var playerPosition)
-                || !playerEntity.TryGet<ResourceCollector>(out var coinCollector))
+                || !playerEntity.TryGet<ResourceCollector>(out var resourceCollector))
             {
                 return;
             }
 
             var commandBuffer = GetOrCreateCommandBuffer(); 
-            World.Query(_coinsQuery,
+            World.Query(_resourcesQuery,
                 (Entity entity, ref Position position, ref Resource resource) =>
                 {
                     var delta = playerPosition.Value - position.Value;
                     delta.y = 0;
                     
-                    if (delta.magnitude < coinCollector.CollectRadius)
+                    if (delta.magnitude < resourceCollector.CollectRadius)
                     {
                         commandBuffer.Add(entity, new ResourceCapture
                         {
@@ -74,7 +74,7 @@ namespace Game.ResourceSystem.Systems
                     }
                 });
                 
-            World.Query(_capturedCoinsQuery, 
+            World.Query(_capturedResourcesQuery, 
                 (Entity entity, ref Position position, ref ResourceCapture resourceCapture) =>
                 {
                     var delta = playerPosition.Value - position.Value;

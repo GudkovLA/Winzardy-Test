@@ -49,7 +49,7 @@ namespace Game.CharacterSystem.Settings
         {
             public ResourceSettings Resource = null!;
             
-            [Tooltip("Chance of coin will be dropped, where 1 means 100% of chance")]
+            [Tooltip("Chance of resource will be dropped, where 1 means 100% of chance")]
             [Range(0, 1)]
             public float DropChance;
         }
