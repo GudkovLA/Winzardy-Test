@@ -60,6 +60,13 @@ namespace Game.PresentationSystem
                 return;
             }
 
+            if (_root == null)
+            {
+                // Application has been closed
+                Object.Destroy(instance);
+                return;
+            }
+            
             instance.transform.SetParent(_root);
             instance.SetActive(false);
             entry.Release(instance);

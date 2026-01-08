@@ -4,7 +4,6 @@ using Arch.Core;
 using Arch.Core.Extensions;
 using Game.AbilitySystem.Components;
 using Game.CharacterSystem.Components;
-using Game.Common;
 using Game.Common.Components;
 using Game.Common.Systems;
 using Game.Common.Systems.Attributes;
@@ -17,7 +16,7 @@ namespace Game.AbilitySystem.Systems
     [UpdateInGroup(typeof(AbilitySystemGroup))]
     public class AbilityConditionTargetInRangeSystem : AbstractSystem
     {
-        private readonly QueryDescription _enemyQuery = new QueryDescription()
+        private readonly QueryDescription _enemiesQuery = new QueryDescription()
             .WithAll<Position, Fraction>()
             .WithNone<PlayerTag, DeathState>();
         
@@ -28,8 +27,6 @@ namespace Game.AbilitySystem.Systems
         private readonly QueryDescription _blockedAbilitiesQuery = new QueryDescription()
             .WithAll<Ability, AbilityConditionTargetInRange, AbilityBlockedTag>()
             .WithNone<Destroy>();
-
-        private EntityHandle? _playerEntity;
 
         protected override void OnUpdate()
         {
@@ -106,7 +103,7 @@ namespace Game.AbilitySystem.Systems
             }
 
             var result = false;
-            world.Query(_enemyQuery,
+            world.Query(_enemiesQuery,
                 (ref Position position, ref Fraction fraction) =>
             {
                 if (result)

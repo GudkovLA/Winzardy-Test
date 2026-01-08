@@ -6,8 +6,7 @@ using System.Reflection;
 using Arch.Core;
 using Game.Common;
 using Game.Common.Systems;
-using Game.PresentationSystem;
-using Game.ResourceSystem;
+using Game.GameplaySystem.Components;
 using Game.Utils;
 using UnityEngine;
 
@@ -15,42 +14,25 @@ namespace Game
 {
     public class GameWorld : IDisposable
     {
+        private readonly QueryDescription _gameOverDescription = new QueryDescription()
+            .WithAll<GameOverTag>();
+        
         private readonly WorldHandle _worldHandle;
         private readonly ServiceLocator _serviceLocator;
-        private readonly GameUi _gameUi;
-        
-        
         private SystemManager _systemManager = null!;
 
-        public GameWorld(
-            GameSettings gameSettings, 
-            EventsManager eventsManager,
-            GameLevel gameLevel,
-            GameCamera gameCamera,
-            GameInput gameInput,
-            GameUi gameUi,
-            InstancePool instancePool,
-            InstanceFactory instanceFactory)
+        public GameWorld(ServiceLocator serviceLocator)
         {
             _worldHandle = new WorldHandle(null!);
-            _gameUi = gameUi;
-
-            var resourceManager = new ResourcesRegistry();
-            resourceManager.CreateResources(gameSettings);
-
-            _serviceLocator = new ServiceLocator();
-            _serviceLocator.Register(gameSettings);
-            _serviceLocator.Register(gameLevel);
-            _serviceLocator.Register(gameCamera);
-            _serviceLocator.Register(gameInput);
-            _serviceLocator.Register(gameUi);
-            _serviceLocator.Register(instancePool);
-            _serviceLocator.Register(instanceFactory);
-            _serviceLocator.Register(resourceManager);
-            _serviceLocator.Register(eventsManager);
-            
-            _gameUi.InitializeFrom(_serviceLocator);
+            _serviceLocator = serviceLocator;
         }
+
+        public void Dispose()
+        {
+            _systemManager.Dispose();
+            _worldHandle.Value.Dispose();
+        }
+
 
         public void StartGame()
         {
@@ -63,28 +45,18 @@ namespace Game
             _systemManager.LogStructure();
             
             world.CreatePlayerSingleton(_serviceLocator);
-
-            _gameUi.StartGame();
-        }
-
-        public void RestartGame()
-        {
-            _systemManager.Dispose();
-
-            StartGame();
-        }
-
-        public void Dispose()
-        {
-            _worldHandle.Value.Dispose();
-            _serviceLocator.Dispose();
         }
 
         public void Update()
         {
             _systemManager.Update(Time.deltaTime, Time.realtimeSinceStartup);
         }
-
+        
+        public bool IsGameOver()
+        {
+            return _worldHandle.Value.CountEntities(_gameOverDescription) > 0;
+        }
+        
         private static List<Assembly> GatherAssemblies()
         {
             return new List<Assembly>

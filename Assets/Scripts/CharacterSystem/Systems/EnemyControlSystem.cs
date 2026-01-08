@@ -21,15 +21,15 @@ namespace Game.CharacterSystem.Systems
         private readonly float _radiusFactor = Mathf.Sqrt(2) * 0.5f;
         private readonly int[] _randomDirectionFactor = { -1, 1 };
 
-        private readonly QueryDescription _enemyInitQuery = new QueryDescription()
+        private readonly QueryDescription _enemiesInitQuery = new QueryDescription()
             .WithAll<Position, LocomotionState, EnemyControlState>()
             .WithNone<Destroy, ObstacleAvoidance>();
 
-        private readonly QueryDescription _enemyQuery = new QueryDescription()
+        private readonly QueryDescription _enemiesQuery = new QueryDescription()
             .WithAll<Position, Size, LocomotionData, LocomotionState, EnemyControlState, ObstacleAvoidance>()
             .WithNone<Destroy, DeathState>();
 
-        private readonly QueryDescription _deadEnemyQuery = new QueryDescription()
+        private readonly QueryDescription _deadEnemiesQuery = new QueryDescription()
             .WithAll<LocomotionState, EnemyControlState, DeathState>()
             .WithNone<Destroy>();
 
@@ -55,7 +55,7 @@ namespace Game.CharacterSystem.Systems
 
             var time = Context.Time;
             var commandBuffer = GetOrCreateCommandBuffer();
-            World.Query(_enemyInitQuery,
+            World.Query(_enemiesInitQuery,
                 entity =>
                 {
                     var directionIndex = Random.Range(0, _randomDirectionFactor.Length);
@@ -65,7 +65,7 @@ namespace Game.CharacterSystem.Systems
                     });
                 });
 
-            World.Query(_enemyQuery,
+            World.Query(_enemiesQuery,
                 (ref Position position, 
                     ref Size size, 
                     ref LocomotionData locomotionData,
@@ -104,7 +104,7 @@ namespace Game.CharacterSystem.Systems
                         obstacleAvoidance.DirectionFactor);
                 });
             
-            World.Query(_deadEnemyQuery,
+            World.Query(_deadEnemiesQuery,
                 (ref LocomotionState locomotionState) =>
                 {
                     locomotionState.Speed = 0f;
