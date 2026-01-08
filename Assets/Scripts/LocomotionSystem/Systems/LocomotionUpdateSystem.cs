@@ -41,10 +41,11 @@ namespace Game.LocomotionSystem.Systems
         protected override void OnUpdate()
         {
             // Move Entity according its movement direction and sped
+            var deltaTime = Context.DeltaTime;
             World.Query(_locomotionQuery,
                 (ref Position position, ref LocomotionState locomotionState) =>
                 {
-                    var velocity = locomotionState.Direction * (locomotionState.Speed * Context.DeltaTime);
+                    var velocity = locomotionState.Direction * (locomotionState.Speed * deltaTime);
                     locomotionState.LastPosition = position.Value;
                     locomotionState.LastVelocity = velocity;
                     position.Value += velocity;
@@ -59,7 +60,7 @@ namespace Game.LocomotionSystem.Systems
                 });
             
             // Update rotation by moving direction
-            var rotationSpeed = 360f * Context.DeltaTime * _turnSpeed;
+            var rotationSpeed = 360f * deltaTime * _turnSpeed;
             World.Query(_rotationQuery,
                 (ref Position position, ref Rotation rotation, ref LocomotionState locomotionState) =>
                 {
