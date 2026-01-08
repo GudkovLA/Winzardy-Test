@@ -16,8 +16,8 @@ MonoBehaviour:
     Angle: {x: 90, y: 0, z: 0}
     Offset: {x: 0, y: 20, z: 0}
   Spawn:
-    CameraAreaScale: 1.15
-    AreaMaxDepth: 2
+    CameraAreaScale: 1.25
+    AreaMaxDepth: 1
     SpawnRetryCountLimit: 10
     SpawnCollisionSafeRadius: 1
     DebugEnable: 0
